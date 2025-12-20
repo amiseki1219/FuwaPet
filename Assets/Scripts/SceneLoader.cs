@@ -8,4 +8,6 @@ public class SceneLoader : MonoBehaviour
     public void GoToSetting() => SceneManager.LoadScene("Setting");
     public void GoToShop() => SceneManager.LoadScene("Shop");
     public void GoToCoinPurchase() => SceneManager.LoadScene("CoinPurchase");
+    public void GoToChat() => SceneManager.LoadScene("Chat");
+
 }
