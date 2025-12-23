@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//画面切替
+
 public class SceneLoader : MonoBehaviour
 {
     public void GoToHome() => SceneManager.LoadScene("Home");
@@ -8,4 +10,7 @@ public class SceneLoader : MonoBehaviour
     public void GoToSetting() => SceneManager.LoadScene("Setting");
     public void GoToShop() => SceneManager.LoadScene("Shop");
     public void GoToCoinPurchase() => SceneManager.LoadScene("CoinPurchase");
+    public void GoToChat() => SceneManager.LoadScene("Chat");
+
+
 }
