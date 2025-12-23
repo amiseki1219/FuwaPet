@@ -2,6 +2,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
+//メッセージを画面に出すだけ
+
 public class MessageUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text messageText;
