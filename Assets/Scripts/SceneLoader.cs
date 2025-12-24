@@ -12,5 +12,9 @@ public class SceneLoader : MonoBehaviour
     public void GoToCoinPurchase() => SceneManager.LoadScene("CoinPurchase");
     public void GoToChat() => SceneManager.LoadScene("Chat");
 
+    public static void LoadHome()
+    {
+        SceneManager.LoadScene("Home");
+    }
 
 }
