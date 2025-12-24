@@ -10,8 +10,8 @@ namespace Game.Care
         private readonly DailyLimits daily;
 
         // しきい値（好みで調整）
-        private const int FULL_HUNGER = 85;     // 85以上なら「お腹いっぱい」
-        private const int SATISFIED_MOOD = 80;  // 80以上なら「満足してる」
+        private const int FULL_HUNGER = 100;     // 100以上なら「お腹いっぱい」
+        private const int SATISFIED_MOOD = 100;  // 100以上なら「満足してる」
 
         public CareService(PetStatus petStatus, DailyLimits dailyLimits)
         {
