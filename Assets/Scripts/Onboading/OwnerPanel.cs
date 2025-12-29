@@ -5,20 +5,23 @@ using Game.Core;
 
 public class OwnerPanel : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField ownerNameInput;
+    [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private TMP_InputField birthdayInput;
     [SerializeField] private Button nextButton;
 
-    private void Start()
+    private void Awake()
     {
+        if (nameInput == null) Debug.LogError("nameInputがセットされてないよ！");
+        if (SaveManager.Instance == null) Debug.LogError("SaveManagerがまだ準備できてないよ！");
+
         var data = SaveManager.Instance.Data;
 
-        ownerNameInput.text = data.ownerName ?? "";
+        nameInput.text = data.ownerName ?? "";
         birthdayInput.text = data.ownerBirthday ?? "";
 
         nextButton.interactable = false;
 
-        ownerNameInput.onValueChanged.AddListener(_ => Validate());
+        nameInput.onValueChanged.AddListener(_ => Validate());
         birthdayInput.onValueChanged.AddListener(_ => Validate());
 
         Validate(); // ← 最初から判定
@@ -29,7 +32,7 @@ public class OwnerPanel : MonoBehaviour
     void Validate()
     {
         bool isValid =
-            !string.IsNullOrWhiteSpace(ownerNameInput.text) &&
+            !string.IsNullOrWhiteSpace(nameInput.text) &&
             !string.IsNullOrWhiteSpace(birthdayInput.text);
 
         nextButton.interactable = isValid;
@@ -40,7 +43,7 @@ public class OwnerPanel : MonoBehaviour
     {
         var data = SaveManager.Instance.Data;
 
-        data.ownerName = ownerNameInput.text;
+        data.ownerName = nameInput.text;
         data.ownerBirthday = birthdayInput.text;
 
         // ここでは Save() しない！

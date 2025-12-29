@@ -4,29 +4,42 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    public static SaveManager Instance;
+    private static SaveManager _instance;
+    public static SaveManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<SaveManager>();
+            }
+            return _instance;
+        }
+    }
 
+    // ★ ここから下、変数の宣言を忘れずに足してね！
     private string savePath;
     private string backupPath;
-
     public SaveData Data;
 
     private void Awake()
     {
-        if (Instance != null)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        _instance = this;
         DontDestroyOnLoad(gameObject);
 
+        // パスの設定などは Awake で OK
         savePath = Path.Combine(Application.persistentDataPath, "save_v1.json");
         backupPath = savePath + ".bak";
 
         Load();
     }
+    // ...あとの Load や Save はそのままで大丈夫！
 
     public void Load()
     {
