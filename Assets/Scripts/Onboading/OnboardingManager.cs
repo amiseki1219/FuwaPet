@@ -1,19 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Game.Core;
-using Game.Onboarding;
 
 public class OnboardingManager : MonoBehaviour
 {
-    [SerializeField] private GameObject ownerPanel;
-    [SerializeField] private GameObject characterPanel;
-    [SerializeField] private GameObject colorPanel;
-    [SerializeField] private GameObject namePanel;
+    public enum OnboardingStep { Owner, Character, Name }
+
+    [SerializeField] private OwnerPanel ownerPanel;
+    [SerializeField] private CharacterPanelLite characterPanel;
+    [SerializeField] private NamePanel namePanel;
 
     private OnboardingStep currentStep;
 
     private void Start()
     {
+        if (ownerPanel == null || characterPanel == null || namePanel == null) return;
         currentStep = OnboardingStep.Owner;
         UpdateView();
     }
@@ -27,19 +28,19 @@ public class OnboardingManager : MonoBehaviour
         }
         else
         {
-            // ✅ オンボーディング完了処理はここ
-            SaveManager.Instance.Data.onboardingCompleted = true;
-            SaveManager.Instance.Save();
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.Data.onboardingCompleted = true;
+                SaveManager.Instance.Save();
+            }
             SceneManager.LoadScene("Home");
-
         }
     }
 
     private void UpdateView()
     {
-        ownerPanel.SetActive(currentStep == OnboardingStep.Owner);
-        characterPanel.SetActive(currentStep == OnboardingStep.Character);
-        colorPanel.SetActive(currentStep == OnboardingStep.Color);
-        namePanel.SetActive(currentStep == OnboardingStep.Name);
+        if (ownerPanel != null) ownerPanel.gameObject.SetActive(currentStep == OnboardingStep.Owner);
+        if (characterPanel != null) characterPanel.gameObject.SetActive(currentStep == OnboardingStep.Character);
+        if (namePanel != null) namePanel.gameObject.SetActive(currentStep == OnboardingStep.Name);
     }
 }
