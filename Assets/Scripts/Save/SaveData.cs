@@ -11,7 +11,7 @@ public class SaveData
 
     //ペット情報
     public int characterId;
-    public string petColor;
+    public int petColorSlot;
     public string petName;
 
     //オンボーディング完了判定

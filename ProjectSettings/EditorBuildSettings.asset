@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Chat.unity
     guid: b64feee2e062949629d1285a7f10b540
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 689af05b93d6b4f97874829c1e585d40
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
