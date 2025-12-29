@@ -1,36 +1,62 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using Game.Core;
+using System;
 
 public class NamePanel : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField petNameInput;
-    [SerializeField] private Button nextButton;
-
-    private void Start()
+    [Serializable]
+    public class CharacterView
     {
-        nextButton.interactable = false;
+        public string id;      // "Dog" とか
+        public Sprite sprite;  // そのキャラ画像
+    }
 
-        petNameInput.onValueChanged.AddListener(_ => Validate());
+    [SerializeField] private Image characterImage;
+    [SerializeField] private CharacterView[] characters;
 
-        // 既に保存されてたら復元（任意だけど便利）
-        var saved = SaveManager.Instance.Data.petName;
-        if (!string.IsNullOrEmpty(saved))
+    private void OnEnable()
+    {
+        if (characterImage == null)
         {
-            petNameInput.text = saved;
-            Validate();
+            Debug.LogError("NamePanel: characterImage が null です");
+            return;
         }
-    }
 
-    void Validate()
-    {
-        nextButton.interactable = !string.IsNullOrWhiteSpace(petNameInput.text);
-    }
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError("SaveManager がまだ準備できていません");
+            return;
+        }
 
-    // NextボタンのOnClickに設定
-    public void SavePetName()
-    {
-        SaveManager.Instance.Data.petName = petNameInput.text.Trim();
+        if (SaveManager.Instance.Data == null)
+        {
+            Debug.LogError("SaveManager.Data が null です");
+            return;
+        }
+
+        var id = SaveManager.Instance.Data.selectedCharacterId;
+
+        // IDに一致するSpriteを探す
+        foreach (var c in characters)
+        {
+            if (c != null && c.id == id)
+            {
+                if (c.sprite != null)
+                {
+                    characterImage.sprite = c.sprite;
+                    characterImage.enabled = true;
+                }
+                else
+                {
+                    Debug.LogWarning($"NamePanel: {id} のスプライトが null です");
+                    characterImage.enabled = false;
+                }
+                return;
+            }
+        }
+
+        // 見つからない時は非表示
+        Debug.LogWarning($"NamePanel: ID '{id}' のキャラクターが見つかりません");
+        characterImage.enabled = false;
     }
 }
