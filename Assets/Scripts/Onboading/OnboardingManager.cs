@@ -14,8 +14,15 @@ public class OnboardingManager : MonoBehaviour
 
     private void Start()
     {
-        if (ownerPanel == null || characterPanel == null || namePanel == null) return;
-        currentStep = OnboardingStep.Owner;
+        // SaveManagerから「オンボーディングが終わってるか」を確認
+        if (SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted)
+        {
+            // 2回目以降の人はHOME画面へ！
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+            return;
+        }
+
+        // 初回の人はそのままチュートリアルの最初のパネル（OwnerPanel）を表示
         UpdateView();
     }
 
