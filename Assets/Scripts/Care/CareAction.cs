@@ -5,114 +5,107 @@ public class CareActions : MonoBehaviour
 {
     [SerializeField] private MessageUI messageUI;
 
-    const float FULL_HUNGER = 80f;
-    const float HAPPY_MOOD = 85f;
+    // 定数（ラフ画の「MAX 100」などの設定）
+    private const float FULL_HUNGER = 100f;
+    private const float HAPPY_MOOD = 100f;
 
-    int trustGainEatCount = 0;
-    int trustGainPetCount = 0;
-    int trustGainPlayCount = 0;
+    // お世話回数のカウント（初回ボーナス判定用）
+    private int eatCount = 0;
+    private int petCount = 0;
+    private int playCount = 0;
 
-    int RollPlus1(int plus1Percent)
-        => (Random.Range(0, 100) < plus1Percent) ? 1 : 0;
+    // 確率判定用の関数
+    bool Roll(int percent) => Random.Range(0, 100) < percent;
 
     public void OnEat()
     {
-        var ctx = GameContext.Instance;
-        var pet = ctx.PetStatus;
+        if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
+        var pet = GameContext.Instance.PetStatus;
 
         if (pet.Hunger >= FULL_HUNGER)
         {
-            messageUI.Show("今はお腹いっぱい…");
+            messageUI.Show("今はお腹いっぱい");
             return;
         }
 
-        // ✅ 今日のお世話カウント（1回だけ）
-        ctx.Daily.OnCare();
+        GameContext.Instance.DailyTracker.OnCareSuccess();
 
-        // 効果
-        pet.AddHunger(+25f);
-        pet.AddMood(+2f);
+        // --- ラフ画：空腹度+25 / 機嫌度+2 / コイン+3 ---
+        pet.AddHunger(25f);
+        pet.AddMood(2f);
+        GameData.Instance?.AddCoin(3);
 
-        int addTrust = (trustGainEatCount == 0) ? 1 : RollPlus1(40);
-        trustGainEatCount++;
+        // --- ラフ画：信頼度 初回+1 / 2回目以降 40%の確率で+1 ---
+        int addTrust = (eatCount == 0) ? 1 : (Roll(40) ? 1 : 0);
+        eatCount++;
         pet.AddTrust(addTrust);
 
-        GameData.Instance?.AddCoin(5);
-
-        messageUI.Show($"ご飯！Hunger+25 / Mood+2 / Trust+{addTrust} / Coin+5");
+        messageUI.Show($"わぁ〜い！おいしい！\nもぐもぐ");
     }
 
     public void OnPet()
     {
-        var ctx = GameContext.Instance;
-        var pet = ctx.PetStatus;
+        if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
+        var pet = GameContext.Instance.PetStatus;
 
         if (pet.Mood >= HAPPY_MOOD)
         {
-            messageUI.Show("今は満足してるみたい。なでなで不要！");
+            messageUI.Show("今はゆっくりしたいみたい。");
             return;
         }
 
-        ctx.Daily.OnCare();
+        GameContext.Instance.DailyTracker.OnCareSuccess();
 
-        pet.AddMood(+6f);
+        // --- ラフ画：機嫌度 初回+5 / 2回目以降 70%の確率で+1 / コイン+3 ---
+        float addMood = (petCount == 0) ? 5f : (Roll(70) ? 1f : 0f);
+        pet.AddMood(addMood);
+        GameData.Instance?.AddCoin(3);
 
-        int addTrust = (trustGainPetCount == 0) ? 3 : RollPlus1(30);
-        trustGainPetCount++;
-        pet.AddTrust(addTrust);
+        // 信頼度（なでなでも基本+1しておこうか！）
+        pet.AddTrust(1);
+        petCount++;
 
-        GameData.Instance?.AddCoin(5);
-
-        messageUI.Show($"なでた！Mood+6 / Trust+{addTrust} / Coin+5");
+        messageUI.Show("えへへ、なでなで大好き！\nもっとやって〜！");
     }
 
     public void OnPlay()
     {
-        var ctx = GameContext.Instance;
-        var pet = ctx.PetStatus;
+        if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
+        var pet = GameContext.Instance.PetStatus;
 
         if (pet.Mood >= HAPPY_MOOD)
         {
-            messageUI.Show("今はゆっくりしたいみたい…");
+            messageUI.Show("今はゆっくりしたいみたい。");
             return;
         }
 
-        ctx.Daily.OnCare();
+        GameContext.Instance.DailyTracker.OnCareSuccess();
 
+        // --- ラフ画：空腹度-5 / 機嫌度+10 / 信頼度+1 / コイン+5 ---
+        // 信頼度 2回目以降は 50%で+1
         pet.AddHunger(-5f);
-        pet.AddMood(+12f);
-
-        int addTrust = (trustGainPlayCount == 0) ? 2 : RollPlus1(50);
-        trustGainPlayCount++;
-        pet.AddTrust(addTrust);
-
+        pet.AddMood(10f);
         GameData.Instance?.AddCoin(5);
 
-        messageUI.Show($"遊んだ！Hunger-5 / Mood+12 / Trust+{addTrust} / Coin+5");
+        int addTrust = (playCount == 0) ? 1 : (Roll(50) ? 1 : 0);
+        playCount++;
+        pet.AddTrust(addTrust);
+
+        messageUI.Show("たのしいね！\nいっしょに遊べてうれしいな！");
     }
 
     public void OnBath()
     {
-        var ctx = GameContext.Instance;
-        var pet = ctx.PetStatus;
+        if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
 
-        // ✅ 日付跨ぎの更新（0時跨ぎ）をここでやっておくと事故りにくい
-        ctx.Daily.EnsureTodayAndCheckNewDay();
+        GameContext.Instance.DailyTracker.OnCareSuccess();
 
-        if (!ctx.Daily.CanBath())
-        {
-            messageUI.Show("今日はもうお風呂入れられない！");
-            return;
-        }
+        // --- ラフ画：1日1回 / 機嫌度+15 / 信頼度+2 / コイン+5 ---
+        // ※「1日1回」の制限は DailyTracker がやってくれるよ
+        GameContext.Instance.PetStatus.AddMood(15f);
+        GameContext.Instance.PetStatus.AddTrust(2);
+        GameData.Instance?.AddCoin(5);
 
-        ctx.Daily.OnCare();
-        ctx.Daily.MarkBath();
-
-        pet.AddMood(+15f);
-        pet.AddTrust(2);
-
-        GameData.Instance?.AddCoin(15);
-
-        messageUI.Show("お風呂！Mood+15 / Trust+2 / Coin+15");
+        messageUI.Show("お風呂できれいさっぱり！\nぽかぽかだよ〜。");
     }
 }

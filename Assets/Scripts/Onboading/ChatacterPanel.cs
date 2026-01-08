@@ -1,49 +1,38 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System; // Serializableを使うために必要
 
 public class CharacterPanelLite : MonoBehaviour
 {
-    [Header("Assign in Inspector (Size must be 6)")]
-    [SerializeField] private Button[] buttons;
-    [SerializeField] private GameObject[] selectedFrames;
+    // ID、ボタン、枠をセットで管理するための専用の「箱」を作るよ
+    [Serializable]
+    public struct CharacterSetting
+    {
+        public string characterId;      // "Dog" "Cat" など（PetDisplay.csと合わせてね！）
+        public Button button;           // キャラクターのボタン
+        public GameObject selectedFrame; // 選択した時に出る枠
+    }
 
-    [Header("Next")]
+    [Header("キャラクターの設定（Sizeを6にしてね）")]
+    [SerializeField] private CharacterSetting[] characterSettings;
+
+    [Header("画面遷移の設定")]
     [SerializeField] private Button nextButton;
-
-    // 遷移先（どっちでもOK）
-    [SerializeField] private GameObject namePanel;      // Panelを切り替える方式
-    [SerializeField] private GameObject characterPanel; // 自分自身でもOK
-    [SerializeField] private string[] characterIds; // サイズ6、"Dog" "Cat" など
-
-
-    private int selectedIndex = -1;
+    [SerializeField] private GameObject namePanel;
 
     private void Awake()
     {
-        // ここで Null を早期発見できるようにする
-        if (buttons == null || buttons.Length == 0) Debug.LogError("Buttons is not assigned / empty");
-        if (selectedFrames == null || selectedFrames.Length == 0) Debug.LogError("SelectedFrames is not assigned / empty");
-        if (nextButton == null) Debug.LogError("NextButton is not assigned");
-
-        if (buttons != null && selectedFrames != null && buttons.Length != selectedFrames.Length)
-            Debug.LogError($"Buttons.Length ({buttons.Length}) != SelectedFrames.Length ({selectedFrames.Length})");
-
-        // どれがnullか特定したい時に超効く
-        if (buttons != null)
+        // セットし忘れがないかチェック！
+        if (characterSettings == null || characterSettings.Length == 0)
         {
-            for (int i = 0; i < buttons.Length; i++)
-                if (buttons[i] == null) Debug.LogError($"Buttons[{i}] is NULL");
+            Debug.LogError("CharacterSettingsが空っぽだよ！インスペクターで設定してね。");
         }
-        if (selectedFrames != null)
-        {
-            for (int i = 0; i < selectedFrames.Length; i++)
-                if (selectedFrames[i] == null) Debug.LogError($"SelectedFrames[{i}] is NULL");
-        }
+        if (nextButton == null) Debug.LogError("NextButtonがセットされてないよ！");
     }
 
     private void Start()
     {
-        // Nextは選ぶまで無効
+        // 1. 最初は「次へ」ボタンを押せないようにする
         if (nextButton != null)
         {
             nextButton.interactable = false;
@@ -51,66 +40,68 @@ public class CharacterPanelLite : MonoBehaviour
             nextButton.onClick.AddListener(OnNext);
         }
 
-        // 全枠オフ
-        HideAllFrames();
-
-        // ボタンにクリック登録
-        if (buttons != null)
+        // 2. すべてのボタンに「押した時の動き」を登録するよ
+        foreach (var setting in characterSettings)
         {
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                int index = i; // クロージャ対策
-                if (buttons[i] == null) continue;
+            if (setting.button == null) continue;
 
-                buttons[i].onClick.RemoveAllListeners();
-                buttons[i].onClick.AddListener(() => OnSelect(index));
-            }
+            // 枠を一旦消しておく
+            if (setting.selectedFrame != null) setting.selectedFrame.SetActive(false);
+
+            // ボタンを押した時、そのキャラのIDを渡して OnSelect を呼ぶ
+            string id = setting.characterId;
+            setting.button.onClick.RemoveAllListeners();
+            setting.button.onClick.AddListener(() => OnSelect(id));
         }
     }
 
-
-    private void OnSelect(int index)
+    private void OnSelect(string id)
     {
-        selectedIndex = index;
-
-        // 選択IDを保存（← これが今回の本題）
-        SaveManager.Instance.Data.selectedCharacterId = characterIds[index];
-
-        // ===== 見た目処理は今まで通り =====
-        HideAllFrames();
-
-        if (selectedFrames != null &&
-            index >= 0 &&
-            index < selectedFrames.Length &&
-            selectedFrames[index] != null)
+        // 3. 選んだIDをセーブデータ（メモリ）に一時保存
+        if (SaveManager.Instance != null && SaveManager.Instance.Data != null)
         {
-            selectedFrames[index].SetActive(true);
+            SaveManager.Instance.Data.selectedCharacterId = id;
         }
 
+        // 4. 見た目の更新（選んだIDの枠だけを表示する）
+        foreach (var setting in characterSettings)
+        {
+            if (setting.selectedFrame != null)
+            {
+                // 設定されているIDが、今選んだIDと同じなら表示(true)、違うなら非表示(false)
+                setting.selectedFrame.SetActive(setting.characterId == id);
+            }
+        }
+
+        // 5. キャラを選んだから「次へ」ボタンを有効にする
         if (nextButton != null)
             nextButton.interactable = true;
 
-        Debug.Log($"Selected character index = {selectedIndex}, id = {characterIds[index]}");
+        Debug.Log($"選んだキャラクターID: {id}");
     }
 
-
-    private void HideAllFrames()
-    {
-        if (selectedFrames == null) return;
-        for (int i = 0; i < selectedFrames.Length; i++)
-        {
-            if (selectedFrames[i] != null)
-                selectedFrames[i].SetActive(false);
-        }
-    }
-
-    // ↓ ここに public をつけるよ！
     public void OnNext()
     {
-        if (selectedIndex < 0) return;
-        if (namePanel != null) namePanel.SetActive(true);
-        if (characterPanel != null) characterPanel.SetActive(false);
-        else gameObject.SetActive(false);
-    }
+        // 6. 「次へ」が押された瞬間にファイルへ書き込み（セーブ）！
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.Save();
+            Debug.Log("キャラクターの選択をセーブしたよ！");
+        }
 
+        // 7. 次のパネル（名前入力）を表示して、自分を隠す
+        if (namePanel != null)
+        {
+            namePanel.SetActive(true);
+        }
+        this.gameObject.SetActive(false);
+    }
+    // CharacterPanel.cs (または相当するスクリプト) に追加
+    [SerializeField] private GameObject ownerPanelCard;
+
+    public void OnClickBack()
+    {
+        this.gameObject.SetActive(false); // 自分（キャラ選択）を消す
+        ownerPanelCard.SetActive(true);   // 最初のアカウント設定画面を出す
+    }
 }
