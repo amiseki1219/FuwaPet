@@ -55,7 +55,7 @@ public class SettingManager : MonoBehaviour
         if (birthdayText != null) birthdayText.text = data.ownerBirthday;
         if (characterNameText != null) characterNameText.text = data.petName;
         if (startDayText != null) startDayText.text = data.startDate + "〜";
-        if (playerIDText != null) playerIDText.text = "ID: " + data.playerId;
+        if (playerIDText != null) playerIDText.text = data.playerId;
     }
 
     // プロフィールボタンを押した時にパネルを出す用
@@ -136,28 +136,37 @@ public class SettingManager : MonoBehaviour
 
             if (SaveManager.Instance != null && sadCharacterDisplay != null)
             {
-                // ★ petName ではなく characterId を使うよ！
+                // ★あみまるの指摘通り characterId に修正！
                 string charID = SaveManager.Instance.Data.characterId;
 
-                // ファイル名を作る（例: "Dog_sad"）
-                string fileName = charID + "_sad";
-
-                // Resourcesから画像をロード
-                Sprite sadSprite = Resources.Load<Sprite>(fileName);
-
-                if (sadSprite != null)
+                // もし空っぽなら selectedCharacterId も見てみる
+                if (string.IsNullOrEmpty(charID))
                 {
-                    sadCharacterDisplay.sprite = sadSprite;
-                    Debug.Log("読み込み成功！: " + fileName);
+                    charID = SaveManager.Instance.Data.selectedCharacterId;
                 }
-                else
+
+                if (!string.IsNullOrEmpty(charID))
                 {
-                    // もし出ない時は、このログをコンソールで見てね！
-                    Debug.LogError($"画像が見つからないよ。Resources直下に「{fileName}」はあるかな？");
+                    // フォルダ名「SadCharacter/」を付けて、名前を完成させる
+                    string fileName = "SadCharacter/" + charID + "_sad";
+
+                    // ロードする
+                    Sprite sadSprite = Resources.Load<Sprite>(fileName);
+
+                    if (sadSprite != null)
+                    {
+                        sadCharacterDisplay.sprite = sadSprite;
+                        Debug.Log("読み込み成功！探したパス: " + fileName);
+                    }
+                    else
+                    {
+                        Debug.LogError("画像が見つからないよ！パスを確認してね: " + fileName);
+                    }
                 }
             }
         }
     }
+
     // パネルの中の「NO（いいえ）」ボタンを押した時
     public void CloseDeletePanel()
     {
