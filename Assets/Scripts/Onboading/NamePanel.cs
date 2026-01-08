@@ -1,62 +1,74 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 
 public class NamePanel : MonoBehaviour
 {
-    [Serializable]
-    public class CharacterView
+    [SerializeField] private TMP_InputField nameInputField;
+    [SerializeField] private Button decisionButton;
+    [SerializeField] private ConfirmPanel confirmPanel;
+
+    private void Start()
     {
-        public string id;      // "Dog" とか
-        public Sprite sprite;  // そのキャラ画像
+        if (decisionButton != null)
+        {
+            // ここを OnDecisionClick に変えるよ
+            decisionButton.onClick.AddListener(OnDecision);
+            decisionButton.interactable = false;
+        }
+
+        if (nameInputField != null)
+        {
+            nameInputField.onValueChanged.AddListener(OnValueChanged);
+        }
     }
 
-    [SerializeField] private Image characterImage;
-    [SerializeField] private CharacterView[] characters;
-
-    private void OnEnable()
+    private void OnValueChanged(string text)
     {
-        if (characterImage == null)
-        {
-            Debug.LogError("NamePanel: characterImage が null です");
-            return;
-        }
-
-        if (SaveManager.Instance == null)
-        {
-            Debug.LogError("SaveManager がまだ準備できていません");
-            return;
-        }
-
-        if (SaveManager.Instance.Data == null)
-        {
-            Debug.LogError("SaveManager.Data が null です");
-            return;
-        }
-
-        var id = SaveManager.Instance.Data.selectedCharacterId;
-
-        // IDに一致するSpriteを探す
-        foreach (var c in characters)
-        {
-            if (c != null && c.id == id)
-            {
-                if (c.sprite != null)
-                {
-                    characterImage.sprite = c.sprite;
-                    characterImage.enabled = true;
-                }
-                else
-                {
-                    Debug.LogWarning($"NamePanel: {id} のスプライトが null です");
-                    characterImage.enabled = false;
-                }
-                return;
-            }
-        }
-
-        // 見つからない時は非表示
-        Debug.LogWarning($"NamePanel: ID '{id}' のキャラクターが見つかりません");
-        characterImage.enabled = false;
+        decisionButton.interactable = !string.IsNullOrEmpty(text);
     }
+
+    // 元々の機能は残したまま、名前だけ保存できるようにしておくね
+    public void SavePetInfo()
+    {
+        var data = SaveManager.Instance.Data;
+        data.petName = nameInputField.text;
+    }
+    public void OnDecision()
+    {
+        // 1. 名前を保存する
+        if (SaveManager.Instance != null && SaveManager.Instance.Data != null)
+        {
+            SaveManager.Instance.Data.petName = nameInputField.text;
+            SaveManager.Instance.Save();
+            Debug.Log("名前をセーブしたよ！");
+        }
+
+        // 2. 確認パネルを「ゲームオブジェクト」として表示する
+        if (confirmPanel != null)
+        {
+            // ★ここを必ず .gameObject.SetActive(true) にしてね！
+            confirmPanel.gameObject.SetActive(true);
+
+            // 3. パネルの中身（テキストなど）を更新する
+            confirmPanel.Open(nameInputField.text);
+
+            Debug.Log("ConfirmPanelを表示させたよ！");
+        }
+
+        // 4. 自分（名前入力パネル）を消す
+        this.gameObject.SetActive(false);
+    }
+    // NamePanel.cs の中に追加
+    [SerializeField] private GameObject characterPanelCard;
+
+    public void OnClickBack()
+    {
+        this.gameObject.SetActive(false);    // 自分（名前入力）を消す
+        characterPanelCard.SetActive(true); // キャラ選択画面を出す
+    }
+
 }
+
