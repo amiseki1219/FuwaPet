@@ -5,87 +5,153 @@ public class GameData : MonoBehaviour
 {
     public static GameData Instance { get; private set; }
 
-    public int Coin { get; private set; }
-    public int Trust { get; private set; }
-    public string selectedCharacterId;
+    // ★【ここが心臓部】SaveManager経由でSaveDataにアクセスする窓口
+    private SaveData CurrentSave => SaveManager.Instance.Data;
 
-    // ★【修正】名前を2種類用意したよ
-    public string PetName { get; private set; } = "なまえ";
-    public string PlayerName { get; private set; } = "あみまる";
+    // --- お財布（SaveDataの値をそのまま返す） ---
+    public int Coin => CurrentSave.coinCount;
+    // GameData.cs のお財布セクションに追加
+    public int LunaStone => CurrentSave.lunaStoneCount;
+    public int Trust => CurrentSave.trust;
 
-    public long nextPet;
-    public long nextEat;
-    public long nextPlay;
-    public long nextBath;
+    // --- ペットとプレイヤーの情報（SaveDataを窓口にする） ---
+    public string PetName => CurrentSave.petName;
+    public string PlayerName => CurrentSave.ownerName;
+    public string selectedCharacterId => CurrentSave.selectedCharacterId;
+
+    // --- 時間関係（これもSaveDataから取る） ---
+    public long nextPet => CurrentSave.nextPet;
+    public long nextEat => CurrentSave.nextEat;
+    public long nextPlay => CurrentSave.nextPlay;
+    public long nextBath => CurrentSave.nextBath;
 
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        Load();
+
+        // SaveManager側でLoadが完了している必要があるお！
     }
 
-    // ★【修正】ペットの名前を保存する
+    // --- データの更新メソッドたち ---
+
+    public void AddCoin(int amount)
+    {
+        CurrentSave.coinCount += Mathf.Max(0, amount);
+        Save();
+    }
+
+    public void UseCoin(int amount)
+    {
+        CurrentSave.coinCount -= amount;
+        if (CurrentSave.coinCount < 0) CurrentSave.coinCount = 0;
+        Save();
+    }
+
+    public void AddLunaStone(int amount)
+    {
+        CurrentSave.lunaStoneCount += amount;
+        if (CurrentSave.lunaStoneCount < 0) CurrentSave.lunaStoneCount = 0;
+        Save();
+    }
+
     public void SetPetName(string newName)
     {
-        PetName = newName;
+        CurrentSave.petName = newName;
         Save();
     }
 
-    // ★【追加】ユーザーの名前を保存する
     public void SetPlayerName(string newName)
     {
-        PlayerName = newName;
+        CurrentSave.ownerName = newName;
         Save();
     }
 
+    // ★【重要】保存はPlayerPrefsじゃなくSaveManagerにお願いする
     public void Save()
     {
-        PlayerPrefs.SetInt("Coin", Coin);
-        PlayerPrefs.SetInt("Trust", Trust);
-        PlayerPrefs.SetString("PetName", PetName);
-        PlayerPrefs.SetString("PlayerName", PlayerName); // 保存！
-        PlayerPrefs.SetString("nextPet", nextPet.ToString());
-        PlayerPrefs.SetString("nextEat", nextEat.ToString());
-        PlayerPrefs.SetString("nextPlay", nextPlay.ToString());
-        PlayerPrefs.SetString("nextBath", nextBath.ToString());
-        PlayerPrefs.Save();
+        SaveManager.Instance.Save();
+        Debug.Log("SaveDataに保存したお！");
     }
+    // --- GameData.cs に追加 ---
 
-    void Load()
+    // ①初回限定パックが買えるかチェック
+    public bool CanBuyFirstTimePack()
     {
-        // --- コインの初期設定 (500コイン) ---
-        // 一旦 -1 を入れて、データがあるかないかチェックするよ
-        int savedCoin = PlayerPrefs.GetInt("Coin", -1);
-
-        if (savedCoin == -1)
-        {
-            // まだ一度も保存されてない（初めての人）なら500コインあげる！
-            Coin = 500;
-            Save(); // 忘れないうちに「500持ってるよ」って保存しちゃう
-        }
-        else
-        {
-            // すでに遊んだことがある人は、保存されてる数字を使う
-            Coin = savedCoin;
-        }
-
-        // --- その他の読み込み ---
-        Trust = PlayerPrefs.GetInt("Trust", 0);
-        PetName = PlayerPrefs.GetString("PetName", "なまえ");
-        PlayerName = PlayerPrefs.GetString("PlayerName", "あみまる");
-
-        // 時間関係の読み込み
-        long.TryParse(PlayerPrefs.GetString("nextPet", "0"), out nextPet);
-        long.TryParse(PlayerPrefs.GetString("nextEat", "0"), out nextEat);
-        long.TryParse(PlayerPrefs.GetString("nextPlay", "0"), out nextPlay);
-        long.TryParse(PlayerPrefs.GetString("nextBath", "0"), out nextBath);
-        //選んだキャラクターのIDを読み込む（デフォルト値０）
-        selectedCharacterId = PlayerPrefs.GetString("SelectedCharacterID", "Dog");
+        return !CurrentSave.isFirstTimePackBought;
     }
 
-    // 他のメソッド（AddCoinとか）は変えなくてOK！
-    public void AddCoin(int amount) { Coin += Mathf.Max(0, amount); }
-    public void AddTrust(int amount) { Trust += Mathf.Max(0, amount); }
+    // ②パックAが買えるかチェック（7日経過チェック）
+    public bool CanBuyPackA()
+    {
+        // 一度も買ってなければOK
+        if (CurrentSave.lastPackAPurchaseTicks == 0) return true;
+
+        DateTime lastDate = new DateTime(CurrentSave.lastPackAPurchaseTicks);
+        TimeSpan elapsed = DateTime.Now - lastDate;
+
+        return elapsed.TotalDays >= 7;
+    }
+
+    // ③パックBが買えるかチェック（7日経過チェック）
+    public bool CanBuyPackB()
+    {
+        if (CurrentSave.lastPackBPurchaseTicks == 0) return true;
+
+        DateTime lastDate = new DateTime(CurrentSave.lastPackBPurchaseTicks);
+        TimeSpan elapsed = DateTime.Now - lastDate;
+
+        return elapsed.TotalDays >= 7;
+    }
+
+    // --- 購入確定した時のデータ更新処理 ---
+
+    public void OnBuyFirstTimePack()
+    {
+        CurrentSave.isFirstTimePackBought = true;
+        Save();
+    }
+
+    public void OnBuyPackA()
+    {
+        CurrentSave.lastPackAPurchaseTicks = DateTime.Now.Ticks;
+        Save();
+    }
+
+    public void OnBuyPackB()
+    {
+        CurrentSave.lastPackBPurchaseTicks = DateTime.Now.Ticks;
+        Save();
+    }
+    // --- アイテム付与セクション（ここを追加だお！） ---
+
+
+    public void AddTalkTicket(int amount)
+    {
+        CurrentSave.talkTicketCount += amount;
+        Save();
+    }
+
+    public void AddSitterTicket(int amount)
+    {
+        CurrentSave.sitterTicketCount += amount;
+        Save();
+    }
+
+    public void AddCloudCandy(int amount)
+    {
+        CurrentSave.cloudCandyCount += amount;
+        Save();
+    }
+
+    public void AddDeco(string id)
+    {
+        if (!CurrentSave.ownedDecoIds.Contains(id))
+        {
+            CurrentSave.ownedDecoIds.Add(id);
+            Save();
+        }
+    }
+
 }

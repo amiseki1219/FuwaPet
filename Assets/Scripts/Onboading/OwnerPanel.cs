@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Game.Core;
+using System.Text.RegularExpressions;
 
 public class OwnerPanel : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class OwnerPanel : MonoBehaviour
 
     [SerializeField] private Button nextButton;
     [SerializeField] private OnboardingManager onboarding;
+    [SerializeField] private GameObject birthdayWarningText; // ★この1行を書き足すっぴ！
 
     private void Awake()
     {
@@ -51,13 +53,45 @@ public class OwnerPanel : MonoBehaviour
 
     void Validate()
     {
-        // ★3つとも文字が入っている時だけボタンが押せる！
-        bool isValid =
-            !string.IsNullOrWhiteSpace(nameInput.text) &&
-            !string.IsNullOrWhiteSpace(monthInput.text) &&
-            !string.IsNullOrWhiteSpace(dayInput.text);
+        // 1. 半角数字以外の文字が入っていないかチェック
+        bool isInvalidFormat = Regex.IsMatch(monthInput.text, @"[^0-9]") || Regex.IsMatch(dayInput.text, @"[^0-9]");
 
-        nextButton.interactable = isValid;
+        // 2. ありえない数字（月>12、日>31）のチェック
+        bool isInvalidRange = false;
+
+        // 月のチェック
+        if (int.TryParse(monthInput.text, out int month))
+        {
+            if (month < 1 || month > 12) isInvalidRange = true;
+        }
+
+        // 日のチェック
+        if (int.TryParse(dayInput.text, out int day))
+        {
+            if (day < 1 || day > 31) isInvalidRange = true;
+        }
+
+        // 3. 警告テキストの表示・非表示を切り替え
+        // 「数字じゃない時」か「範囲がおかしい時」に警告を出すよ
+        if (birthdayWarningText != null)
+        {
+            birthdayWarningText.SetActive(isInvalidFormat || isInvalidRange);
+
+            // 💡 警告メッセージを状況に合わせて変えたいなら、こんな風にもできるお！
+            var warningTxt = birthdayWarningText.GetComponent<TextMeshProUGUI>();
+            if (warningTxt != null)
+            {
+                if (isInvalidFormat) warningTxt.text = "※半角数字で入力してね";
+                else if (isInvalidRange) warningTxt.text = "※正しい日付を入力してね";
+            }
+        }
+
+        // 4. 全項目に入力があり、かつエラーがない時だけボタンを有効にする
+        bool isAllFilled = !string.IsNullOrWhiteSpace(nameInput.text) &&
+                           !string.IsNullOrWhiteSpace(monthInput.text) &&
+                           !string.IsNullOrWhiteSpace(dayInput.text);
+
+        nextButton.interactable = isAllFilled && !isInvalidFormat && !isInvalidRange;
     }
 
     public void SaveOwnerInfo()

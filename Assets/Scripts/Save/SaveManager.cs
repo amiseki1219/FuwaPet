@@ -47,9 +47,18 @@ public class SaveManager : MonoBehaviour
         {
             string json = File.ReadAllText(savePath);
             Data = JsonUtility.FromJson<SaveData>(json);
+
+            // ★追加：既存データにIDがない場合の救済処置
+            if (string.IsNullOrEmpty(Data.playerId))
+            {
+                Data.playerId = System.Guid.NewGuid().ToString("D").ToUpper();
+                Save(); // IDを発行したら即保存！
+                Debug.Log("<color=yellow>既存データに新しいプレイヤーIDを発行したお！: </color>" + Data.playerId);
+            }
         }
         else
         {
+            // ここで new SaveData() される時にIDが自動生成されるお
             Data = new SaveData();
             Data.lastDate = DateTime.Now.ToString("yyyy-MM-dd");
             Save();
