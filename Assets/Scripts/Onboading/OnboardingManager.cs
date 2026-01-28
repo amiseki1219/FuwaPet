@@ -4,50 +4,79 @@ using Game.Core;
 
 public class OnboardingManager : MonoBehaviour
 {
-    public enum OnboardingStep { Owner, Character, Name }
+    // ★ここが超重要！使う名前（ProfileImage, Confirm）をすべてここに登録するよ
+    public enum OnboardingStep
+    {
+        Owner,
+        ProfileImage,
+        Character,
+        Name,
+        Confirm
+    }
 
     [SerializeField] private OwnerPanel ownerPanel;
+    // ★ここを「GameObject」にすると、SetActiveのエラーが消えるよ！
+    [SerializeField] private GameObject profileSelectionPanel;
     [SerializeField] private CharacterPanelLite characterPanel;
     [SerializeField] private NamePanel namePanel;
+    [SerializeField] private ConfirmPanel confirmPanel;
 
-    private OnboardingStep currentStep;
+    private OnboardingStep currentStep = OnboardingStep.Owner;
 
     private void Start()
     {
-        // SaveManagerから「オンボーディングが終わってるか」を確認
         if (SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted)
         {
-            // 2回目以降の人はHOME画面へ！
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+            SceneManager.LoadScene("Home");
             return;
         }
-
-        // 初回の人はそのままチュートリアルの最初のパネル（OwnerPanel）を表示
         UpdateView();
     }
 
     public void Next()
     {
-        if (currentStep < OnboardingStep.Name)
+        // ★Confirm（最後）まで進めるように設定
+        if (currentStep < OnboardingStep.Confirm)
         {
             currentStep++;
             UpdateView();
         }
         else
         {
-            if (SaveManager.Instance != null)
-            {
-                SaveManager.Instance.Data.onboardingCompleted = true;
-                SaveManager.Instance.Save();
-            }
-            SceneManager.LoadScene("Home");
+            CompleteOnboarding();
         }
     }
 
     private void UpdateView()
     {
+        // 今のステップに合わせて、表示するパネルを切り替えるよ
         if (ownerPanel != null) ownerPanel.gameObject.SetActive(currentStep == OnboardingStep.Owner);
+        if (profileSelectionPanel != null) profileSelectionPanel.SetActive(currentStep == OnboardingStep.ProfileImage);
         if (characterPanel != null) characterPanel.gameObject.SetActive(currentStep == OnboardingStep.Character);
         if (namePanel != null) namePanel.gameObject.SetActive(currentStep == OnboardingStep.Name);
+
+        if (confirmPanel != null)
+        {
+            if (currentStep == OnboardingStep.Confirm)
+            {
+                confirmPanel.gameObject.SetActive(true);
+                // 保存されている名前を使って確認画面を開くよ
+                confirmPanel.Open(SaveManager.Instance.Data.petName);
+            }
+            else
+            {
+                confirmPanel.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void CompleteOnboarding()
+    {
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.Data.onboardingCompleted = true;
+            SaveManager.Instance.Save();
+        }
+        SceneManager.LoadScene("Care");
     }
 }

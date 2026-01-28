@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.IO;
 
 public class ConfirmPanel : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class ConfirmPanel : MonoBehaviour
     [Header("ボタン")]
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
+    [SerializeField] private RawImage userProfilePreview;
 
     // パネルを開く時に呼ばれる関数
     public void Open(string inputPetName)
@@ -37,6 +39,9 @@ public class ConfirmPanel : MonoBehaviour
         birthdayText.text = data.ownerBirthday;
         petNameText.text = inputPetName;
 
+        // ★追加：ユーザーが選んだ写真の読み込み
+        LoadUserProfileImage(data.profileImagePath);
+
         // 2. 画像の読み込み（Resources/Characters/フォルダから）
         Sprite petSprite = Resources.Load<Sprite>($"Characters/{data.selectedCharacterId}");
         if (petImage != null) petImage.sprite = petSprite;
@@ -52,6 +57,25 @@ public class ConfirmPanel : MonoBehaviour
         this.gameObject.SetActive(true);
         Transform cardTransform = transform.Find("Card");
         if (cardTransform != null) cardTransform.gameObject.SetActive(true);
+    }
+
+    // ★追加：写真を表示するヘルパー関数
+    private void LoadUserProfileImage(string path)
+    {
+        if (userProfilePreview == null) return;
+
+        if (!string.IsNullOrEmpty(path) && File.Exists(path))
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(bytes);
+            userProfilePreview.texture = texture;
+        }
+        else
+        {
+            // 写真がない場合のデフォルト（空っぽなど）
+            userProfilePreview.texture = null;
+        }
     }
 
     // ★YESボタンが押された時の最終処理
