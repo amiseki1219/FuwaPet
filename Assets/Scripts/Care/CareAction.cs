@@ -29,6 +29,21 @@ public class CareActions : MonoBehaviour
         // 画面起動時に両方セットするお！
         LoadUserProfile();
         UpdateBadgeDisplay();
+        LoadUserProfile();
+        UpdateBadgeDisplay();
+
+        // --- ★設定画面からの「ジャンプ合図」をチェックするお！ ---
+        if (SettingManager.shouldOpenProfileOnLoad)
+        {
+            if (profileDetailPanel != null)
+            {
+                profileDetailPanel.SetActive(true);
+            }
+            // 旗を折っておくお（次にCareSceneを普通に開いた時に出ないように！）
+            SettingManager.shouldOpenProfileOnLoad = false;
+
+            Debug.Log("<color=yellow>Settingシーンからのジャンプ成功だっぴ！</color>");
+        }
     }
 
     // --- プロフィール画像の読み込み ---

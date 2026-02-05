@@ -1,195 +1,105 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using Game.Core;
+using TMPro;
+using UnityEngine.SceneManagement; // ★ここを SceneManagement に修正したお！
 
 public class SettingManager : MonoBehaviour
 {
-    [Header("プロフィール表示用")]
-    [SerializeField] private TextMeshProUGUI ownerNameText;
-    [SerializeField] private TextMeshProUGUI birthdayText;
-    [SerializeField] private TextMeshProUGUI characterNameText;
-    [SerializeField] private TextMeshProUGUI startDayText;
+    // CareActions.csから参照される旗だっぴ！
+    public static bool shouldOpenProfileOnLoad = false;
 
-    [Header("パネル管理")]
-    [SerializeField] private GameObject profileDetailPanel;
-    [SerializeField] private TextMeshProUGUI playerIDText;
-    [SerializeField] private GameObject mainUI;
-    [SerializeField] private GameObject profileMainButton;
+    [Header("--- Panels & Navigation ---")]
+    [SerializeField] private GameObject settingPanel;
+    [SerializeField] private GameObject aiDataPanel;
+    [SerializeField] private GameObject deleteConfirmPanel;
 
-    [Header("サウンド設定")]
+    [Header("--- BGM Slider ---")]
     [SerializeField] private Slider bgmSlider;
 
-    [Header("通知ボタン")]
-    [SerializeField] private Button notificationOnBtn;
-    [SerializeField] private Button notificationOffBtn;
+    [Header("--- Sliding Toggles (SE & Notify) ---")]
+    [SerializeField] private RectTransform notifyHandle;
+    [SerializeField] private Image notifyBackground;
+    [SerializeField] private RectTransform seHandle;
+    [SerializeField] private Image seBackground;
 
-    [Header("効果音ボタン")]
-    [SerializeField] private Button seOnBtn;
-    [SerializeField] private Button seOffBtn;
+    [SerializeField] private float posOn = 40f;
+    [SerializeField] private float posOff = -40f;
+    [SerializeField] private Color colorOn = Color.white;
+    [SerializeField] private Color colorOff = Color.gray;
 
-    [Header("初期化パネルのキャラ用")]
-    [SerializeField] private Image sadCharacterDisplay; // パネルの中のImage枠
-    [SerializeField] private GameObject deleteConfirmPanel;
+    [Header("--- Info & Version ---")]
+    [SerializeField] private TextMeshProUGUI displayPlayerIdText;
+    [SerializeField] private TextMeshProUGUI versionText;
 
     private void Start()
     {
-        // 最初にデータを読み込んで表示するよ！
-        RefreshProfile();
+        RefreshUI();
 
-        // 最初は詳細パネルを閉じておくなら
-        if (profileDetailPanel != null) profileDetailPanel.SetActive(false);
+        if (versionText != null)
+            versionText.text = "Ver. " + Application.version;
 
-        // 初期状態をONにして色をつけておくよ
-        UpdateButtonVisuals(notificationOnBtn, notificationOffBtn, true);
-        UpdateButtonVisuals(seOnBtn, seOffBtn, true);
+        if (displayPlayerIdText != null && SaveManager.Instance != null)
+            displayPlayerIdText.text = "ID: " + SaveManager.Instance.Data.playerId;
     }
 
-    public void RefreshProfile()
+    public void OnProfileDetailsClicked()
+    {
+        if (SaveManager.Instance == null) return;
+
+        // 1. IDをコピー
+        string id = SaveManager.Instance.Data.playerId;
+        GUIUtility.systemCopyBuffer = id;
+        Debug.Log("<color=cyan>IDをコピーしたお！</color>");
+
+        // 2. 旗を立てる
+        shouldOpenProfileOnLoad = true;
+
+        // 3. シーン移動（SceneLoaderと名前を合わせたお！）
+        SceneManager.LoadScene("Care");
+    }
+
+    // --- 以下、ボタン処理など ---
+    public void OnContactClicked() => Application.OpenURL("https://example.com/contact");
+    public void OnTermsOfServiceClicked() => Application.OpenURL("https://example.com/terms");
+    public void OnAiDataUsageClicked() { if (aiDataPanel != null) aiDataPanel.SetActive(true); }
+    public void OnDeleteAccountClicked() { if (deleteConfirmPanel != null) deleteConfirmPanel.SetActive(true); }
+    public void OnRestorePurchaseClicked() => Debug.Log("購入情報を復元中...");
+
+    public void RefreshUI()
     {
         if (SaveManager.Instance == null) return;
         var data = SaveManager.Instance.Data;
-
-        // チュートリアルで保存したデータをテキストに流し込む
-        if (ownerNameText != null) ownerNameText.text = data.ownerName;
-        if (birthdayText != null) birthdayText.text = data.ownerBirthday;
-        if (characterNameText != null) characterNameText.text = data.petName;
-        if (startDayText != null) startDayText.text = data.startDate + "〜";
-        if (playerIDText != null) playerIDText.text = data.playerId;
+        if (bgmSlider != null) bgmSlider.value = data.bgmVolume;
+        UpdateSwitchVisuals(notifyHandle, notifyBackground, data.isNotificationOn);
+        UpdateSwitchVisuals(seHandle, seBackground, data.isSeOn);
+        AudioListener.volume = data.bgmVolume;
     }
 
-    // プロフィールボタンを押した時にパネルを出す用
-    public void OpenProfile()
-    {
-        RefreshProfile();
-
-        if (profileDetailPanel != null)
-        {
-            // 1. パネルをアクティブにする
-            profileDetailPanel.SetActive(true);
-
-            // ★2. これを追加！「自分を親子関係の最後（一番手前）に移動して！」という命令
-            profileDetailPanel.transform.SetAsLastSibling();
-        }
-
-        // 3. 他のUIを消す
-        if (mainUI != null) mainUI.SetActive(false);
-
-    }
-
-
-    public void CloseProfile()
-    {
-        if (profileDetailPanel != null) profileDetailPanel.SetActive(false);
-        if (mainUI != null) mainUI.SetActive(true);  // ★後ろを復活させる！
-
-    }
-
-    // スライダーを動かした時に呼ばれる関数
     public void OnBgmSliderChanged()
     {
-        if (bgmSlider == null) return;
-
-        float volume = bgmSlider.value; // 0.0 〜 1.0 の値
-
-        // 1. 実際に音量を変える（AudioManagerがあるならそこへ、なければとりあえずAudioListenerで全体を変える）
-        AudioListener.volume = volume;
-
-        // 2. 設定をセーブデータに保存する（後で実装しよう！）
-        Debug.Log("BGM音量を " + volume + " に変えたよ！");
+        SaveManager.Instance.Data.bgmVolume = bgmSlider.value;
+        AudioListener.volume = bgmSlider.value;
+        SaveManager.Instance.Save();
     }
 
-    // 通知ボタン用（ONはTrue, OFFはFalseをイベントから送るよ）
-    public void SetNotification(bool isOn)
+    public void ToggleNotification()
     {
-        UpdateButtonVisuals(notificationOnBtn, notificationOffBtn, isOn);
-        Debug.Log("通知を " + (isOn ? "ON" : "OFF") + " にしたよ！");
+        SaveManager.Instance.Data.isNotificationOn = !SaveManager.Instance.Data.isNotificationOn;
+        UpdateSwitchVisuals(notifyHandle, notifyBackground, SaveManager.Instance.Data.isNotificationOn);
+        SaveManager.Instance.Save();
     }
 
-    // 効果音ボタン用
-    public void SetSe(bool isOn)
+    public void ToggleSe()
     {
-        UpdateButtonVisuals(seOnBtn, seOffBtn, isOn);
-        Debug.Log("効果音を " + (isOn ? "ON" : "OFF") + " にしたよ！");
+        SaveManager.Instance.Data.isSeOn = !SaveManager.Instance.Data.isSeOn;
+        UpdateSwitchVisuals(seHandle, seBackground, SaveManager.Instance.Data.isSeOn);
+        SaveManager.Instance.Save();
     }
 
-    // 選ばれた方のボタンを明るく、選ばれてない方を暗くする魔法
-    private void UpdateButtonVisuals(Button onBtn, Button offBtn, bool isOn)
+    private void UpdateSwitchVisuals(RectTransform handle, Image bg, bool isOn)
     {
-        if (onBtn == null || offBtn == null) return;
-
-        // 色だけを変えるよ（1.0fが通常、0.5fが少し暗い状態）
-        // isOnがTrueなら：ONボタンを明るく(1.0f)、OFFボタンを少し暗く(0.5f)
-        onBtn.image.color = new Color(1f, 1f, 1f, isOn ? 1.0f : 0.5f);
-        offBtn.image.color = new Color(1f, 1f, 1f, isOn ? 0.5f : 1.0f);
-
-        // 【重要】ボタンの「反応」は絶対に消さない！
-        onBtn.interactable = true;
-        offBtn.interactable = true;
+        if (handle == null || bg == null) return;
+        handle.anchoredPosition = new Vector2(isOn ? posOn : posOff, 0);
+        bg.color = isOn ? colorOn : colorOff;
     }
-    public void OpenDeletePanel()
-    {
-        if (deleteConfirmPanel != null)
-        {
-            deleteConfirmPanel.SetActive(true);
-            deleteConfirmPanel.transform.SetAsLastSibling();
-
-            if (SaveManager.Instance != null && sadCharacterDisplay != null)
-            {
-                // ★あみまるの指摘通り characterId に修正！
-                string charID = SaveManager.Instance.Data.characterId;
-
-                // もし空っぽなら selectedCharacterId も見てみる
-                if (string.IsNullOrEmpty(charID))
-                {
-                    charID = SaveManager.Instance.Data.selectedCharacterId;
-                }
-
-                if (!string.IsNullOrEmpty(charID))
-                {
-                    // フォルダ名「SadCharacter/」を付けて、名前を完成させる
-                    string fileName = "SadCharacter/" + charID + "_sad";
-
-                    // ロードする
-                    Sprite sadSprite = Resources.Load<Sprite>(fileName);
-
-                    if (sadSprite != null)
-                    {
-                        sadCharacterDisplay.sprite = sadSprite;
-                        Debug.Log("読み込み成功！探したパス: " + fileName);
-                    }
-                    else
-                    {
-                        Debug.LogError("画像が見つからないよ！パスを確認してね: " + fileName);
-                    }
-                }
-            }
-        }
-    }
-
-    // パネルの中の「NO（いいえ）」ボタンを押した時
-    public void CloseDeletePanel()
-    {
-        if (deleteConfirmPanel != null)
-        {
-            deleteConfirmPanel.SetActive(false); // パネルを隠すだけ
-            Debug.Log("よかった、初期化はやめたよ！");
-        }
-    }
-
-    // パネルの中の「YES（はい）」ボタンを押した時
-    public void ExecuteDelete()
-    {
-        if (SaveManager.Instance != null)
-        {
-            // 1. データを真っ白にする（SaveManagerにある初期化を呼ぶ）
-            SaveManager.Instance.DeleteData(); // ※DeleteDataという名前で作ってあるかな？
-
-            Debug.Log("<color=red>全ての思い出を消去しました...</color>");
-
-            // 2. データを消した後は、タイトル画面（最初）に戻してあげよう！
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial"); // タイトルシーンの名前に合わせてね
-        }
-    }
-
 }
