@@ -21,7 +21,7 @@ public class CharacterPanelLite : MonoBehaviour
 
     [Header("表示パネルの設定")]
     [SerializeField] private GameObject previewListPanel;
-    [SerializeField] private GameObject namePanel;
+    [SerializeField] private GameObject profileEditPanel;
 
     [Header("アニメーション演出の設定")]
     [SerializeField] private float duration = 0.5f;
@@ -105,14 +105,36 @@ public class CharacterPanelLite : MonoBehaviour
 
     public void OnFinalDecide()
     {
+        Debug.Log("<color=cyan>【調査】OKボタンが押されたお！</color>");
+
         if (SaveManager.Instance != null)
         {
             string finalId = characterSettings[currentIndex].characterId;
             SaveManager.Instance.Data.selectedCharacterId = finalId;
+            SaveManager.Instance.Data.iconId = finalId;
             SaveManager.Instance.Save();
+            Debug.Log("セーブ完了だお！ ID: " + finalId);
         }
 
-        if (namePanel != null) namePanel.SetActive(true);
-        this.gameObject.SetActive(false);
+        OnboardingManager manager = FindAnyObjectByType<OnboardingManager>();
+
+        if (manager != null)
+        {
+            Debug.Log("<color=yellow>司令官（OnboardingManager）を見つけたお！Next()を呼ぶお。</color>");
+            manager.Next();
+        }
+        else
+        {
+            Debug.LogWarning("<color=red>司令官が見つからないお！手動で切り替えるっぴ。</color>");
+            if (profileEditPanel != null)
+            {
+                profileEditPanel.SetActive(true);
+                this.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("profileEditPanel の枠が空っぽ（None）だお！");
+            }
+        }
     }
 }
