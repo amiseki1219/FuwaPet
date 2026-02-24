@@ -1,5 +1,7 @@
 # YURUFUWorld（開発中）
-![YURUFU World Main Visual](Home画面.png)
+<p align="center">
+  <img src="Home画面.png" width="300" alt="YURUFU World Main Visual">
+</p>
 Unity 6 と AIを組み合わせた、癒やし系のペット育成アプリケーションです。
 最新のエンジン環境で、C#を用いたゲームロジックとAIによる動的なコミュニケーションの融合に挑戦しています。
 
