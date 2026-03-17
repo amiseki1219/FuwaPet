@@ -51,7 +51,7 @@ public class ProfileDetailPanel : MonoBehaviour
         }
 
         // --- 2. ユーザーフレーム ---
-        string frameId = !string.IsNullOrEmpty(data.selectedFrameId) ? data.selectedFrameId : "DefaultFrame";
+        string frameId = !string.IsNullOrEmpty(data.selectedFrameId) ? data.selectedFrameId : "Frame";
         Sprite frameSprite = Resources.Load<Sprite>("SpecialFrameUI/" + frameId);
         if (frameSprite != null && profileFrame != null)
         {

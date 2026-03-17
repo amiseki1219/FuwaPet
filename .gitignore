@@ -98,3 +98,12 @@ InitTestScene*.unity*
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 *.asset
+
+# Mac
+.DS_Store
+**/.DS_Store
+
+# APIキー（絶対にコミットしない）
+.env
+secrets.json
+

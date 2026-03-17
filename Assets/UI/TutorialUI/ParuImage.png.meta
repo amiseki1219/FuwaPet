@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4452b7e3b9630425ab8561393660e4c9
+guid: 65ccf00bc9e6f4afeb196bb9dccc9197
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2668481859254912018
-    second: ParuImage_0
+      213: 1693686985829195360
+    second: Gemini_Generated_Image_p466rkp466rkp466-removebg-preview_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ParuImage_0
+      name: Gemini_Generated_Image_p466rkp466rkp466-removebg-preview_0
       rect:
         serializedVersion: 2
-        x: 200
-        y: 28
-        width: 582
-        height: 808
+        x: 43
+        y: 18
+        width: 339
+        height: 442
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eeb798123e5a7fad0800000000000000
-      internalID: -2668481859254912018
+      spriteID: 06e1d0f075f218710800000000000000
+      internalID: 1693686985829195360
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ParuImage_0: -2668481859254912018
+      Gemini_Generated_Image_p466rkp466rkp466-removebg-preview_0: 1693686985829195360
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

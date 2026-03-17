@@ -142,10 +142,10 @@ TextureImporter:
       name: NextButton_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 408
-        height: 109
+        x: 3
+        y: 3
+        width: 496
+        height: 161
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
