@@ -1,70 +1,130 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Game.Core;
+using System.IO;
 
 public class CareActions : MonoBehaviour
 {
     [SerializeField] private MessageUI messageUI;
+    [SerializeField] private EatManager eatManager;
+    [SerializeField] private RawImage profilePreview;
 
-    // 定数（ラフ画の「MAX 100」などの設定）
+    [Header("プロフィール詳細パネルの参照")]
+    [SerializeField] private GameObject profileDetailPanel;
+
+    // ★追加：バッジを表示するためのRawImage
+    [SerializeField] private RawImage badgeImage;
+
     private const float FULL_HUNGER = 100f;
     private const float HAPPY_MOOD = 100f;
 
-    // お世話回数のカウント（初回ボーナス判定用）
     private int eatCount = 0;
     private int petCount = 0;
     private int playCount = 0;
 
-    // 確率判定用の関数
     bool Roll(int percent) => Random.Range(0, 100) < percent;
 
-    public void OnEat()
+    void Start()
+    {
+        // 画面起動時に両方セットするお！
+        LoadUserProfile();
+        UpdateBadgeDisplay();
+        LoadUserProfile();
+        UpdateBadgeDisplay();
+
+        // --- ★設定画面からの「ジャンプ合図」をチェックするお！ ---
+        if (SettingManager.shouldOpenProfileOnLoad)
+        {
+            if (profileDetailPanel != null)
+            {
+                profileDetailPanel.SetActive(true);
+            }
+            // 旗を折っておくお（次にCareSceneを普通に開いた時に出ないように！）
+            SettingManager.shouldOpenProfileOnLoad = false;
+
+            Debug.Log("<color=yellow>Settingシーンからのジャンプ成功だっぴ！</color>");
+        }
+    }
+
+    // --- プロフィール画像の読み込み ---
+    private void LoadUserProfile()
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.Data == null) return;
+        var data = SaveManager.Instance.Data;
+
+        // ProfileDetailPanelと同じく、iconIdがあればそれを優先するお！
+        string iconId = !string.IsNullOrEmpty(data.iconId) ? data.iconId : data.profileImagePath;
+        if (string.IsNullOrEmpty(iconId)) return;
+
+        Texture loadedIcon = Resources.Load<Texture>("SpecialIcon/" + iconId);
+        if (loadedIcon == null) loadedIcon = Resources.Load<Texture>("Icon/" + iconId);
+
+        if (loadedIcon != null && profilePreview != null)
+        {
+            profilePreview.texture = loadedIcon;
+        }
+    }
+
+    // ★追加：バッジの読み込み
+    public void UpdateBadgeDisplay()
+    {
+        if (badgeImage == null || BadgeManager.Instance == null) return;
+
+        // 今の最強バッジをもらってくる
+        string bestId = BadgeManager.Instance.GetCurrentBestBadgeId();
+
+        if (!string.IsNullOrEmpty(bestId))
+        {
+            Texture badgeTex = Resources.Load<Texture>("BadgeUI/" + bestId);
+            if (badgeTex != null)
+            {
+                badgeImage.enabled = true; // 表示！
+                badgeImage.texture = badgeTex;
+            }
+            else { badgeImage.enabled = false; }
+        }
+        else
+        {
+            badgeImage.enabled = false; // 0円なら消す！
+        }
+    }
+
+    public void OnClickProfileIcon()
+    {
+        if (profileDetailPanel != null)
+        {
+            profileDetailPanel.SetActive(true);
+        }
+    }
+
+    // --- 以下、お世話系の関数は変更なし ---
+    public void OnEat() { if (eatManager != null) eatManager.ToggleEatPanel(); }
+
+    public void GiveSnack(string snackName)
     {
         if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
+        if (GameData.Instance == null) return;
+        int cost = 10;
+        if (GameData.Instance.Coin < cost) { messageUI.Show("コインが足りないよ…！"); return; }
+        GameData.Instance.UseCoin(cost);
         var pet = GameContext.Instance.PetStatus;
-
-        if (pet.Hunger >= FULL_HUNGER)
-        {
-            messageUI.Show("今はお腹いっぱい");
-            return;
-        }
-
-        GameContext.Instance.DailyTracker.OnCareSuccess();
-
-        // --- ラフ画：空腹度+25 / 機嫌度+2 / コイン+3 ---
         pet.AddHunger(25f);
         pet.AddMood(2f);
-        GameData.Instance?.AddCoin(3);
-
-        // --- ラフ画：信頼度 初回+1 / 2回目以降 40%の確率で+1 ---
-        int addTrust = (eatCount == 0) ? 1 : (Roll(40) ? 1 : 0);
-        eatCount++;
-        pet.AddTrust(addTrust);
-
-        messageUI.Show($"わぁ〜い！おいしい！\nもぐもぐ");
+        messageUI.Show($"{snackName} をあげたよ！\nもぐもぐ");
+        if (eatManager != null) eatManager.ToggleEatPanel();
     }
 
     public void OnPet()
     {
         if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
         var pet = GameContext.Instance.PetStatus;
-
-        if (pet.Mood >= HAPPY_MOOD)
-        {
-            messageUI.Show("今はゆっくりしたいみたい。");
-            return;
-        }
-
+        if (pet.Mood >= HAPPY_MOOD) { messageUI.Show("今はゆっくりしたいみたい。"); return; }
         GameContext.Instance.DailyTracker.OnCareSuccess();
-
-        // --- ラフ画：機嫌度 初回+5 / 2回目以降 70%の確率で+1 / コイン+3 ---
         float addMood = (petCount == 0) ? 5f : (Roll(70) ? 1f : 0f);
         pet.AddMood(addMood);
         GameData.Instance?.AddCoin(3);
-
-        // 信頼度（なでなでも基本+1しておこうか！）
         pet.AddTrust(1);
         petCount++;
-
         messageUI.Show("えへへ、なでなで大好き！\nもっとやって〜！");
     }
 
@@ -72,40 +132,24 @@ public class CareActions : MonoBehaviour
     {
         if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
         var pet = GameContext.Instance.PetStatus;
-
-        if (pet.Mood >= HAPPY_MOOD)
-        {
-            messageUI.Show("今はゆっくりしたいみたい。");
-            return;
-        }
-
+        if (pet.Mood >= HAPPY_MOOD) { messageUI.Show("今はゆっくりしたいみたい。"); return; }
         GameContext.Instance.DailyTracker.OnCareSuccess();
-
-        // --- ラフ画：空腹度-5 / 機嫌度+10 / 信頼度+1 / コイン+5 ---
-        // 信頼度 2回目以降は 50%で+1
         pet.AddHunger(-5f);
         pet.AddMood(10f);
         GameData.Instance?.AddCoin(5);
-
         int addTrust = (playCount == 0) ? 1 : (Roll(50) ? 1 : 0);
         playCount++;
         pet.AddTrust(addTrust);
-
         messageUI.Show("たのしいね！\nいっしょに遊べてうれしいな！");
     }
 
     public void OnBath()
     {
         if (GameContext.Instance == null || GameContext.Instance.PetStatus == null) return;
-
         GameContext.Instance.DailyTracker.OnCareSuccess();
-
-        // --- ラフ画：1日1回 / 機嫌度+15 / 信頼度+2 / コイン+5 ---
-        // ※「1日1回」の制限は DailyTracker がやってくれるよ
         GameContext.Instance.PetStatus.AddMood(15f);
         GameContext.Instance.PetStatus.AddTrust(2);
         GameData.Instance?.AddCoin(5);
-
         messageUI.Show("お風呂できれいさっぱり！\nぽかぽかだよ〜。");
     }
 }
