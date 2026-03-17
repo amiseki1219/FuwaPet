@@ -251,12 +251,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Home
-
-'
+  m_text: Care
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 793886163d7e049d293db25ee89388a8, type: 2}
+  m_sharedMaterial: {fileID: -4150949516175520266, guid: 793886163d7e049d293db25ee89388a8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -346,7 +344,7 @@ GameObject:
   - component: {fileID: 1043223178}
   - component: {fileID: 1043223177}
   m_Layer: 5
-  m_Name: HomeButton
+  m_Name: CareButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -418,7 +416,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1576589838}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: GoToHome
+        m_MethodName: GotoCare
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
