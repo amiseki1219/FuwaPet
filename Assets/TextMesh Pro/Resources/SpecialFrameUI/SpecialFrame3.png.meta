@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_tgx4vqtgx4vqtgx4-removebg-preview_0
+      name: SpecialFrame3_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 31
-        width: 439
-        height: 449
+        x: 30
+        y: 5
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c26a17837ead9d8a0800000000000000
-      internalID: -6279747518772173268
+      spriteID: 3168f32cc12af4b459a92043e1742aab
+      internalID: 1534704172
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d166bfef7cbdb4835b632a166c530904
     internalID: 0
     vertices: []
     indices: 
@@ -175,6 +175,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Gemini_Generated_Image_tgx4vqtgx4vqtgx4-removebg-preview_0: -6279747518772173268
+      SpecialFrame3_0: 1534704172
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
