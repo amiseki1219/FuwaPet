@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Home.unity
     guid: 9b4f8ce03998c417293a1f511f345e1f
   - enabled: 1
-    path: Assets/Scenes/Care.unity
+    path: Assets/Scenes/Main.unity
     guid: 7e9aa51d531934c669d600a57309d509
   - enabled: 1
     path: Assets/Scenes/Setting.unity
@@ -26,6 +26,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: 689af05b93d6b4f97874829c1e585d40
+  - enabled: 0
+    path: Assets/Scenes/Ranking.unity
+    guid: c609f3ebae445430a8ed21b67b6670a0
+  - enabled: 1
+    path: Assets/Scenes/MyCollection.unity
+    guid: ed600b1cc225f49e392a46c06f84f844
+  - enabled: 1
+    path: Assets/Scenes/CoinPurchase.unity
+    guid: e78ff1a7fd10646f09977a84d2fbf789
+  - enabled: 1
+    path: Assets/Scenes/Gatya.unity
+    guid: e27860491701b492792a43167b42c495
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
