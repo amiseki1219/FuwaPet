@@ -1,32 +1,36 @@
 using UnityEngine;
-using Game.Pet;
 
 namespace Game.Core
 {
     public class GameContext : MonoBehaviour
     {
         public static GameContext Instance { get; private set; }
-
-        // 最初から中身を作っておくことで、他が読み取るときに「空っぽ」になるのを防ぐよ
-        public PetStatus PetStatus { get; set; } = new PetStatus();
-        public DailyCareTracker DailyTracker { get; private set; } = new DailyCareTracker();
+        public PetStatus PetStatus { get; private set; }
 
         private void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
-            PetStatus = new PetStatus();
             DontDestroyOnLoad(gameObject);
 
-            // 起動時に初期化を済ませる
-            DailyTracker.InitIfEmpty();
+            PetStatus = new PetStatus();
         }
 
-        private void Update()
+        private void Start()
         {
-            if (PetStatus == null) return;
-            PetStatus.Tick(Time.deltaTime);
-            DailyTracker.CheckDayRolloverAndApplyPenalty(PetStatus);
+            // SaveDataが読み込まれた後にPetStatusに値を反映
+            if (SaveManager.Instance?.Data != null)
+            {
+                PetStatus.LoadFromSave(SaveManager.Instance.Data);
+            }
+        }
+
+        // お世話後などに呼ぶ保存メソッド
+        public void SavePetStatus()
+        {
+            if (SaveManager.Instance?.Data == null) return;
+            PetStatus.SaveToSave(SaveManager.Instance.Data);
+            SaveManager.Instance.Save();
         }
     }
 }
