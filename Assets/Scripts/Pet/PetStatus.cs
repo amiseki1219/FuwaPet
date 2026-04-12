@@ -1,72 +1,90 @@
 using System;
 using UnityEngine;
 
-namespace Game.Pet
+namespace Game.Core
 {
     [Serializable]
     public class PetStatus
     {
-        public int Trust;          // 合計経験値（これを元にレベルを計算するよ）
-        public float Hunger;       // 0-100
-        public float Mood;         // 0-100
-        public bool IsProtected;
+        // ─── パラメーター ───────────────────────────
+        public float Hunger { get; private set; } = 50f;
+        public float Clean { get; private set; } = 50f;
+        public float Energy { get; private set; } = 50f;
+        public float Mood { get; private set; } = 50f;
+        public int Trust { get; private set; } = 0;
 
-        // 減少スピードの設定
-        public float HungerDecayPerSec = 0.01f;
-        public float MoodDecayPerSec = 0.006f;
+        // ─── 最終お世話時刻 ─────────────────────────
+        public DateTime LastFedTime { get; private set; } = DateTime.Now;
+        public DateTime LastBathTime { get; private set; } = DateTime.Now;
+        public DateTime LastPlayTime { get; private set; } = DateTime.Now;
 
-        public PetStatus(int trust = 0, float hunger = 50f, float mood = 50f)
+        // ─── SaveDataから初期値を読み込む ────────────
+        public void LoadFromSave(SaveData save)
         {
-            Trust = trust;
-            Hunger = hunger;
-            Mood = mood;
-            IsProtected = false;
+            Hunger = save.hunger;
+            Clean = save.clean;
+            Energy = save.energy;
+            Mood = save.mood;
+            Trust = save.trust;
         }
 
-        // ★あみまる専用：特殊なレベル計算ロジック
-        public int Level
+        // ─── SaveDataに書き込む ──────────────────────
+        public void SaveToSave(SaveData save)
         {
-            get
-            {
-                // 信頼度100ポイント（Lv.11になる直前）までは10刻み
-                if (Trust <= 100)
-                {
-                    return (Trust / 10) + 1;
-                }
-                else
-                {
-                    // 100ポイントを超えたら、そこからは30刻みでレベルアップ！
-                    int extraTrust = Trust - 100;
-                    return 11 + (extraTrust / 30);
-                }
-            }
+            save.hunger = Hunger;
+            save.clean = Clean;
+            save.energy = Energy;
+            save.mood = Mood;
+            save.trust = Trust;
         }
 
-        // 時間経過で減る処理（Trustは勝手に上げないよ！）
-        public void Tick(float deltaTime)
+        // ─── 加算メソッド ────────────────────────────
+        public void AddHunger(float v) => Hunger = Mathf.Clamp(Hunger + v, 0f, 100f);
+        public void AddClean(float v) => Clean = Mathf.Clamp(Clean + v, 0f, 100f);
+        public void AddEnergy(float v) => Energy = Mathf.Clamp(Energy + v, 0f, 100f);
+        public void AddMood(float v) => Mood = Mathf.Clamp(Mood + v, 0f, 100f);
+        public void AddTrust(int v) => Trust = Mathf.Max(0, Trust + v);
+
+        // ─── お世話時刻の更新 ────────────────────────
+        public void OnFed() => LastFedTime = DateTime.Now;
+        public void OnBath() => LastBathTime = DateTime.Now;
+        public void OnPlayed() => LastPlayTime = DateTime.Now;
+
+        // ─── 時間経過ペナルティ ──────────────────────
+        public void ApplyTimeDecay()
         {
-            Hunger = Mathf.Clamp(Hunger - HungerDecayPerSec * deltaTime, 0f, 100f);
-            Mood = Mathf.Clamp(Mood - MoodDecayPerSec * deltaTime, 0f, 100f);
+            DateTime now = DateTime.Now;
+
+            double hoursSinceFed = (now - LastFedTime).TotalHours;
+            double hoursSincePlay = (now - LastPlayTime).TotalHours;
+            double hoursSinceBath = (now - LastBathTime).TotalHours;
+
+            AddHunger(-Mathf.Floor((float)hoursSinceFed) * 2f);
+            AddEnergy(-Mathf.Floor((float)hoursSincePlay) * 1f);
+            AddClean(-Mathf.Floor((float)(hoursSinceBath / 3f)) * 1f);
+
+            float avg = (Hunger + Clean + Energy) / 3f;
+            if (avg < 30f) AddMood(-5f);
+            else if (avg < 40f) AddMood(-2f);
+
+            Debug.Log($"[PetStatus] TimeDecay適用 Hunger:{Hunger} Clean:{Clean} Energy:{Energy} Mood:{Mood}");
         }
 
-        // --- 各ステータスを操作する関数（Trustは別々に管理！） ---
-
-        // 信頼度を上げる（ご飯をあげた時などに呼んでね）
-        public void AddTrust(int value)
+        // ─── 信頼度レベル計算 ────────────────────────
+        public static int GetTrustLevel(int trust)
         {
-            Trust += value;
+            if (trust < 100) return 1;
+            if (trust < 400) return 2;
+            if (trust < 1400) return 3;
+            return 4 + (trust - 1400) / 2000;
         }
 
-        // 満腹度を上げる
-        public void AddHunger(float value)
+        public static float GetTrustFillAmount(int trust)
         {
-            Hunger = Mathf.Clamp(Hunger + value, 0f, 100f);
-        }
-
-        // 機嫌度を上げる
-        public void AddMood(float value)
-        {
-            Mood = Mathf.Clamp(Mood + value, 0f, 100f);
+            if (trust < 100) return trust / 100f;
+            if (trust < 400) return (trust - 100) / 300f;
+            if (trust < 1400) return (trust - 400) / 1000f;
+            return ((trust - 1400) % 2000) / 2000f;
         }
     }
 }
