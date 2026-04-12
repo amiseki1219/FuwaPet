@@ -770,8 +770,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0005340576, y: 0.000030517578}
-  m_SizeDelta: {x: 0.00097656, y: -0.000038147}
+  m_AnchoredPosition: {x: 6.3332977, y: -0.00015258789}
+  m_SizeDelta: {x: -12.667, y: -35.015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &793212692
 MonoBehaviour:
@@ -828,7 +828,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -885,6 +885,7 @@ GameObject:
   - component: {fileID: 848555912}
   - component: {fileID: 848555911}
   - component: {fileID: 848555913}
+  - component: {fileID: 848555914}
   m_Layer: 5
   m_Name: BackGround
   m_TagString: Untagged
@@ -965,6 +966,20 @@ MonoBehaviour:
   daySprite: {fileID: 8816078528562127398, guid: 4b2f6691b13614cf8b93ca46401cdda5, type: 3}
   eveningSprite: {fileID: 5132570336875280678, guid: 365ab1885868f44d2956c0525b67a3ed, type: 3}
   nightSprite: {fileID: -6021159525106253389, guid: 44fd4db70e9324e44a2ce09599304336, type: 3}
+--- !u!114 &848555914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848555909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!1 &849401649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,7 +1145,7 @@ GameObject:
   - component: {fileID: 1043223178}
   - component: {fileID: 1043223177}
   m_Layer: 5
-  m_Name: CareButton
+  m_Name: MainBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1153,7 +1168,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 80, y: -80}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 90, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1043223177
 MonoBehaviour:
@@ -1231,7 +1246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2286481672070026441, guid: 49192aabb7532497b89f19561f57ac88, type: 3}
+  m_Sprite: {fileID: -179292252182795680, guid: 7a2476fc6aa9246fc9d8e241867cec5f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1541,7 +1556,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 150, y: 662.25}
+  m_AnchoredPosition: {x: 175, y: 691}
   m_SizeDelta: {x: 300, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197110270
@@ -1955,6 +1970,7 @@ GameObject:
   - component: {fileID: 1607182623}
   - component: {fileID: 1607182625}
   - component: {fileID: 1607182624}
+  - component: {fileID: 1607182626}
   m_Layer: 5
   m_Name: InputField_Chat
   m_TagString: Untagged
@@ -1980,7 +1996,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -506.74948}
-  m_SizeDelta: {x: 641, y: 132.501}
+  m_SizeDelta: {x: 641, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1607182624
 MonoBehaviour:
@@ -2020,6 +2036,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1607182622}
   m_CullTransparentMesh: 1
+--- !u!114 &1607182626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607182622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &1687665240
 GameObject:
   m_ObjectHideFlags: 0
