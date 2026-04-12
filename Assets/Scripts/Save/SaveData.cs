@@ -26,7 +26,7 @@ public class SaveData
 
     // --- お財布 ---
     public int coinCount = 300;       // 無償コイン
-    public int lunaStoneCount = 0;   // 有償ルナ・ストーン
+    public int lunaStoneCount = 50;   // 有償ルナ・ストーン
     public int trust = 0;            // なかよし度
 
     // --- アイテムのポケット ---
@@ -61,6 +61,12 @@ public class SaveData
     public List<string> ownedBackgrounds = new();
     public List<WordData> words = new();
     public List<DiaryEntry> diaries = new();
+
+    // --- ペットステータス ---
+    public float hunger = 50f;
+    public float clean = 50f;
+    public float energy = 50f;
+    public float mood = 50f;
 
     public SaveData()
     {
