@@ -5,23 +5,25 @@ using Game.Core; // これを追加！
 public class CurrencyHUD : MonoBehaviour
 {
     [SerializeField] TMP_Text coinText;
+    [SerializeField] TMP_Text lunaStoneText; // 有償コイン用
 
     void Update()
     {
-        // もしテキスト枠が空っぽなら、エラーにならないようにここで止める
-        if (coinText == null) return;
+        // どちらかのテキスト枠が空っぽなら止める
+        if (coinText == null || lunaStoneText == null) return;
 
-        // 【ここがポイント】
-        // GameData.Instance がまだ準備できていない時に
-        // 無理やり中身を見に行こうとしてエラーになっていたよ。
-        // だから「準備ができるまで待つ」処理を入れたよ！
         if (GameData.Instance == null)
         {
-            coinText.text = "---"; // 準備中はこう出す
+            coinText.text = "---";
+            lunaStoneText.text = "---";
             return;
         }
 
-        // 準備ができたらラフ画通りに表示！
-        coinText.text = $"{GameData.Instance.Coin} ";
+        // 無償コインを表示
+        coinText.text = $"{GameData.Instance.Coin}";
+
+        // 有償コイン（ダイヤ）を表示！
+        // GameDataにさっき追加した「PaidCoin」を見に行くよ
+        lunaStoneText.text = $"{GameData.Instance.LunaStone}";
     }
 }
