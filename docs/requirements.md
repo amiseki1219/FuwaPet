@@ -614,7 +614,7 @@ SNS拡散の鍵となる重要機能。
 |------|------|------|
 | フロントエンド | Unity 6（uGUI） | 既にプロジェクト進行中 |
 | キャラ表現 | **3D（Meshy生成）** | Live2D より高速、将来拡張性あり |
-| バックエンド | AWS Lambda + API Gateway | AIエンジニア転職武器 |
+| バックエンド | AWS Lambda（**Python**） + API Gateway | AIエンジニア転職武器、AI/MLライブラリ豊富 |
 | DB | **DynamoDB** | スケール、コスト、AI向きアクセスパターン |
 | 認証 | **Firebase Authentication** | Unity公式SDK、導入速度 |
 | AI | Google Gemini Flash / Pro | コスト・品質のバランス |
