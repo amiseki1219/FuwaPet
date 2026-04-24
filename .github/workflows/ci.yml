@@ -6,42 +6,54 @@ on:
   push:
     branches: [main]
 
+# =============================================================
+#  MUST   → CI fails (red)    : must fix before merge
+#  SHOULD → CI fails (yellow) : warn, strongly recommended
+#  COULD  → comment only      : nice to have, optional
+# =============================================================
+
 jobs:
-  secret-scan:
-    name: Secret Detection
+
+  # ---------------------------------------------------------
+  # MUST: Secret Detection
+  # ---------------------------------------------------------
+  must-secret-scan:
+    name: "MUST: Secret Detection"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-      - name: Check for secrets in tracked files
+      - name: Check for secrets
         run: |
-          echo "=== Checking for potential secrets ==="
+          echo "=== [MUST] Checking for potential secrets ==="
           FOUND=0
 
           # Firebase config files
           for f in google-services.json GoogleService-Info.plist; do
             if git ls-files --error-unmatch "$f" 2>/dev/null; then
-              echo "::error::$f is tracked by git. Remove it and add to .gitignore."
+              echo "::error::[MUST] $f is tracked by git. Remove it and add to .gitignore."
               FOUND=1
             fi
           done
 
           # .env files
           for f in $(git ls-files '*.env' '.env.*' 2>/dev/null); do
-            echo "::error::$f is tracked by git. Remove it and add to .gitignore."
+            echo "::error::[MUST] $f is tracked by git. Remove it and add to .gitignore."
             FOUND=1
           done
 
           # AWS credentials
           if git ls-files --error-unmatch credentials 2>/dev/null; then
-            echo "::error::AWS credentials file is tracked by git."
+            echo "::error::[MUST] AWS credentials file is tracked by git."
             FOUND=1
           fi
 
           # Scan for hardcoded keys (common patterns)
-          if git diff --cached --diff-filter=d -U0 HEAD~1 2>/dev/null | \
+          if git diff HEAD~1 HEAD 2>/dev/null | \
              grep -iE '(AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|sk-[a-zA-Z0-9]{48})'; then
-            echo "::error::Possible API key detected in diff."
+            echo "::error::[MUST] Possible API key detected in diff."
             FOUND=1
           fi
 
@@ -51,12 +63,92 @@ jobs:
 
           echo "No secrets detected."
 
+  # ---------------------------------------------------------
+  # SHOULD: Code Quality Warnings
+  # ---------------------------------------------------------
+  should-code-quality:
+    name: "SHOULD: Code Quality"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check TODO/FIXME/HACK in diff
+        run: |
+          echo "=== [SHOULD] Checking for TODO/FIXME/HACK in changes ==="
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- ':!.github/' || true)
+          MATCHES=$(echo "$DIFF" | grep -n '^\+' | grep -iE '(TODO|FIXME|HACK)' | grep -v '^\+\+\+' || true)
+          if [ -n "$MATCHES" ]; then
+            echo "::warning::[SHOULD] TODO/FIXME/HACK found in diff. Consider resolving before merge:"
+            echo "$MATCHES"
+          else
+            echo "No TODO/FIXME/HACK in diff."
+          fi
+
+      - name: Check PR size
+        run: |
+          echo "=== [SHOULD] Checking PR size ==="
+          FILE_COUNT=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | wc -l | tr -d ' ')
+          echo "Changed files: $FILE_COUNT"
+          if [ "$FILE_COUNT" -gt 20 ]; then
+            echo "::warning::[SHOULD] PR has $FILE_COUNT changed files. Consider splitting into smaller PRs."
+          fi
+
+      - name: Check orphaned .meta files
+        run: |
+          echo "=== [SHOULD] Checking for orphaned .meta changes ==="
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD || true)
+          for meta in $(echo "$CHANGED" | grep '\.meta$'); do
+            ASSET="${meta%.meta}"
+            if echo "$CHANGED" | grep -qF "$ASSET"; then
+              continue
+            fi
+            if [ ! -e "$ASSET" ] && [ ! -d "$ASSET" ]; then
+              echo "::warning::[SHOULD] $meta changed but $ASSET does not exist. Orphaned .meta file?"
+            fi
+          done
+          echo "Done."
+
+  # ---------------------------------------------------------
+  # COULD: Gentle Reminders (never fails)
+  # ---------------------------------------------------------
+  could-reminders:
+    name: "COULD: Reminders"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check docs update
+        run: |
+          echo "=== [COULD] Checking for docs updates ==="
+          DOCS_CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'docs/' 'CLAUDE.md' '*.md' | wc -l | tr -d ' ')
+          CODE_CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.cs' '*.py' '*.ts' | wc -l | tr -d ' ')
+          if [ "$CODE_CHANGED" -gt 0 ] && [ "$DOCS_CHANGED" -eq 0 ]; then
+            echo "::notice::[COULD] Code changed but no docs updated. Consider updating docs if needed."
+          fi
+
+      - name: Check commit message format
+        run: |
+          echo "=== [COULD] Checking Conventional Commits format ==="
+          COMMITS=$(git log --format="%s" origin/${{ github.base_ref }}...HEAD)
+          PATTERN="^(feat|fix|refactor|docs|test|ci|chore|style|perf|build|revert)(\(.+\))?: .+"
+          while IFS= read -r msg; do
+            if ! echo "$msg" | grep -qE "$PATTERN"; then
+              echo "::notice::[COULD] Commit message not in Conventional Commits format: '$msg'"
+            fi
+          done <<< "$COMMITS"
+          echo "Done."
+
   # --- Future jobs (uncomment when ready) ---
 
-  # python-lint:
-  #   name: Python Lint & Test
+  # must-python-test:
+  #   name: "MUST: Python Lint & Test"
   #   runs-on: ubuntu-latest
-  #   if: contains(github.event.pull_request.changed_files, 'backend/')
   #   steps:
   #     - uses: actions/checkout@v4
   #     - uses: actions/setup-python@v5
@@ -65,10 +157,9 @@ jobs:
   #     - run: pip install -r backend/requirements.txt
   #     - run: python -m pytest backend/tests/
 
-  # cdk-synth:
-  #   name: CDK Synth Check
+  # must-cdk-synth:
+  #   name: "MUST: CDK Synth Check"
   #   runs-on: ubuntu-latest
-  #   if: contains(github.event.pull_request.changed_files, 'backend/infra/')
   #   steps:
   #     - uses: actions/checkout@v4
   #     - uses: actions/setup-node@v4
