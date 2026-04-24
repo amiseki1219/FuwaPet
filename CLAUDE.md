@@ -23,10 +23,19 @@
 - **3Dキャラクター**（Meshy生成、Unity で3Dレンダリング、背景は2D）
 
 ### バックエンド
-- **AWS Lambda**（Python or Node.js、要決定）
+- **AWS Lambda**（**Python**）
+  - AI/ML系ライブラリが豊富、Gemini SDK の整備が良い
+  - 将来のAIエンジニア転職との整合性
 - **AWS API Gateway**
 - **AWS DynamoDB**（3テーブル構成: YurufuUsers / YurufuEvents / YurufuMemories）
-- **AWS EventBridge**（夜バッチスケジューラ）
+- **AWS EventBridge**（夜バッチスケジューラ、JST 3:00 AM = UTC 前日 18:00）
+
+### IaC（Infrastructure as Code）
+- **AWS CDK + TypeScript**（方向性確定、Level 1 着手直前に最終判断）
+  - Java 経験者にとって TypeScript は学習コスト低
+  - Lambda本体はPython、インフラ定義はTypeScript のハイブリッド構成
+  - **L2 コンストラクト中心**に使用（L1は低レベルすぎ、L3は過剰抽象）
+  - GW中にCDK Getting Started 素振りを実施予定
 
 ### 認証・通知・分析
 - **Firebase Authentication**（匿名認証 + Apple/Google/メアド）
@@ -55,10 +64,19 @@
 - **非同期処理**: async/await を優先、コルーチン最小化
 - **null安全**: 可能な限り nullチェック、?? 演算子活用
 
-### Python/Node.js (Lambda)
-- **命名**: snake_case（Python）、camelCase（Node.js）
-- **エラーハンドリング**: 必ず try/catch、適切なログ出力
+### Python (Lambda本体)
+- **命名**: snake_case
+- **型ヒント**: 可能な限り記述（`def handler(event: dict, context: Any) -> dict:`）
+- **エラーハンドリング**: 必ず try/except、適切なログ出力（print ではなく logging モジュール使用）
 - **環境変数**: 秘密情報はAWS環境変数、絶対にコミットしない
+- **依存管理**: requirements.txt（または Poetry）
+
+### TypeScript (CDK / IaC)
+- **命名**: camelCase（変数・関数）、PascalCase（クラス・型・インターフェース）
+- **型定義**: any は避ける、明示的な型を優先
+- **CDKコンストラクト**: L2 を基本に使用
+- **スタック分割**: 機能単位（AuthStack / ApiStack / DataStack 等）で責務分離
+- **環境分け**: dev / prod の2環境想定、context で切り替え
 
 ### 共通
 - **コミットメッセージ**: Conventional Commits 形式推奨
@@ -164,12 +182,12 @@ yurufu-world/
 │   │   ├── Scenes/
 │   │   └── ...
 │   └── ...
-├── backend/                   # AWS Lambda コード
-│   ├── functions/
+├── backend/                   # AWS Lambda コード + IaC
+│   ├── functions/             # Lambda本体（Python）
 │   │   ├── chat/
 │   │   ├── analyze_nightly/
 │   │   └── ...
-│   └── infra/                 # IaC（CDK/Terraform 検討）
+│   └── infra/                 # IaC（AWS CDK + TypeScript）
 ├── CLAUDE.md                  # このファイル
 ├── README.md
 └── .gitignore
@@ -195,6 +213,15 @@ A: リアルタイムは Gemini Flash、夜バッチは Gemini Pro（プラン�
 
 ### Q: 新機能を追加したい
 A: まず要件定義書に照らして「v1.0 に必要か」判断。v1.1以降で良いものは後回し推奨。
+
+### Q: Lambda を Node.js で書いていい？
+A: 既に **Python で確定**済み。理由: AI/MLライブラリの豊富さ、Gemini SDK 整備、将来のAIエンジニア転職との整合性。変更前にユーザーに相談してください。
+
+### Q: IaC を SAM や Terraform に変えていい？
+A: **AWS CDK + TypeScript** で方向性確定（Level 1 着手直前に最終判断予定）。SAM は YAML の表現力の限界、Terraform は AWS特化ではないためツール連携で劣る、という判断。変更前にユーザーに相談してください。
+
+### Q: CDK のスタック分割はどうする？
+A: 機能単位で分割（例: `AuthStack`, `ApiStack`, `DataStack`, `NotificationStack`）。DataStack（DynamoDB）は他スタックから参照されるため、依存関係の起点になる。
 
 ## 連絡先・参考資料
 
