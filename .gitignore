@@ -99,11 +99,27 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 *.asset
 
-# Mac
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# OS
 .DS_Store
 **/.DS_Store
+Thumbs.db
 
-# APIキー（絶対にコミットしない）
+# Secrets
 .env
+.env.*
+secrets/
 secrets.json
+google-services.json
+GoogleService-Info.plist
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
 
