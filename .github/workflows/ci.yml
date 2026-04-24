@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for secrets in tracked files
+        run: |
+          echo "=== Checking for potential secrets ==="
+          FOUND=0
+
+          # Firebase config files
+          for f in google-services.json GoogleService-Info.plist; do
+            if git ls-files --error-unmatch "$f" 2>/dev/null; then
+              echo "::error::$f is tracked by git. Remove it and add to .gitignore."
+              FOUND=1
+            fi
+          done
+
+          # .env files
+          for f in $(git ls-files '*.env' '.env.*' 2>/dev/null); do
+            echo "::error::$f is tracked by git. Remove it and add to .gitignore."
+            FOUND=1
+          done
+
+          # AWS credentials
+          if git ls-files --error-unmatch credentials 2>/dev/null; then
+            echo "::error::AWS credentials file is tracked by git."
+            FOUND=1
+          fi
+
+          # Scan for hardcoded keys (common patterns)
+          if git diff --cached --diff-filter=d -U0 HEAD~1 2>/dev/null | \
+             grep -iE '(AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|sk-[a-zA-Z0-9]{48})'; then
+            echo "::error::Possible API key detected in diff."
+            FOUND=1
+          fi
+
+          if [ "$FOUND" -eq 1 ]; then
+            exit 1
+          fi
+
+          echo "No secrets detected."
+
+  # --- Future jobs (uncomment when ready) ---
+
+  # python-lint:
+  #   name: Python Lint & Test
+  #   runs-on: ubuntu-latest
+  #   if: contains(github.event.pull_request.changed_files, 'backend/')
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.12'
+  #     - run: pip install -r backend/requirements.txt
+  #     - run: python -m pytest backend/tests/
+
+  # cdk-synth:
+  #   name: CDK Synth Check
+  #   runs-on: ubuntu-latest
+  #   if: contains(github.event.pull_request.changed_files, 'backend/infra/')
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #     - run: cd backend/infra && npm ci && npx cdk synth
