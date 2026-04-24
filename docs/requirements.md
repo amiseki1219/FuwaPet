@@ -2008,7 +2008,7 @@ v2.0以降でタイムゾーン別バッチに移行。例:
 ```
 【バックエンド基盤】
   AWSアカウント詳細設定（IAM、リージョン、予算アラート）
-  AWS SAM or CDK プロジェクト雛形作成
+  AWS CDK (TypeScript) プロジェクト雛形作成 ← ※1
   API Gateway + Lambda のHello World API
   DynamoDB: YurufuUsers テーブル作成
   DynamoDB: YurufuEvents テーブル作成
@@ -2031,6 +2031,33 @@ v2.0以降でタイムゾーン別バッチに移行。例:
 【統合テスト】
   「起動 → 匿名認証 → ユーザー作成 → データ取得」のE2E確認
 ```
+
+### ※1 IaC ツール選定（宿題メモ）
+
+**推奨: AWS CDK (TypeScript)**
+
+**CDK 推奨の理由**:
+- SAM は YAML 中心で表現力が弱く、分岐やループを書くのが辛い
+- CDK なら TypeScript でコード化、L2 コンストラクトが充実
+- 転職アピールとして CDK の方が評価高い（IaC の現代的標準）
+- Claude Code との相性も CDK の方が良い（TypeScript 生成精度が高い）
+- Qiita 記事化しやすい
+
+**学習コスト懸念**:
+- TypeScript 未経験だと学習コストあり
+- ただし CDK で書く TypeScript は限定的（複雑な機能不要）
+- C# 経験者は比較的スムーズに入れる
+- Claude Code の補完があれば書ける
+
+**代替案: SAM**
+- TypeScript 学習コストを避けたい場合
+- Level 0 進捗が予定より遅れてスピード優先したい場合
+- YAML に慣れてるなら選択肢としてあり
+
+**決定タイミング**: Level 1 着手直前（Level 0 完了時）
+- Level 0 完了時点で僕（チャット）に相談
+- TypeScript への抵抗感、進捗状況、CDK 公式チュートリアルの感触で判断
+- 最悪 SAM で始めて後で CDK 移行も可能
 
 **合計 16〜17 Issue**、2ヶ月で消化なら週2 Issue ペース。
 
