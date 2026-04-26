@@ -9,7 +9,7 @@
 - **ジャンル**: 癒し系 × AIチャット × キャラ育成（たまごっち+どうぶつの森+シムズ+ヤンデレコレの融合）
 - **プラットフォーム**: iOS / Android
 - **リリース目標**: 2027年春〜初夏
-- **開発体制**: 一人開発（エンジニア1年目）
+- **開発体制**: 個人開発
 - **作業時間**: 平日帰宅後2〜3時間、土日可変
 
 ### 詳細な要件定義書
@@ -109,6 +109,42 @@
 - BlenderMCP + Unity MCP で高速組み込み
 - 将来の部屋3D化との整合性
 
+### 6. Unity MCP 接続設定（確定済み）
+- Transport: HTTP モード（stdio は使わない）
+- .mcp.json の "type" フィールドは必須
+```json
+{
+  "mcpServers": {
+    "unityMCP": {
+      "type": "http",
+      "url": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}
+```
+- 毎回の起動手順:
+  1. Unity を Dock から起動
+  2. Window > MCP For Unity > Toggle MCP Window
+  3. Start Server をクリック
+  4. ターミナルで claude 起動
+  5. /mcp で connected / authenticated を確認
+
+### 7. キャラクター3Dモデルの方針
+- Level 0〜2 は Meshy デフォルト出力で十分（仮で進める）
+- フェルト感・品質追求は Level 3（2026年10月）で実施
+- 設計（性格・DB・AIプロンプト）は今ちゃんと決める
+- 見た目は仮でOK、中身の設計は妥協しない
+
+### 8. 確定済み技術選定（2026/4/25）
+- 夜バッチ実行時刻: JST 3:00 AM（= UTC 前日 18:00）
+  - 朝 7:30 のあいさつ通知までに分析完了が必要なため
+  - EventBridge ルールは「バッチ用」「通知用」で分けて作成
+
+### 9. UI 設計確定事項（2026/4/25）
+- HOME 画面は起動時専用（Tap to Start 画面）
+- Care 画面のナビから HOME ボタンを削除
+- Care 画面ナビは Shop / Setting / MyCollection の3個
+
 ## セキュリティ・プライバシー
 
 ### 絶対にコミットしないもの
@@ -163,6 +199,12 @@ venv/
 - まず `docs/requirements.md` を参照
 - それでも不明な場合はユーザーに質問
 - 推測で進めず、必ず確認
+
+### Git 操作方針
+- Git 操作（add / commit / push / merge / PR作成）はユーザーが手動で行う（Fork を使用）
+- Claude Code はコード生成・ファイル編集のみ担当
+- コミット前に必ず git status / diff をユーザーが確認する
+- ブランチは必ずユーザーが事前に作成する
 
 ### テストの方針
 - Unity: PlayMode テストで主要ロジックをカバー
