@@ -1,37 +1,52 @@
-# YURUFUWorld（開発中）
-<p align="center">
-  <img src="Home画面.png" width="300" alt="YURUFU World Main Visual">
-</p>
-Unity 6 と AIを組み合わせた、癒やし系のペット育成アプリケーションです。
-最新のエンジン環境で、C#を用いたゲームロジックとAIによる動的なコミュニケーションの融合に挑戦しています。
+# YURUFUワールド
 
-## 🌟 プロジェクトの概要
-「忙しい日常に、自分だけの癒やしのパートナーを」というコンセプトで開発しています。
-ユーザーの言葉をAIが理解し、ペットが個性豊かに反応する「次世代の育成体験」を提供することを目指しています。
-デザイン面では、ユーザーがリラックスできるよう「ゆるふわ」な世界観を大切にしています。
+![Unity](https://img.shields.io/badge/Unity-6-000000?logo=unity)
+![AWS](https://img.shields.io/badge/AWS-Lambda%20%7C%20DynamoDB-FF9900?logo=amazonaws)
+![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20FCM-FFCA28?logo=firebase)
+![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey)
 
-## 🛠 使用技術（テックスタック）
-* **ゲームエンジン:** Unity 6.3 LTS (6000.3.9f1) 
-* **言語:** C#
-* **AI連携:** OpenAI API (ChatGPT) 連携予定
-* **インフラ:** AWS (構築予定)
-* **開発ツール:** Visual Studio, Git / GitHub
+AIキャラクターと対話しながら、1年かけて「うちの子」を育てる癒し系モバイルアプリです。
 
-## 🚀 現在の実装状況と今後の予定
-現在は、ユーザー体験の根幹となるUIを中心に開発を進めています。
+## プロジェクト概要
 
-### 実装済み
-* **UIデザイン・実装:** 「ゆるふわ」な世界観を表現するUIのプロトタイプ制作。
-* **基本システム:** Unity上での画面遷移や基本的な操作ロジックの実装。
+| 項目 | 内容 |
+|------|------|
+| ジャンル | 癒し系 × AIチャット × キャラ育成 |
+| プラットフォーム | iOS / Android |
+| リリース目標 | 2027年 春〜初夏 |
+| 開発体制 | 個人開発 |
 
-### 今後の開発ロードマップ
-1. **キャラクターの3Dモデリング:** オリジナルキャラクターを3Dで制作し、Unity上でのアニメーションを実装。
-2. **AI対話基盤の構築:** OpenAI APIと連携し、ペットとリアルタイムで会話できる機能を統合。
-3. **インフラ構築 (AWS):** セキュアで拡張性の高いデータ管理のため、バックエンドインフラをAWSで構築。
+ユーザーの言葉をAIが理解し、キャラクターの性格が会話や行動を通じて変化していく「自分だけの子を育てる体験」を目指しています。
 
-## 💡 こだわりと挑戦
-* **最新環境での開発:** Unity 6の最新機能を活用し、より表現力豊かなゲーム体験を追求しています。
-* **技術の掛け合わせ:** 単なるゲーム制作に留まらず、AIやAWSインフラを組み合わせた「次世代のプロダクト」としての完成度を目指しています。
+## 技術スタック
 
----
-「技術で新しいエンタメ体験を作る」Unityエンジニアを目指し、日々開発を継続しています！
+### フロントエンド
+- **Unity 6**（uGUI） / C#
+- **3Dキャラクター** — Meshy Pro（image-to-3D）+ Blender で調整
+
+### バックエンド
+- **AWS Lambda**（Python） + API Gateway
+- **Amazon DynamoDB**（3テーブル構成）
+- **AWS EventBridge**（夜間バッチスケジューラ）
+
+### IaC
+- **AWS CDK**（TypeScript）— L2コンストラクト中心
+
+### 認証・通知・分析
+- **Firebase** Authentication / Cloud Messaging / Analytics / Crashlytics
+
+### AI
+- **Google Gemini Flash** — リアルタイム会話
+- **Google Gemini Pro** — 夜間バッチ分析（上位プラン）
+
+### 開発支援
+- Claude Code / Unity MCP / BlenderMCP
+
+## 開発状況
+
+現在 **Level 0（環境整備）** を進行中です。
+詳細な進捗は [GitHub Issues](../../issues) および [Milestones](../../milestones) を参照してください。
+
+## ドキュメント
+
+- [要件定義書](docs/requirements.md) — アプリ設計の全体像
