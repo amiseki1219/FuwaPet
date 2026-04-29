@@ -123,3 +123,11 @@ __pycache__/
 venv/
 .venv/
 
+# Fonts（大きいバイナリ、Git管理外）
+Assets/Fonts/*.ttf
+Assets/Fonts/*.otf
+Assets/Fonts/*.otf1
+Assets/Fonts/*_SDF.asset
+Assets/Fonts/*_SDF*.asset
+Assets/Fonts/japanese_characters.txt
+
