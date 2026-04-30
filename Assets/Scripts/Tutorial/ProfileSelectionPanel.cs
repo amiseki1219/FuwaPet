@@ -18,9 +18,6 @@ public class ProfileSelectionPanel : MonoBehaviour
     [Header("ボタンの設定")]
     [SerializeField] private Button nextButton; // ヒエラルキーの NextButton だお
 
-    [Header("連携する親パネル")]
-    [SerializeField] private ProfileEditPanel parentPanel; // ProfileEditPanelCard を入れるお
-
     private string temporarySelectedId;
 
     void Start()
@@ -78,13 +75,7 @@ public class ProfileSelectionPanel : MonoBehaviour
             Debug.Log($"<color=green>セーブ完了！ ID: {temporarySelectedId}</color>");
         }
 
-        // 2. 親画面（ProfileEditPanel）の表示を更新！
-        if (parentPanel != null)
-        {
-            parentPanel.RefreshDisplay();
-        }
-
-        // 3. 自分（ポップアップ）を閉じる
-        this.gameObject.SetActive(false);
+        // 2. 次のサブステップへ
+        FindAnyObjectByType<StoryPanelManager>()?.NextSub();
     }
 }

@@ -16,7 +16,7 @@ public class GameData : MonoBehaviour
 
     // --- ペットとプレイヤーの情報（SaveDataを窓口にする） ---
     public string PetName => CurrentSave.petName;
-    public string PlayerName => CurrentSave.ownerName;
+    public string PlayerName => CurrentSave.userName;
     public string selectedCharacterId => CurrentSave.selectedCharacterId;
 
     // --- 時間関係（これもSaveDataから取る） ---
@@ -82,7 +82,7 @@ public class GameData : MonoBehaviour
 
     public void SetPlayerName(string newName)
     {
-        CurrentSave.ownerName = newName;
+        CurrentSave.userName = newName;
         Save();
     }
 

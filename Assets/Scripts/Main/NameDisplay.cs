@@ -22,7 +22,7 @@ public class NameDisplay : MonoBehaviour
         // チェックが入っていれば「飼い主名」、入っていなければ「ペット名」を表示
         if (isOwnerName)
         {
-            textMesh.text = data.ownerName;
+            textMesh.text = data.userName;
         }
         else
         {

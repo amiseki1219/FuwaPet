@@ -19,10 +19,6 @@ public class CharacterPanelLite : MonoBehaviour
     [Header("4人のキャラクター設定")]
     [SerializeField] private List<CharacterSetting> characterSettings = new List<CharacterSetting>();
 
-    [Header("表示パネルの設定")]
-    [SerializeField] private GameObject previewListPanel;
-    [SerializeField] private GameObject profileEditPanel;
-
     [Header("アニメーション演出の設定")]
     [SerializeField] private float duration = 0.5f;
     [SerializeField] private float jumpOffset = -500f;
@@ -50,9 +46,15 @@ public class CharacterPanelLite : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        Debug.Log("<color=cyan>【CharacterPanelLite】OnEnable() 呼ばれた</color>");
+        OnStartSelection();
+    }
+
     public void OnStartSelection()
     {
-        if (previewListPanel != null) previewListPanel.SetActive(false);
+        Debug.Log("<color=cyan>【CharacterPanelLite】OnStartSelection() 呼ばれた index=0</color>");
         currentIndex = 0;
         UpdateDetailDisplay(true);
     }
@@ -69,15 +71,21 @@ public class CharacterPanelLite : MonoBehaviour
 
     private void UpdateDetailDisplay(bool useAnimation)
     {
-        // ★ここも .Count に修正だっぴ！
         for (int i = 0; i < characterSettings.Count; i++)
         {
             var setting = characterSettings[i];
-            if (setting.detailPanel == null) continue;
+            if (setting.detailPanel == null)
+            {
+                Debug.Log($"<color=red>【CharacterPanelLite】index={i} detailPanel が null</color>");
+                continue;
+            }
+            bool isActive = (i == currentIndex);
+            Debug.Log($"<color=yellow>【CharacterPanelLite】index={i} id={setting.characterId} isActive={isActive}</color>");
 
             if (i == currentIndex)
             {
                 setting.detailPanel.SetActive(true);
+                Debug.Log($"<color=lime>【CharacterPanelLite】SetActive({true}) 呼んだ直後 → activeSelf={setting.detailPanel.activeSelf} activeInHierarchy={setting.detailPanel.activeInHierarchy}</color>");
 
                 if (useAnimation && setting.animateTarget != null)
                 {
@@ -99,42 +107,21 @@ public class CharacterPanelLite : MonoBehaviour
             else
             {
                 setting.detailPanel.SetActive(false);
+                Debug.Log($"<color=lime>【CharacterPanelLite】SetActive({false}) 呼んだ直後 → activeSelf={setting.detailPanel.activeSelf} activeInHierarchy={setting.detailPanel.activeInHierarchy}</color>");
             }
         }
     }
 
     public void OnFinalDecide()
     {
-        Debug.Log("<color=cyan>【調査】OKボタンが押されたお！</color>");
-
         if (SaveManager.Instance != null)
         {
             string finalId = characterSettings[currentIndex].characterId;
             SaveManager.Instance.Data.selectedCharacterId = finalId;
             SaveManager.Instance.Data.iconId = finalId;
             SaveManager.Instance.Save();
-            Debug.Log("セーブ完了だお！ ID: " + finalId);
         }
 
-        OnboardingManager manager = FindAnyObjectByType<OnboardingManager>();
-
-        if (manager != null)
-        {
-            Debug.Log("<color=yellow>司令官（OnboardingManager）を見つけたお！Next()を呼ぶお。</color>");
-            manager.Next();
-        }
-        else
-        {
-            Debug.LogWarning("<color=red>司令官が見つからないお！手動で切り替えるっぴ。</color>");
-            if (profileEditPanel != null)
-            {
-                profileEditPanel.SetActive(true);
-                this.gameObject.SetActive(false);
-            }
-            else
-            {
-                Debug.LogError("profileEditPanel の枠が空っぽ（None）だお！");
-            }
-        }
+        FindAnyObjectByType<OnboardingManager>()?.Next();
     }
 }
