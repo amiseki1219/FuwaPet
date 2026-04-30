@@ -59,8 +59,8 @@ public class SettingManager : MonoBehaviour
     }
 
     // --- 以下、ボタン処理など ---
-    public void OnContactClicked() => Application.OpenURL("https://example.com/contact");
-    public void OnTermsOfServiceClicked() => Application.OpenURL("https://example.com/terms");
+    public void OnContactClicked() => Application.OpenURL("https://forms.gle/cw6MdGnq1Kibqbdr7");
+    public void OnTermsOfServiceClicked() => Application.OpenURL("https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae");
     public void OnAiDataUsageClicked() { if (aiDataPanel != null) aiDataPanel.SetActive(true); }
     public void OnDeleteAccountClicked() { if (deleteConfirmPanel != null) deleteConfirmPanel.SetActive(true); }
     public void OnRestorePurchaseClicked() => Debug.Log("購入情報を復元中...");

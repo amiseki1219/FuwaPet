@@ -11,7 +11,7 @@ public class ProfileDetailPanel : MonoBehaviour
     [SerializeField] private RawImage characterIcon;
 
     [Header("表示パーツ：テキスト")]
-    [SerializeField] private TextMeshProUGUI ownerNameText;
+    [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private TextMeshProUGUI birthdayText;
     [SerializeField] private TextMeshProUGUI petNameText;
     [SerializeField] private TextMeshProUGUI startDateText;
@@ -72,7 +72,7 @@ public class ProfileDetailPanel : MonoBehaviour
         }
 
         // --- 4. テキスト反映 ---
-        ownerNameText.text = data.ownerName;
+        userNameText.text = data.userName;
         playerIdText.text = "ID：" + (!string.IsNullOrEmpty(data.playerId) ? data.playerId : "--------");
         petNameText.text = !string.IsNullOrEmpty(data.petName) ? data.petName : "なまえなし";
         birthdayText.text = "誕生日：" + (!string.IsNullOrEmpty(data.ownerBirthday) ? data.ownerBirthday : "未設定");

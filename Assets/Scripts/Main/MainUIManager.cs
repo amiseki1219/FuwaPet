@@ -83,7 +83,7 @@ public class MainUIManager : MonoBehaviour
     private void SetUserInfo()
     {
         if (userNameText != null)
-            userNameText.text = _save.ownerName;
+            userNameText.text = _save.userName;
 
         if (!string.IsNullOrEmpty(_save.iconId))
         {

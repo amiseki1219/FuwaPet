@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class SaveData
 {
     // --- オーナー情報 ---
-    public string ownerName;
+    public string userName;
     public string ownerBirthday;
     public string playerId;
 
@@ -19,7 +19,8 @@ public class SaveData
     // --- ペット情報 ---
     public string characterId;
     public int petColorSlot;
-    public string petName;
+    public string petName; //デフォルトのペット名
+    public string petNickname = "";  // キャラのニックネーム（省略可）
     public string selectedCharacterId;
     public string startDate; // 出会った日
     public string lastDate;  // 最後に遊んだ日

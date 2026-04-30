@@ -22,7 +22,7 @@ public class HomeManager : MonoBehaviour
 
         string today = DateTime.Today.ToString("M月d日");
         string birthday = SaveManager.Instance.Data.ownerBirthday;
-        string user = SaveManager.Instance.Data.ownerName;
+        string user = SaveManager.Instance.Data.userName;
         string charID = SaveManager.Instance.Data.characterId;
         // ★ これを足して、UnityのConsoleウィンドウを見てみて！
         Debug.Log($"今日の判定: {today} / 保存されている誕生日: {birthday}");
