@@ -2,18 +2,41 @@
 
 このファイルは Claude Code がこのプロジェクトで作業する際のガイドです。
 
+> **最終更新**: 2026年5月1日
+> **更新履歴**: 末尾の「更新履歴」セクションを参照
+
+---
+
 ## プロジェクト概要
 
 **YURUFUワールド** - AIキャラクターと対話し、1年かけて「うちの子」を育てる癒やし系モバイルアプリ。
 
-- **ジャンル**: 癒し系 × AIチャット × キャラ育成（たまごっち+どうぶつの森+シムズ+ヤンデレコレの融合）
+- **ジャンル**: 癒し系 × AIチャット × キャラ育成（たまごっち + どうぶつの森 + シムズ + ヤンデレコレの融合）
 - **プラットフォーム**: iOS / Android
 - **リリース目標**: 2027年春〜初夏
-- **開発体制**: 個人開発
+- **開発体制**: 一人開発（エンジニア1年目）
 - **作業時間**: 平日帰宅後2〜3時間、土日可変
+- **運営者**: Ami Seki（関 あみ）/ 屋号 Ami Seki
 
 ### 詳細な要件定義書
 必ず `docs/requirements.md` を参照してください。このファイルにアプリ設計の全てが書かれています。
+
+### 重要な公開URL
+| 項目 | URL |
+|---|---|
+| 利用規約 | https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae |
+| プライバシーポリシー | https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785 |
+| お問い合わせ | https://forms.gle/cw6MdGnq1Kibqbdr7 |
+
+### AWS 環境情報
+| 項目 | 値 |
+|---|---|
+| リージョン | ap-northeast-1 |
+| IAMユーザー | yurufu-dev |
+| Account ID | 491852264509 |
+| 予算アラート | $10/月（amisato.n1219@gmail.com 通知） |
+
+---
 
 ## 技術スタック
 
@@ -35,7 +58,6 @@
   - Java 経験者にとって TypeScript は学習コスト低
   - Lambda本体はPython、インフラ定義はTypeScript のハイブリッド構成
   - **L2 コンストラクト中心**に使用（L1は低レベルすぎ、L3は過剰抽象）
-  - GW中にCDK Getting Started 素振りを実施予定
 
 ### 認証・通知・分析
 - **Firebase Authentication**（匿名認証 + Apple/Google/メアド）
@@ -56,18 +78,20 @@
 - **Unity MCP**（Unity エディタを Claude から操作）
 - **BlenderMCP**（Blender を Claude から操作）
 
+---
+
 ## コーディング規約
 
 ### C# (Unity)
 - **命名**: PascalCase（クラス、メソッド、publicプロパティ）、camelCase（ローカル変数、privateフィールド）
 - **データアクセス層の分離**: Repository パターンを採用（DB変更に備える）
 - **非同期処理**: async/await を優先、コルーチン最小化
-- **null安全**: 可能な限り nullチェック、?? 演算子活用
+- **null安全**: 可能な限り nullチェック、`??` 演算子活用
 
 ### Python (Lambda本体)
 - **命名**: snake_case
 - **型ヒント**: 可能な限り記述（`def handler(event: dict, context: Any) -> dict:`）
-- **エラーハンドリング**: 必ず try/except、適切なログ出力（print ではなく logging モジュール使用）
+- **エラーハンドリング**: 必ず try/except、適切なログ出力（`print` ではなく `logging` モジュール使用）
 - **環境変数**: 秘密情報はAWS環境変数、絶対にコミットしない
 - **依存管理**: requirements.txt（または Poetry）
 
@@ -82,6 +106,8 @@
 - **コミットメッセージ**: Conventional Commits 形式推奨
   - `feat:` 新機能、`fix:` バグ修正、`refactor:` リファクタ、`docs:` ドキュメント
 - **ブランチ戦略**: main / develop / feature/{issue番号}-{概要}
+
+---
 
 ## 重要な設計判断（要件定義書より抜粋）
 
@@ -110,8 +136,9 @@
 - 将来の部屋3D化との整合性
 
 ### 6. Unity MCP 接続設定（確定済み）
-- Transport: HTTP モード（stdio は使わない）
-- .mcp.json の "type" フィールドは必須
+- Transport: **HTTP モード**（stdio は使わない）
+- `.mcp.json` の `"type"` フィールドは必須
+
 ```json
 {
   "mcpServers": {
@@ -122,12 +149,13 @@
   }
 }
 ```
-- 毎回の起動手順:
-  1. Unity を Dock から起動
-  2. Window > MCP For Unity > Toggle MCP Window
-  3. Start Server をクリック
-  4. ターミナルで claude 起動
-  5. /mcp で connected / authenticated を確認
+
+**毎回の起動手順**:
+1. Unity を Dock から起動
+2. Window > MCP For Unity > Toggle MCP Window
+3. Start Server をクリック
+4. ターミナルで claude 起動
+5. `/mcp` で connected / authenticated を確認
 
 ### 7. キャラクター3Dモデルの方針
 - Level 0〜2 は Meshy デフォルト出力で十分（仮で進める）
@@ -135,15 +163,26 @@
 - 設計（性格・DB・AIプロンプト）は今ちゃんと決める
 - 見た目は仮でOK、中身の設計は妥協しない
 
-### 8. 確定済み技術選定（2026/4/25）
-- 夜バッチ実行時刻: JST 3:00 AM（= UTC 前日 18:00）
-  - 朝 7:30 のあいさつ通知までに分析完了が必要なため
-  - EventBridge ルールは「バッチ用」「通知用」で分けて作成
+### 8. 夜バッチ実行時刻（2026/4/25 確定）
+- **JST 3:00 AM**（= UTC 前日 18:00）
+- 朝 7:30 のあいさつ通知までに分析完了が必要なため
+- EventBridge ルールは「バッチ用」「通知用」で分けて作成
 
 ### 9. UI 設計確定事項（2026/4/25）
 - HOME 画面は起動時専用（Tap to Start 画面）
 - Care 画面のナビから HOME ボタンを削除
-- Care 画面ナビは Shop / Setting / MyCollection の3個
+- Care 画面ナビは **Shop / Setting / MyCollection** の3個
+
+### 10. Loading画面の方針（2026/5/1 確定）
+- **てくてく歩く4キャラ（ぱる・ここ・ぽこ・える）の2フレーム歩行アニメ**
+- 8フレームではなく **2フレーム交互ループ**（Aフレーム ⇄ Bフレーム、約0.2秒間隔）
+- プログレスバー連動 / 「LOADING...」テキスト表示
+- 表示タイミング: シーン遷移時 / API通信待機時の両方
+- 配置先:
+  - 素材: `Assets/Art/UI/Loading/`
+  - スクリプト: `Assets/Scripts/UI/Loading/`
+
+---
 
 ## セキュリティ・プライバシー
 
@@ -188,11 +227,13 @@ venv/
 .venv/
 ```
 
+---
+
 ## 作業方針
 
 ### Claude Code への依頼の仕方
 1. **Issueを明示**: 「Issue #X をやって」と伝えると Claude が該当タスクに集中できる
-2. **要件定義書を参照**: 「docs/requirements.md のセクションY を参照して実装」と指示
+2. **要件定義書を参照**: 「`docs/requirements.md` のセクションY を参照して実装」と指示
 3. **段階的に**: 大きい機能は小さいPRに分割
 
 ### Claude Code が迷ったら
@@ -201,27 +242,38 @@ venv/
 - 推測で進めず、必ず確認
 
 ### Git 操作方針
-- Git 操作（add / commit / push / merge / PR作成）はユーザーが手動で行う（Fork を使用）
-- Claude Code はコード生成・ファイル編集のみ担当
-- コミット前に必ず git status / diff をユーザーが確認する
+- Git 操作（add / commit / push / merge / PR作成）は**ユーザーが手動で行う**（Forkを使用）
+- Claude Code は**コード生成・ファイル編集のみ**担当
+- コミット前に必ず `git status` / `git diff` をユーザーが確認する
 - ブランチは必ずユーザーが事前に作成する
-- 作業開始前に必ず git branch で現在のブランチを確認する
+- 作業開始前に必ず `git branch` で現在のブランチを確認する
 - 指定されたブランチ以外では編集しない
 
-### テストの方針
-- Unity: PlayMode テストで主要ロジックをカバー
-- Lambda: ユニットテスト + ローカル実行での動作確認
-- E2E は実機テスト（Level 6）
+### Issue管理
+- **GitHub Projects** で管理
+- Issue番号を明示して作業依頼するとスムーズ
 
-## プロジェクト構造（想定）
+### テストの方針
+- **Unity**: PlayMode テストで主要ロジックをカバー
+- **Lambda**: ユニットテスト + ローカル実行での動作確認
+- **E2E**: 実機テスト（Level 6で実施）
+
+---
+
+## プロジェクト構造
 
 ```
 yurufu-world/
 ├── docs/
-│   └── requirements.md        # 要件定義書
+│   └── requirements.md        # 要件定義書（必読）
 ├── unity/                     # Unity プロジェクト
 │   ├── Assets/
+│   │   ├── Art/
+│   │   │   └── UI/
+│   │   │       └── Loading/   # Loading画面素材
 │   │   ├── Scripts/
+│   │   │   └── UI/
+│   │   │       └── Loading/   # Loading画面スクリプト
 │   │   ├── Prefabs/
 │   │   ├── Scenes/
 │   │   └── ...
@@ -237,12 +289,40 @@ yurufu-world/
 └── .gitignore
 ```
 
+---
+
 ## 現在の進捗フェーズ
 
-**Level 0: 環境整備**
+**Level 0: 環境整備 → Level 1: 基盤実装フェーズ移行中**
 
-現在、要件定義を完了し、実装に着手する段階。
-最新の Issue / Milestone 状況は GitHub Project を参照。
+### ✅ 完了済み
+- 要件定義書作成（v1.0）
+- AWS IAM ユーザー作成（yurufu-dev）+ CLI 設定（Issue #24）
+- 予算アラート設定（$10/月）
+- フォント（MPLUS Rounded）SDF 生成
+- Notion 利用規約・プライバシーポリシー公開
+- Google Forms お問い合わせフォーム作成
+- **Tutorial 実装完了**（HomePanel → TermsOfUsePanel → StoryPanel → CharacterPanelCard → ProfileSelectionPanelCard → Care）
+  - 動画再生（welcomeVideo.mp4）
+  - キャラ選択（poko / eru / koko / paru）
+  - ニックネーム保存
+  - DisAgreePanel（TermsOfUsePanel の子要素）
+- ownerName → userName 全置換
+- Loading画面素材作成（4キャラ歩行 1枚絵 + Aフレーム切り出し進行中）
+
+### 🔄 進行中
+- **Loading画面の実装**（次の着手タスク）
+  - Aフレーム素材切り出し（Figma作業中）
+  - Bフレーム作成（Aフレーム完了後）
+  - Unity実装（C# + Animator/スクリプト）
+
+### 📅 次の予定
+- Issue #23 Firebase プロジェクト作成
+- 旧ブランチ rescue（feature/chat-ui 等）
+
+最新の Issue / Milestone 状況は **GitHub Projects** を参照。
+
+---
 
 ## Q&A（Claude Code からよくある質問）
 
@@ -250,7 +330,7 @@ yurufu-world/
 A: DynamoDB は柔軟に属性追加できるので、`schemaVersion` フィールドを活用してマイグレーションを検討してください。データアクセス層を経由するので、その層だけ修正すれば大丈夫なはずです。
 
 ### Q: Live2D に変えたい？
-A: 既にMeshy + 3D に決定済み。理由は要件定義書の「付録B: 設計判断の履歴」参照。変更の前にユーザーに相談してください。
+A: 既に Meshy + 3D に決定済み。理由は要件定義書の「付録B: 設計判断の履歴」参照。変更の前にユーザーに相談してください。
 
 ### Q: どのAIモデルを使うべき？
 A: リアルタイムは Gemini Flash、夜バッチは Gemini Pro（プランによる）。コスト最適化済み。変更前にユーザーに相談してください。
@@ -262,14 +342,28 @@ A: まず要件定義書に照らして「v1.0 に必要か」判断。v1.1以�
 A: 既に **Python で確定**済み。理由: AI/MLライブラリの豊富さ、Gemini SDK 整備、将来のAIエンジニア転職との整合性。変更前にユーザーに相談してください。
 
 ### Q: IaC を SAM や Terraform に変えていい？
-A: **AWS CDK + TypeScript** で方向性確定（Level 1 着手直前に最終判断予定）。SAM は YAML の表現力の限界、Terraform は AWS特化ではないためツール連携で劣る、という判断。変更前にユーザーに相談してください。
+A: **AWS CDK + TypeScript** で方向性確定。SAM は YAML の表現力の限界、Terraform は AWS特化ではないためツール連携で劣る、という判断。変更前にユーザーに相談してください。
 
 ### Q: CDK のスタック分割はどうする？
 A: 機能単位で分割（例: `AuthStack`, `ApiStack`, `DataStack`, `NotificationStack`）。DataStack（DynamoDB）は他スタックから参照されるため、依存関係の起点になる。
 
+### Q: Loading画面のフレーム数を増やしたい
+A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討してください。
+
+---
+
 ## 連絡先・参考資料
 
-- リポジトリ: github.com/amiseki1219/yurufu-world（private）
-- 要件定義書: docs/requirements.md
-- Figma/デザイン: （あれば記載）
-- 公式Twitter: （開設したら記載）
+- **リポジトリ**: github.com/amiseki1219/yurufu-world（private）
+- **要件定義書**: docs/requirements.md
+- **Issue管理**: GitHub Projects
+
+---
+
+## 更新履歴
+
+| 日付 | 変更内容 |
+|---|---|
+| 2026/4/24 | 要件定義書 v1.0 作成 |
+| 2026/4/25 | UI設計確定事項（HOME画面・Careナビ）、夜バッチ時刻確定（JST 3:00 AM） |
+| 2026/5/1 | **2バージョンのCLAUDE.md統合**、Loading画面方針を「2フレーム歩行アニメ」に確定、AWS環境情報・公開URL追記、進捗フェーズ更新 |
