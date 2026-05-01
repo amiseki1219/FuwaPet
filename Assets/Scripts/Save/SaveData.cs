@@ -49,6 +49,9 @@ public class SaveData
     public long totalBillingAmount = 0; // 課金総額
     public string selectedBadgeId = ""; // 称号バッジ
 
+    // --- 初回起動日 ---
+    public string firstLoginDate;
+
     // --- お世話・システム ---
     public long nextPet = 0;
     public long nextEat = 0;
