@@ -189,10 +189,15 @@ public class OnboardingManager : MonoBehaviour
         videoPanel.SetActive(false);
         videoPlayer.gameObject.SetActive(false);
 
-        // 8. 次のステップ表示
+        // 8. 次のステップ表示（Loadingを先に表示してからパネル切り替え）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.ShowAsync();
         Next();
 
         // 9. フェードイン（白→透明）で CharacterPanelCard を見せる
+        // LoadingとフェードInが重なるのでLoadingを先に消す
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.HideAsync();
         if (fadeCanvasGroup != null)
         {
             float t = 0f;
@@ -222,6 +227,14 @@ public class OnboardingManager : MonoBehaviour
         }
         fadeCanvasGroup.alpha = 1f;
 
+        // Loading表示・パネル切り替え（白い間に実行）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.ShowAsync();
+        Next();
+        // LoadingとフェードInが重なるのでLoadingを先に消す
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.HideAsync();
+
         // 明転 0.5秒
         t = 0f;
         while (t < 0.5f)
@@ -232,8 +245,6 @@ public class OnboardingManager : MonoBehaviour
         }
         fadeCanvasGroup.alpha = 0f;
         fadeCanvasGroup.gameObject.SetActive(false);
-
-        Next();
     }
 
     // --- 完了 ---
