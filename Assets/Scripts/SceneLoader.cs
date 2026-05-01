@@ -3,22 +3,35 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public void GoToHome() => SceneManager.LoadScene("Home");
+    private void LoadScene(string sceneName)
+    {
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.LoadSceneWithLoading(sceneName);
+        else
+            SceneManager.LoadScene(sceneName);
+    }
+
+    public void GoToHome() => LoadScene("Home");
 
     public void GotoMain()
     {
         Debug.Log("Careボタンが押されたお！");
-        // Build Settingsに "Care" という名前で登録されている前提だっぴ
-        SceneManager.LoadScene("Main");
+        LoadScene("Main");
     }
-    
-    public void GotoCare() => SceneManager.LoadScene("Care");
-    public void GoToSetting() => SceneManager.LoadScene("Setting");
-    public void GoToShop() => SceneManager.LoadScene("Shop");
-    public void GoToCoinPurchase() => SceneManager.LoadScene("CoinPurchase");
-    public void GoToChat() => SceneManager.LoadScene("Chat");
-    public void GoToRanking() => SceneManager.LoadScene("Ranking");
-    public void GoToMyCollection() => SceneManager.LoadScene("MyCollection");
 
-    public static void LoadHome() => SceneManager.LoadScene("Home");
+    public void GotoCare() => LoadScene("Care");
+    public void GoToSetting() => LoadScene("Setting");
+    public void GoToShop() => LoadScene("Shop");
+    public void GoToCoinPurchase() => LoadScene("CoinPurchase");
+    public void GoToChat() => LoadScene("Chat");
+    public void GoToRanking() => LoadScene("Ranking");
+    public void GoToMyCollection() => LoadScene("MyCollection");
+
+    public static void LoadHome()
+    {
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.LoadSceneWithLoading("Home");
+        else
+            SceneManager.LoadScene("Home");
+    }
 }
