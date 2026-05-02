@@ -41,6 +41,9 @@ public class MainUIManager : MonoBehaviour
     [Header("やることパネル")]
     [SerializeField] private GameObject questPanel;
 
+    [Header("データ引き継ぎ案内")]
+    [SerializeField] private GameObject dataTransferPanel;
+
     private int _currentOpenIndex = -1;
     private PetStatus _status;
     private SaveData _save;
@@ -67,6 +70,13 @@ public class MainUIManager : MonoBehaviour
 
         _status.ApplyTimeDecay();
         RefreshAll();
+
+        // データ引き継ぎ案内：初回のみ表示
+        if (SaveManager.Instance != null && !SaveManager.Instance.Data.accountLinkShown)
+        {
+            if (dataTransferPanel != null)
+                dataTransferPanel.SetActive(true);
+        }
     }
 
     public void RefreshAll()
@@ -215,6 +225,34 @@ public class MainUIManager : MonoBehaviour
     {
         if (questPanel == null) return;
         questPanel.SetActive(false);
+    }
+
+    // ─── データ引き継ぎ案内 ──────────────────────
+
+    public void OnAccountLinkLater()
+    {
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.Data.accountLinkShown = true;
+            SaveManager.Instance.Save();
+        }
+        if (dataTransferPanel != null)
+            dataTransferPanel.SetActive(false);
+    }
+
+    public void OnAppleSignIn()
+    {
+        Debug.Log("Apple Sign In（Firebase未実装）");
+    }
+
+    public void OnGoogleSignIn()
+    {
+        Debug.Log("Google Sign In（Firebase未実装）");
+    }
+
+    public void OnEmailSignUp()
+    {
+        Debug.Log("メール登録（Firebase未実装）");
     }
 
 

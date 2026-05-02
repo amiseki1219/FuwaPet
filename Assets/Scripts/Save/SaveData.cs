@@ -58,6 +58,7 @@ public class SaveData
     public long nextPlay = 0;
     public long nextBath = 0;
     public bool onboardingCompleted;
+    public bool accountLinkShown = false; // データ引き継ぎ案内を表示済みか
 
     // --- 持ち物・記録リスト ---
     public List<string> ownedIcons = new();
