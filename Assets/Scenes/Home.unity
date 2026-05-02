@@ -545,7 +545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6640404073067587070, guid: f7725b443e7c34bf8beac460a82ab55c, type: 3}
+  m_Sprite: {fileID: 4433539168102762298, guid: 22ff7f0043ce240f2a0e8a998fbc9202, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1009,11 +1009,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 220722910}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: GotoMain
-        m_Mode: 1
+        m_MethodName: GoToStart
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

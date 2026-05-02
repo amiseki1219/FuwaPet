@@ -9,7 +9,6 @@ using System.Collections;
 public class OnboardingManager : MonoBehaviour
 {
     [Header("Onboarding Panels")]
-    [SerializeField] private GameObject homePanel;
     [SerializeField] private GameObject termsOfUsePanel;
     [SerializeField] private GameObject disAgreePanel;
     [SerializeField] private GameObject storyPanel;
@@ -22,13 +21,13 @@ public class OnboardingManager : MonoBehaviour
     [SerializeField] private RawImage videoRawImage;
     [SerializeField] private CanvasGroup fadeCanvasGroup;
 
-    private OnboardingStep currentStep = OnboardingStep.HomePanel;
+    private OnboardingStep currentStep = OnboardingStep.TermsOfUsePanel;
 
     private void Start()
     {
         if (SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted)
         {
-            SceneManager.LoadScene("Care");
+            SceneManager.LoadScene("Main");
             return;
         }
         UpdateView();
@@ -50,7 +49,7 @@ public class OnboardingManager : MonoBehaviour
 
     public void GoBack()
     {
-        if (currentStep > OnboardingStep.HomePanel)
+        if (currentStep > OnboardingStep.TermsOfUsePanel)
         {
             currentStep--;
             UpdateView();
@@ -59,8 +58,6 @@ public class OnboardingManager : MonoBehaviour
 
     private void UpdateView()
     {
-        if (homePanel != null)
-            homePanel.SetActive(currentStep == OnboardingStep.HomePanel);
         if (termsOfUsePanel != null)
             termsOfUsePanel.SetActive(currentStep == OnboardingStep.TermsOfUsePanel);
         if (storyPanel != null)
@@ -73,6 +70,7 @@ public class OnboardingManager : MonoBehaviour
         // DisAgreePanel は TermsOfUsePanel 以外では必ず非表示
         if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUsePanel)
             disAgreePanel.SetActive(false);
+
     }
 
     // --- AI同意しない場合 ---
@@ -255,6 +253,9 @@ public class OnboardingManager : MonoBehaviour
             SaveManager.Instance.Data.onboardingCompleted = true;
             SaveManager.Instance.Save();
         }
-        SceneManager.LoadScene("Care");
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.LoadSceneWithLoading("Main");
+        else
+            SceneManager.LoadScene("Main");
     }
 }

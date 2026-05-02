@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 58ee924712d6a43b594d72502b3d697e
+guid: 22ff7f0043ce240f2a0e8a998fbc9202
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6640404073067587070
-    second: "Home\u753B\u9762_0"
+      213: 4433539168102762298
+    second: Home_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "Home\u753B\u9762_0"
+      name: Home_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1090
-        height: 2368
+        width: 1741
+        height: 3763
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 20adfbb8dab88d3a0800000000000000
-      internalID: -6640404073067587070
+      spriteID: a37cb8c2268178d30800000000000000
+      internalID: 4433539168102762298
       vertices: []
       indices: 
       edges: []
@@ -135,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "Home\u753B\u9762_0": -6640404073067587070
+      Home_0: 4433539168102762298
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
