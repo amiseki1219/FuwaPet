@@ -21,6 +21,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private GameObject profileSaveButton;
     [SerializeField] private GameObject editButton;
     [SerializeField] private RawImage profileIconImage;
+    [SerializeField] private TextMeshProUGUI characterNameValueText;
 
     [Header("--- Data Transfer Panel ---")]
     [SerializeField] private GameObject dataTransferPanel;
@@ -142,6 +143,27 @@ public class SettingManager : MonoBehaviour
 
         if (profileIdText != null)
             profileIdText.text = data.playerId;
+
+        // キャラクター名表示（ニックネームがあればそれを優先）
+        if (characterNameValueText != null)
+        {
+            string charId = !string.IsNullOrEmpty(data.selectedCharacterId) ? data.selectedCharacterId : data.characterId;
+            if (!string.IsNullOrEmpty(data.petNickname))
+            {
+                characterNameValueText.text = data.petNickname;
+            }
+            else
+            {
+                characterNameValueText.text = charId switch
+                {
+                    "poko" => "ぽこ",
+                    "eru"  => "える",
+                    "koko" => "ここ",
+                    "paru" => "ぱる",
+                    _ => charId ?? ""
+                };
+            }
+        }
 
         // アイコン表示（iconId → profileImagePath の順にフォールバック）
         if (profileIconImage != null)
