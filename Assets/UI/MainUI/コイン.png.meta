@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 60a6c7ecccbee48af865cf8f72005908
+guid: d02bf1c9e5daa41feb7c646abcf4bc88
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 474957828125180888
-    second: "\u30B7\u30E7\u30C3\u30D7\u30DC\u30BF\u30F3_0"
+      213: -1209366513674373542
+    second: "\u30B3\u30A4\u30F3_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -110,19 +110,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -139,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u30B7\u30E7\u30C3\u30D7\u30DC\u30BF\u30F3_0"
+      name: "\u30B3\u30A4\u30F3_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 203
-        height: 215
+        width: 308
+        height: 98
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8d341b4d0a3679600800000000000000
-      internalID: 474957828125180888
+      spriteID: a56bf253097773fe0800000000000000
+      internalID: -1209366513674373542
       vertices: []
       indices: 
       edges: []
@@ -164,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 58b3cefb76bec4856992db4266decec9
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u30B7\u30E7\u30C3\u30D7\u30DC\u30BF\u30F3_0": 474957828125180888
+      "\u30B3\u30A4\u30F3_0": -1209366513674373542
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
