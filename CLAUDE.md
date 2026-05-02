@@ -182,6 +182,43 @@
   - 素材: `Assets/Art/UI/Loading/`
   - スクリプト: `Assets/Scripts/UI/Loading/`
 
+### 11. 起動フローとTutorialフローの保護（2026/5/2 確定）
+
+#### 起動フロー（絶対に変えない）
+```
+アプリ起動 → Home.unity（Index 0）
+  - onboardingCompleted == false（初回/アカウント削除後）
+      → Tutorial.unity へ自動遷移
+  - onboardingCompleted == true（2回目以降）
+      → Home画面表示 → MainBtn → Main.unity
+```
+
+#### Tutorialフロー（絶対に変えない）
+```
+Tutorial.unity 起動
+  → Step1: TermsOfUsePanel
+      同意ボタン → Next() → StoryPanel
+      同意しない → DisAgreePanel
+  → Step2: StoryPanel
+      FinalStory の TapButton → PlayDoorAnimation() → 動画再生 → Next()
+  → Step3: CharacterPanelCard
+  → Step4: ProfileSelectionPanelCard
+      StartButton → CompleteOnboarding() → onboardingCompleted=true → Main
+```
+
+#### 絶対にやってはいけないこと
+- `HomeManager.cs` の振り分けロジックを削除する
+- `PlayDoorAnimation()` の呼び出し元（StoryPanel の FinalStory TapButton）を変更する
+- `CompleteOnboarding()` の呼び出し元（StartButton）を変更する
+- `onboardingCompleted` をリセットせずにアカウント削除する
+- Tutorial 内のパネルを削除する際に呼び出し元ボタンも一緒に消す
+
+#### 関連ファイル
+- `HomeManager.cs`: 起動振り分けロジック
+- `OnboardingManager.cs`: Tutorialフロー管理
+- `SceneLoader.cs`: `GoToStart()` / `GoToTutorial()`
+- `SaveData.cs`: `onboardingCompleted` フラグ
+
 ---
 
 ## セキュリティ・プライバシー
@@ -367,3 +404,4 @@ A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討し
 | 2026/4/24 | 要件定義書 v1.0 作成 |
 | 2026/4/25 | UI設計確定事項（HOME画面・Careナビ）、夜バッチ時刻確定（JST 3:00 AM） |
 | 2026/5/1 | **2バージョンのCLAUDE.md統合**、Loading画面方針を「2フレーム歩行アニメ」に確定、AWS環境情報・公開URL追記、進捗フェーズ更新 |
+| 2026/5/2 | 起動フロー・Tutorialフロー保護ルールを追記（§11） |
