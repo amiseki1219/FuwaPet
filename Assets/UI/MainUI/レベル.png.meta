@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: abc76fdaa3e954927bc3f5f0fa9e98ab
+guid: 0a8ac487a4e4749378579aaa3ed2fc5f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1911855785667072852
-    second: Ellipse 62_0
+      213: 6813655387794231505
+    second: "\u30EC\u30D9\u30EB_0"
+  - first:
+      213: -3386471525144735324
+    second: "\u30EC\u30D9\u30EB_1"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,27 +99,75 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ellipse 62_0
+      name: "\u30EC\u30D9\u30EB_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
-        height: 300
+        width: 258
+        height: 344
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 453167625b6488a10800000000000000
-      internalID: 1911855785667072852
+      spriteID: 1d0d6639977fe8e50800000000000000
+      internalID: 6813655387794231505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30EC\u30D9\u30EB_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 258
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a1d5c51716d001d0800000000000000
+      internalID: -3386471525144735324
       vertices: []
       indices: 
       edges: []
@@ -125,7 +176,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7e40098381364480fbec478d6c188014
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +186,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ellipse 62_0: 1911855785667072852
+      "\u30EC\u30D9\u30EB_0": 6813655387794231505
+      "\u30EC\u30D9\u30EB_1": -3386471525144735324
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
