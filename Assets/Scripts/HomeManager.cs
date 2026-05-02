@@ -12,7 +12,16 @@ public class HomeManager : MonoBehaviour
 
     void Start()
     {
-        // 誕生日のチェックを先にするか、条件分岐で分けるのがおすすめ！
+        // 起動振り分け: 初回またはアカウント削除後はTutorialへ
+        if (SaveManager.Instance == null || !SaveManager.Instance.Data.onboardingCompleted)
+        {
+            if (LoadingManager.Instance != null)
+                LoadingManager.Instance.LoadSceneWithLoading("Tutorial");
+            else
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
+            return;
+        }
+
         UpdateUI();
     }
 
