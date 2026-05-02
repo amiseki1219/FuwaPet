@@ -13,6 +13,17 @@ public class SceneLoader : MonoBehaviour
 
     public void GoToHome() => LoadScene("Home");
 
+    /// <summary>
+    /// Home の MainBtn から呼ぶ。初回はチュートリアル、2回目以降は Main へ。
+    /// </summary>
+    public void GoToStart()
+    {
+        bool completed = SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted;
+        LoadScene(completed ? "Main" : "Tutorial");
+    }
+
+    public void GoToTutorial() => LoadScene("Tutorial");
+
     public void GotoMain()
     {
         Debug.Log("Careボタンが押されたお！");
