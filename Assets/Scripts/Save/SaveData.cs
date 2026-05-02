@@ -89,5 +89,8 @@ public class SaveData
         seVolume = 0.5f;
         isNotificationOn = true;
         isSeOn = true;
+
+        // チュートリアル：新規・削除後は必ず未完了にする
+        onboardingCompleted = false;
     }
 }
