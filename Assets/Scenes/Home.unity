@@ -545,7 +545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4433539168102762298, guid: 22ff7f0043ce240f2a0e8a998fbc9202, type: 3}
+  m_Sprite: {fileID: 9115605020260906401, guid: 7ed3410727584408bb4e7ea6497764f0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -715,6 +715,101 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404974384}
   m_CullTransparentMesh: 1
+--- !u!1 &1445710365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1445710367}
+  - component: {fileID: 1445710366}
+  m_Layer: 0
+  m_Name: SaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1445710366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445710365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1886ddfdc5846ac99762f3eece9894, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+  Data:
+    userName: 
+    ownerBirthday: 
+    playerId: E8B8B6E7-6C82-49BD-9A94-B551703359DF
+    profileImagePath: 
+    iconId: 
+    selectedFrameId: 
+    selectedPetFrameId: 
+    playerLevel: 0
+    characterId: 
+    petColorSlot: 0
+    petName: 
+    petNickname: 
+    selectedCharacterId: 
+    startDate: 
+    lastDate: 
+    coinCount: 300
+    lunaStoneCount: 50
+    trust: 0
+    cloudCandyCount: 0
+    talkTicketCount: 0
+    sitterTicketCount: 0
+    bgmVolume: 0.5
+    seVolume: 0.5
+    isNotificationOn: 1
+    isSeOn: 1
+    ownedDecoIds: []
+    isFirstTimePackBought: 0
+    lastPackAPurchaseTicks: 0
+    lastPackBPurchaseTicks: 0
+    totalBillingAmount: 0
+    selectedBadgeId: 
+    firstLoginDate: 
+    nextPet: 0
+    nextEat: 0
+    nextPlay: 0
+    nextBath: 0
+    onboardingCompleted: 0
+    ownedIcons:
+    - Icon1
+    - Icon2
+    ownedFrames:
+    - DefaultFrame
+    ownedBackgrounds:
+    - DefaultBG
+    words: []
+    diaries: []
+    hunger: 50
+    clean: 50
+    energy: 50
+    mood: 50
+--- !u!4 &1445710367
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445710365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1458110211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,3 +1165,4 @@ SceneRoots:
   - {fileID: 220722909}
   - {fileID: 1796313600}
   - {fileID: 1927544360}
+  - {fileID: 1445710367}
