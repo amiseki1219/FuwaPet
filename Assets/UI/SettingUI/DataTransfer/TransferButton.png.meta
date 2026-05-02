@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 7c9b2dc23052f4b3d9da37060046e7a5
+guid: 238cfee1425c8417db6e12b8bb3a6993
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3441444263041232419
-    second: AppleLogo_0
-  - first:
-      213: -2572721525968387508
-    second: AppleLogo_1
+      213: 3153359146611357680
+    second: TransferButton_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,45 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: AppleLogo_0
+      name: TransferButton_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 50
-        height: 50
+        width: 808
+        height: 138
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dd11f132da88d30d0800000000000000
-      internalID: -3441444263041232419
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: AppleLogo_1
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 5
-        width: 43
-        height: 37
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c4247aa276bdb4cd0800000000000000
-      internalID: -2572721525968387508
+      spriteID: 0f7bff6cf6bf2cb20800000000000000
+      internalID: 3153359146611357680
       vertices: []
       indices: 
       edges: []
@@ -150,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: aa7cde43bb12c49e2b1cdb3c4df9d7d3
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      AppleLogo_0: -3441444263041232419
-      AppleLogo_1: -2572721525968387508
+      TransferButton_0: 3153359146611357680
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
