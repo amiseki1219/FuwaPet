@@ -311,6 +311,12 @@ public class SettingManager : MonoBehaviour
 
     public void OnDeleteConfirmed()
     {
+        if (selectedReasonIndex < 0)
+        {
+            if (errorText != null) errorText.gameObject.SetActive(true);
+            return;
+        }
+
         if (selectedReasonIndex == 3
             && (otherInputField == null || string.IsNullOrEmpty(otherInputField.text)))
         {

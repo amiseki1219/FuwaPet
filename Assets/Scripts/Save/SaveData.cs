@@ -41,6 +41,14 @@ public class SaveData
     public bool isNotificationOn = true;    // 通知設定
     public bool isSeOn = true;              // 効果音スイッチ
 
+    // --- お知らせ既読管理 ---
+    public List<string> readNoticeIds = new List<string>();
+
+    // --- バッジバージョン管理 ---
+    public string lastShopVersion       = "";
+    public string lastGachaVersion      = "";
+    public string lastCollectionVersion = "";
+
     // --- 購入・課金情報 ---
     public List<string> ownedDecoIds = new List<string>();
     public bool isFirstTimePackBought = false;
@@ -58,6 +66,7 @@ public class SaveData
     public long nextPlay = 0;
     public long nextBath = 0;
     public bool onboardingCompleted;
+    public bool accountLinkShown = false; // データ引き継ぎ案内を表示済みか
 
     // --- 持ち物・記録リスト ---
     public List<string> ownedIcons = new();
@@ -71,6 +80,22 @@ public class SaveData
     public float clean = 50f;
     public float energy = 50f;
     public float mood = 50f;
+
+    // --- クエスト進捗 ---
+    public bool[] tutorialQuestsDone = new bool[5];
+    public bool tutorialBonusClaimed;
+    public bool tutorialAllCompleted;
+    public string tutorialCompletedDate;
+
+    public bool[] dailyQuestsDone = new bool[4];
+    public bool dailyBonusClaimed;
+    public int dailyNadeCount;
+    public string lastQuestResetDate;
+
+    public bool coachMarkShown;
+
+    public bool[] tutorialQuestsClaimed = new bool[5];
+    public bool[] dailyQuestsClaimed    = new bool[4];
 
     public SaveData()
     {
@@ -92,5 +117,11 @@ public class SaveData
 
         // チュートリアル：新規・削除後は必ず未完了にする
         onboardingCompleted = false;
+
+        // クエスト進捗の配列を初期化
+        tutorialQuestsDone    = new bool[5];
+        dailyQuestsDone       = new bool[4];
+        tutorialQuestsClaimed = new bool[5];
+        dailyQuestsClaimed    = new bool[4];
     }
 }

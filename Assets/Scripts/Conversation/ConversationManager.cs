@@ -14,6 +14,7 @@ public class ConversationManager : MonoBehaviour
 
     public string GetReply()
     {
+        QuestManager.Instance?.NotifyConversation();
         var pet = GameContext.Instance.PetStatus;
 
         // 例：空腹が低いと不機嫌
