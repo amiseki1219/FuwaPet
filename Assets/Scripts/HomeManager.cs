@@ -12,13 +12,10 @@ public class HomeManager : MonoBehaviour
 
     void Start()
     {
-        // 起動振り分け: 初回またはアカウント削除後はTutorialへ
+        // 起動振り分け: 初回またはアカウント削除後はTutorialへ（ローディングなし）
         if (SaveManager.Instance == null || !SaveManager.Instance.Data.onboardingCompleted)
         {
-            if (LoadingManager.Instance != null)
-                LoadingManager.Instance.LoadSceneWithLoading("Tutorial");
-            else
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Tutorial");
             return;
         }
 

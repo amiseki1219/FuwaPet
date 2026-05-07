@@ -214,6 +214,7 @@ public class CareSceneManager : MonoBehaviour
         _status.AddTrust(2);
         GameContext.Instance?.SavePetStatus();
         ShowPopup(new List<string> { "💕 機嫌 +25" });
+        QuestManager.Instance?.NotifyNade();
         RefreshAll();
     }
 
@@ -254,6 +255,7 @@ public class CareSceneManager : MonoBehaviour
         _status.AddTrust(1);
         _status.OnFed();
         ShowPopup(new List<string> { "🍚 空腹 +30", "⚡ 元気 +5" });
+        QuestManager.Instance?.NotifyFeed();
         CloseOyatuPanel();
         RefreshAll();
     }
@@ -268,6 +270,7 @@ public class CareSceneManager : MonoBehaviour
         _status.OnFed();
         GameContext.Instance?.SavePetStatus();
         ShowPopup(new List<string> { "🍪 空腹 +20", "💕 機嫌 +15" });
+        QuestManager.Instance?.NotifyFeed();
         CloseOyatuPanel();
         RefreshAll();
     }
@@ -282,6 +285,7 @@ public class CareSceneManager : MonoBehaviour
         _status.OnFed();
         GameContext.Instance?.SavePetStatus();
         ShowPopup(new List<string> { "🥩 空腹 +25", "⚡ 元気 +15" });
+        QuestManager.Instance?.NotifyFeed();
         CloseOyatuPanel();
         RefreshAll();
     }
@@ -296,6 +300,7 @@ public class CareSceneManager : MonoBehaviour
         _status.OnFed();
         GameContext.Instance?.SavePetStatus();
         ShowPopup(new List<string> { "🍽️ 空腹 全回復！", "💕 機嫌 +20" });
+        QuestManager.Instance?.NotifyFeed();
         CloseOyatuPanel();
         RefreshAll();
     }
@@ -310,6 +315,7 @@ public class CareSceneManager : MonoBehaviour
         _status.OnFed();
         GameContext.Instance?.SavePetStatus();
         ShowPopup(new List<string> { "🎂 空腹 全回復！", "💕 機嫌 +30", "⭐ 信頼度 大UP！" });
+        QuestManager.Instance?.NotifyFeed();
         CloseOyatuPanel();
         RefreshAll();
     }
