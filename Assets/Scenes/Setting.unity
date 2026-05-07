@@ -769,7 +769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &80030414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18266,6 +18266,7 @@ MonoBehaviour:
     seVolume: 0.5
     isNotificationOn: 1
     isSeOn: 1
+    readNoticeIds: []
     ownedDecoIds: []
     isFirstTimePackBought: 0
     lastPackAPurchaseTicks: 0
@@ -18292,6 +18293,17 @@ MonoBehaviour:
     clean: 50
     energy: 50
     mood: 50
+    tutorialQuestsDone: 0000000000
+    tutorialBonusClaimed: 0
+    tutorialAllCompleted: 0
+    tutorialCompletedDate: 
+    dailyQuestsDone: 00000000
+    dailyBonusClaimed: 0
+    dailyNadeCount: 0
+    lastQuestResetDate: 
+    coachMarkShown: 0
+    tutorialQuestsClaimed: 0000000000
+    dailyQuestsClaimed: 00000000
 --- !u!4 &2073852431
 Transform:
   m_ObjectHideFlags: 0

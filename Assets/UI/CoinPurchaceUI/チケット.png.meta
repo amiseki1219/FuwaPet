@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 246ac8124ffc44dd8870c3e2393740e9
+guid: 74e6ac1c3172749fe8a6eb0b93257bc0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8299977013416702195
-    second: Icon1 1_0
+      213: 4913356682722487851
+    second: "\u30C1\u30B1\u30C3\u30C8_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Icon1 1_0
+      name: "\u30C1\u30B1\u30C3\u30C8_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 500
-        height: 500
+        x: 37
+        y: 57
+        width: 365
+        height: 284
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3f03c985e117f2370800000000000000
-      internalID: 8299977013416702195
+      spriteID: b2e2770fedfbf2440800000000000000
+      internalID: 4913356682722487851
       vertices: []
       indices: 
       edges: []
@@ -135,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Icon1 1_0: 8299977013416702195
+      "\u30C1\u30B1\u30C3\u30C8_0": 4913356682722487851
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

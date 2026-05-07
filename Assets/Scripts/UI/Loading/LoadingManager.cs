@@ -16,6 +16,7 @@ public class LoadingManager : MonoBehaviour
     private Image progressBarFill;
     private TMP_Text percentText;
     private float currentProgress;
+    private bool isLoading;
 
     private void Awake()
     {
@@ -33,7 +34,7 @@ public class LoadingManager : MonoBehaviour
         if (loadingPanelInstance != null) return;
 
         loadingPanelInstance = Instantiate(loadingPanelPrefab);
-        DontDestroyOnLoad(loadingPanelInstance);
+        DontDestroyOnLoad(loadingPanelInstance.transform.root.gameObject);
 
         progressBarFill = loadingPanelInstance.transform
             .Find("Background/Container/ProgressBarFrame/ProgressBarFill")
@@ -59,17 +60,20 @@ public class LoadingManager : MonoBehaviour
     /// </summary>
     public void LoadSceneWithLoading(string sceneName)
     {
-        Debug.Log($"<color=cyan>[LoadingManager] LoadSceneWithLoading called for scene: {sceneName}</color>");
+        if (isLoading)
+        {
+            Debug.LogWarning($"[LoadingManager] 既にロード中のため無視: {sceneName}");
+            return;
+        }
         StartCoroutine(LoadSceneCoroutine(sceneName));
     }
 
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
-        Debug.Log($"<color=cyan>[LoadingManager] Coroutine started for scene: {sceneName}</color>");
+        isLoading = true;
         EnsurePanel();
         SetProgress(0f);
         loadingPanelInstance.SetActive(true);
-        Debug.Log("<color=cyan>[LoadingManager] Panel activated, starting progress animation</color>");
 
         // 0 → 0.9 自動進行 (0.5秒)
         float elapsed = 0f;
@@ -82,23 +86,35 @@ public class LoadingManager : MonoBehaviour
             yield return null;
         }
         SetProgress(0.9f);
-        Debug.Log("<color=cyan>[LoadingManager] Progress reached 90%, starting scene load</color>");
 
         // シーンを非同期読み込み
         var op = SceneManager.LoadSceneAsync(sceneName);
-        op.allowSceneActivation = false;
-        Debug.Log($"<color=cyan>[LoadingManager] LoadSceneAsync started, initial progress: {op.progress}</color>");
-        while (op.progress < 0.9f)
+        if (op == null)
         {
-            yield return null;
+            Debug.LogError($"[LoadingManager] LoadSceneAsync が null を返しました: '{sceneName}'");
+            if (loadingPanelInstance != null) loadingPanelInstance.SetActive(false);
+            isLoading = false;
+            yield break;
         }
-        Debug.Log($"<color=cyan>[LoadingManager] Scene load progress complete: {op.progress}, activating scene</color>");
-        op.allowSceneActivation = true;
-        yield return null;
 
+        // sceneLoaded イベントで完了を受け取り、新コルーチンを起動
+        // → シーン遷移をまたいでコルーチンを生かし続けない設計
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        op.allowSceneActivation = true;
+        // ここでコルーチン終了（遷移後は OnSceneLoaded → FinishLoadingCoroutine が引き継ぐ）
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StartCoroutine(FinishLoadingCoroutine());
+    }
+
+    private IEnumerator FinishLoadingCoroutine()
+    {
         // 0.9 → 1.0 フィル (0.2秒)
         float start = currentProgress;
-        elapsed = 0f;
+        float elapsed = 0f;
         const float fillDuration = 0.2f;
         while (elapsed < fillDuration)
         {
@@ -108,13 +124,12 @@ public class LoadingManager : MonoBehaviour
             yield return null;
         }
         SetProgress(1f);
-        Debug.Log("<color=cyan>[LoadingManager] Progress reached 100%, waiting before hiding</color>");
 
         yield return new WaitForSeconds(0.15f);
 
         if (loadingPanelInstance != null)
             loadingPanelInstance.SetActive(false);
-        Debug.Log("<color=cyan>[LoadingManager] Loading complete, panel hidden</color>");
+        isLoading = false;
     }
 
     /// <summary>
