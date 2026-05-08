@@ -1,75 +1,53 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
-using System.Collections;
-using System.Collections.Generic;
 
 public class StatusPopup : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI popupPrefab; // ポップアップ1行のPrefab
-    [SerializeField] private Transform spawnPoint;        // キャラクターの周り
+    [SerializeField] private TextMeshProUGUI popupText;
+    [SerializeField] private float floatDistance = 50f;
+    [SerializeField] private float duration = 1f;
 
-    public static StatusPopup Instance { get; private set; }
+    private RectTransform _rt;
+    private Vector2 _startPos;
+    private Coroutine _coroutine;
 
     private void Awake()
     {
-        Instance = this;
+        _rt = GetComponent<RectTransform>();
+        _startPos = _rt.anchoredPosition;
+        if (popupText == null)
+            popupText = GetComponent<TextMeshProUGUI>();
+        gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// 複数行のポップアップを順番に表示
-    /// </summary>
-    public void Show(List<string> messages)
+    public void Show(string text)
     {
-        StartCoroutine(ShowSequence(messages));
+        if (_coroutine != null) StopCoroutine(_coroutine);
+        popupText.text = text;
+        _rt.anchoredPosition = _startPos;
+        gameObject.SetActive(true);
+        _coroutine = StartCoroutine(AnimateCoroutine());
     }
 
-    private IEnumerator ShowSequence(List<string> messages)
+    private IEnumerator AnimateCoroutine()
     {
-        for (int i = 0; i < messages.Count; i++)
-        {
-            SpawnOne(messages[i], i * 0.15f); // 少しずつずらして表示
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
+        var color = popupText.color;
+        color.a = 1f;
+        popupText.color = color;
 
-    private void SpawnOne(string message, float offsetY)
-    {
-        if (popupPrefab == null || spawnPoint == null) return;
-
-        TextMeshProUGUI tmp = Instantiate(popupPrefab, spawnPoint);
-        tmp.text = message;
-
-        // 縦にずらして重ならないようにする
-        RectTransform rt = tmp.GetComponent<RectTransform>();
-        rt.anchoredPosition += new Vector2(0, offsetY * -40f);
-
-        StartCoroutine(AnimatePopup(tmp));
-    }
-
-    private IEnumerator AnimatePopup(TextMeshProUGUI tmp)
-    {
-        float duration = 1.2f;
-        float elapsed  = 0f;
-
-        RectTransform rt = tmp.GetComponent<RectTransform>();
-        Vector2 startPos = rt.anchoredPosition;
-        Color startColor = tmp.color;
-
+        float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-
-            // 上に浮かび上がる
-            rt.anchoredPosition = startPos + new Vector2(0, t * 60f);
-
-            // フェードアウト（後半から）
-            float alpha = t < 0.5f ? 1f : 1f - ((t - 0.5f) / 0.5f);
-            tmp.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-
+            _rt.anchoredPosition = _startPos + new Vector2(0f, floatDistance * t);
+            color.a = 1f - t;
+            popupText.color = color;
             yield return null;
         }
 
-        Destroy(tmp.gameObject);
+        gameObject.SetActive(false);
+        _rt.anchoredPosition = _startPos;
     }
 }

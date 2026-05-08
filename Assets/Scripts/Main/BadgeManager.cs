@@ -34,27 +34,27 @@ public class BadgeManager : MonoBehaviour
     {
         if (questBadge == null || QuestManager.Instance == null) return;
 
-        bool show = false;
+        bool[] done;
+        bool[] claimed;
         if (QuestManager.Instance.IsTutorialPhase)
         {
-            var done    = QuestManager.Instance.GetTutorialQuestsDone();
-            var claimed = QuestManager.Instance.GetTutorialQuestsClaimed();
-            for (int i = 0; i < done.Length; i++)
-            {
-                if (done[i] && !claimed[i]) { show = true; break; }
-            }
+            done    = QuestManager.Instance.GetTutorialQuestsDone();
+            claimed = QuestManager.Instance.GetTutorialQuestsClaimed();
         }
         else
         {
-            var done    = QuestManager.Instance.GetDailyQuestsDone();
-            var claimed = QuestManager.Instance.GetDailyQuestsClaimed();
-            for (int i = 0; i < done.Length; i++)
-            {
-                if (done[i] && !claimed[i]) { show = true; break; }
-            }
+            done    = QuestManager.Instance.GetDailyQuestsDone();
+            claimed = QuestManager.Instance.GetDailyQuestsClaimed();
         }
 
-        questBadge.SetActive(show);
+        // 全クエストが done=true かつ claimed=true の場合のみ非表示
+        bool allComplete = true;
+        for (int i = 0; i < done.Length; i++)
+        {
+            if (!done[i] || !claimed[i]) { allComplete = false; break; }
+        }
+
+        questBadge.SetActive(!allComplete);
     }
 
     private void CheckNoticeBadge()

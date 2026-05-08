@@ -11,6 +11,7 @@ public class NoticeManager : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Transform scrollContent;
     [SerializeField] private GameObject noticeItemPrefab;
+    [SerializeField] private BadgeManager badgeManager;
 
     private static readonly List<NoticeData> dummyNotices = new()
     {
@@ -81,11 +82,14 @@ public class NoticeManager : MonoBehaviour
             MarkAsRead(data.id);
 
         SaveManager.Instance?.Save();
+        badgeManager?.OnNoticePanelClosed();
     }
 
     private void GenerateNotices()
     {
         if (scrollContent == null || noticeItemPrefab == null) return;
+        var debugIds = SaveManager.Instance?.Data?.readNoticeIds;
+        Debug.Log($"readNoticeIds: [{string.Join(", ", debugIds ?? new System.Collections.Generic.List<string>())}]");
 
         foreach (Transform child in scrollContent)
             Destroy(child.gameObject);

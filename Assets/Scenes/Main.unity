@@ -26926,8 +26926,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -150.19998, y: -42.99994}
-  m_SizeDelta: {x: 79.2507, y: 50}
+  m_AnchoredPosition: {x: -146.27466, y: -36.131}
+  m_SizeDelta: {x: 126.355, y: 36.2613}
   m_Pivot: {x: 0.49999997, y: 0.5}
 --- !u!114 &1509163264
 MonoBehaviour:
@@ -26949,7 +26949,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u666E\u901A"
+  m_text: "\u3075\u3064\u3046"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 46eb132de9f75408eb3685c8137cac7d, type: 2}
   m_sharedMaterial: {fileID: 5860046056626304245, guid: 46eb132de9f75408eb3685c8137cac7d, type: 2}
@@ -26976,10 +26976,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
+  m_fontSize: 25.95
   m_fontSizeBase: 25
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -30344,14 +30344,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0674c3b1611744278b95288734952f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BadgeManager
-  questBadge: {fileID: 0}
-  noticeBadge: {fileID: 0}
-  shopBadge: {fileID: 0}
-  gachaBadge: {fileID: 0}
-  collectionBadge: {fileID: 0}
-  currentShopVersion: 2026.05.07
-  currentGachaVersion: 2026.05.07
-  currentCollectionVersion: 2026.05.07
 --- !u!4 &1814398372
 Transform:
   m_ObjectHideFlags: 0
