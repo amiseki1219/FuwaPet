@@ -14,15 +14,10 @@ namespace Game.Core
             DontDestroyOnLoad(gameObject);
 
             PetStatus = new PetStatus();
-        }
 
-        private void Start()
-        {
-            // SaveDataが読み込まれた後にPetStatusに値を反映
+            // SaveManager.Awake()より後に実行されるよう Script Execution Order で保証すること
             if (SaveManager.Instance?.Data != null)
-            {
                 PetStatus.LoadFromSave(SaveManager.Instance.Data);
-            }
         }
 
         // お世話後などに呼ぶ保存メソッド
