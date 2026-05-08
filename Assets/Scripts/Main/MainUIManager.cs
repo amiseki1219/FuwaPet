@@ -191,7 +191,7 @@ public class MainUIManager : MonoBehaviour
         string text;
         Sprite icon;
 
-        if (avg >= 80f)      { text = "絶好調✨";     icon = iconSuperGood; }
+        if (avg >= 80f)      { text = "絶好調！";     icon = iconSuperGood; }
         else if (avg >= 60f) { text = "元気いっぱい！"; icon = iconGood; }
         else if (avg >= 40f) { text = "ふつう";       icon = iconNormal; }
         else if (avg >= 20f) { text = "しょんぼり";   icon = iconBad; }

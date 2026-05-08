@@ -1,61 +1,75 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Game.Core;
-using System.Collections.Generic;
 
 public class CareSceneManager : MonoBehaviour
 {
     [Header("キャラクター情報")]
     [SerializeField] private TextMeshProUGUI petNameText;
-    [SerializeField] private RawImage userIconImage;
-    [SerializeField] private RawImage iconFrameImage;
 
     [Header("コンディション")]
-    [SerializeField] private Image conditionIconImage;
     [SerializeField] private TextMeshProUGUI conditionText;
 
-    [Header("ステータスバー Fill Area")]
-    [SerializeField] private RectTransform cleanFillArea;
-    [SerializeField] private RectTransform hungerFillArea;
-    [SerializeField] private RectTransform energyFillArea;
-    [SerializeField] private RectTransform moodFillArea;
+    [Header("性格テキスト")]
+    [SerializeField] private TextMeshProUGUI personalityLabelText;
+    [SerializeField] private TextMeshProUGUI personalityText;
+
+    [Header("ステータスバー Slider")]
+    [SerializeField] private Slider cleanSlider;
+    [SerializeField] private Slider hungerSlider;
+    [SerializeField] private Slider energySlider;
+    [SerializeField] private Slider moodSlider;
+
+    [Header("ステータス数値テキスト")]
+    [SerializeField] private TextMeshProUGUI moodValueText;
+    [SerializeField] private TextMeshProUGUI cleanValueText;
+    [SerializeField] private TextMeshProUGUI hungerValueText;
+    [SerializeField] private TextMeshProUGUI energyValueText;
 
     [Header("所持金表示")]
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI lunaStoneText;
 
-    [Header("おやつパネル所持金表示")]
-    [SerializeField] private TextMeshProUGUI oyatuCoinText;
-    [SerializeField] private TextMeshProUGUI oyatuLunaStoneText;
-
-    [Header("コンディションアイコン")]
-    [SerializeField] private Sprite iconSuperGood;
-    [SerializeField] private Sprite iconGood;
-    [SerializeField] private Sprite iconNormal;
-    [SerializeField] private Sprite iconBad;
-    [SerializeField] private Sprite iconSuperBad;
-
-    [Header("おやつパネル")]
-    [SerializeField] private GameObject oyatuSelectPanel;
-
-    [Header("通知テキスト（コイン不足など）")]
+    [Header("通知パネル")]
+    [SerializeField] private RectTransform noticePanelRect;
     [SerializeField] private TextMeshProUGUI noticeText;
     [SerializeField] private float noticeDuration = 2f;
 
-
-
     [Header("信頼度")]
-    [SerializeField] private TextMeshProUGUI trustLevelText;
+    [SerializeField] private Slider trustSlider;
+    [SerializeField] private TextMeshProUGUI trustRemainingText;
+
+    [Header("吹き出し")]
+    [SerializeField] private TextMeshProUGUI speechBubbleText;
+    [SerializeField] private GameObject speechBubbleRoot;
+
+    [Header("ステータスポップアップ")]
+    [SerializeField] private StatusPopup cleanPopup;
+    [SerializeField] private StatusPopup hungerPopup;
+    [SerializeField] private StatusPopup energyPopup;
+    [SerializeField] private StatusPopup moodPopup;
+
+    [Header("おやつ")]
+    [SerializeField] private OyatuManager oyatuManager;
+
+    private const int MaxBathPerDay  = 3;
+    private const int MaxNadePerDay  = 10;
+    private const int MaxPlayPerDay  = 5;
+    private const float SleepCooldownHours = 8f;
 
     private PetStatus _status;
     private SaveData _save;
     private Coroutine _noticeCoroutine;
-    private Coroutine _popupCoroutine;
+    private Coroutine _sliderCoroutine;
+    private Coroutine _coinCoroutine;
+    private Coroutine _lunaStoneCoroutine;
+    private Coroutine _typewriterCoroutine;
+    private float _originalNoticeX;
 
     private void Start()
     {
-        // GameContextがない場合はダミーで動かす
         if (GameContext.Instance != null)
         {
             _status = GameContext.Instance.PetStatus;
@@ -70,7 +84,6 @@ public class CareSceneManager : MonoBehaviour
             _status.AddHunger(50f);
         }
 
-        // SaveManagerがない場合はダミーで動かす
         if (SaveManager.Instance != null)
         {
             _save = SaveManager.Instance.Data;
@@ -83,10 +96,17 @@ public class CareSceneManager : MonoBehaviour
 
         _status.ApplyTimeDecay();
         LoadCharacterInfo();
-        RefreshAll();
 
-        if (noticeText != null) noticeText.gameObject.SetActive(false);
-        if (oyatuSelectPanel != null) oyatuSelectPanel.SetActive(false);
+        if (noticePanelRect != null)
+        {
+            _originalNoticeX = noticePanelRect.anchoredPosition.x;
+            var pos = noticePanelRect.anchoredPosition;
+            pos.x = -Screen.width;
+            noticePanelRect.anchoredPosition = pos;
+            noticePanelRect.gameObject.SetActive(false);
+        }
+
+        RefreshAll();
     }
 
     public void RefreshAll()
@@ -95,234 +115,289 @@ public class CareSceneManager : MonoBehaviour
         SetStatusBars();
         SetWallet();
         SetTrustLevel();
+        SetPersonality();
+        SetSpeechBubble();
     }
 
     private void LoadCharacterInfo()
     {
         if (petNameText != null)
-            petNameText.text = _save.petName;
+            petNameText.text = ResolveCharName();
+    }
 
-        if (!string.IsNullOrEmpty(_save.iconId))
-        {
-            Texture icon = Resources.Load<Texture>("SpecialIcon/" + _save.iconId)
-                        ?? Resources.Load<Texture>("Icon/" + _save.iconId);
-            if (icon != null && userIconImage != null)
-                userIconImage.texture = icon;
-        }
+    private string ResolveCharName()
+    {
+        if (!string.IsNullOrEmpty(_save.petNickname))
+            return _save.petNickname;
 
-        if (!string.IsNullOrEmpty(_save.selectedFrameId))
+        string charId = !string.IsNullOrEmpty(_save.selectedCharacterId)
+            ? _save.selectedCharacterId
+            : _save.characterId;
+
+        return charId switch
         {
-            Texture frame = Resources.Load<Texture>("Frame/" + _save.selectedFrameId);
-            if (frame != null && iconFrameImage != null)
-                iconFrameImage.texture = frame;
-        }
+            "poko" => "ぽこ",
+            "eru"  => "える",
+            "koko" => "ここ",
+            "paru" => "ぱる",
+            _      => _save.petName ?? ""
+        };
     }
 
     private void SetWallet()
     {
         if (coinText != null)
-            coinText.text = GameData.Instance.Coin.ToString();
+        {
+            int from = int.TryParse(coinText.text, out int parsed) ? parsed : GameData.Instance.Coin;
+            if (_coinCoroutine != null) StopCoroutine(_coinCoroutine);
+            _coinCoroutine = StartCoroutine(AnimateCoinText(coinText, from, GameData.Instance.Coin, 0.5f));
+        }
         if (lunaStoneText != null)
-            lunaStoneText.text = GameData.Instance.LunaStone.ToString();
+        {
+            int from = int.TryParse(lunaStoneText.text, out int parsed) ? parsed : GameData.Instance.LunaStone;
+            if (_lunaStoneCoroutine != null) StopCoroutine(_lunaStoneCoroutine);
+            _lunaStoneCoroutine = StartCoroutine(AnimateCoinText(lunaStoneText, from, GameData.Instance.LunaStone, 0.5f));
+        }
+    }
 
-        // おやつパネル側も同時更新
-        if (oyatuCoinText != null)
-            oyatuCoinText.text = GameData.Instance.Coin.ToString();
-        if (oyatuLunaStoneText != null)
-            oyatuLunaStoneText.text = GameData.Instance.LunaStone.ToString();
+    private IEnumerator AnimateCoinText(TextMeshProUGUI text, int fromValue, int toValue, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            text.text = Mathf.RoundToInt(Mathf.Lerp(fromValue, toValue, t)).ToString();
+            yield return null;
+        }
+        text.text = toValue.ToString();
     }
 
     private void SetTrustLevel()
     {
-        if (trustLevelText == null) return;
-        int level = PetStatus.GetTrustLevel(_save.trust);
-        trustLevelText.text = $"Lv {level}";
+        int trust = _save.trust;
+        int[] thresholds = { 0, 100, 500, 1500 };
+
+        int level = PetStatus.GetTrustLevel(trust);
+
+        int currentStart = level <= thresholds.Length
+            ? thresholds[level - 1]
+            : thresholds[thresholds.Length - 1] + (level - thresholds.Length) * 2000;
+
+        int nextStart = level < thresholds.Length
+            ? thresholds[level]
+            : thresholds[thresholds.Length - 1] + (level - thresholds.Length + 1) * 2000;
+
+        float fill = Mathf.Clamp01((float)(trust - currentStart) / (nextStart - currentStart));
+        if (trustSlider != null)
+            trustSlider.value = fill;
+
+        if (trustRemainingText != null)
+            trustRemainingText.text = $"あと{nextStart - trust}ptで信頼度アップ！";
     }
 
     private void SetCondition()
     {
-        float mood = _status.Mood;
+        float avg = (_status.Mood + _status.Clean + _status.Energy) / 3f;
         string text;
-        Sprite icon;
 
-        if (mood >= 80f) { text = "絶好調"; icon = iconSuperGood; }
-        else if (mood >= 60f) { text = "好調"; icon = iconGood; }
-        else if (mood >= 40f) { text = "普通"; icon = iconNormal; }
-        else if (mood >= 20f) { text = "不調"; icon = iconBad; }
-        else { text = "絶不調"; icon = iconSuperBad; }
+        if (avg >= 80f)      text = "絶好調！";
+        else if (avg >= 60f) text = "元気いっぱい！";
+        else if (avg >= 40f) text = "ふつう";
+        else if (avg >= 20f) text = "しょんぼり";
+        else                 text = "元気ない...";
 
-        if (conditionText != null) conditionText.text = text;
-        if (conditionIconImage != null && icon != null)
-            conditionIconImage.sprite = icon;
+        if (conditionText != null)
+            conditionText.text = $"{ResolveCharName()}は{text}";
     }
 
     private void SetStatusBars()
     {
-        SetFillArea(cleanFillArea, _status.Clean);
-        SetFillArea(hungerFillArea, _status.Hunger);
-        SetFillArea(energyFillArea, _status.Energy);
-        SetFillArea(moodFillArea, _status.Mood);
+        if (moodValueText != null)   moodValueText.text   = $"{(int)_status.Mood}/100";
+        if (cleanValueText != null)  cleanValueText.text  = $"{(int)_status.Clean}/100";
+        if (hungerValueText != null) hungerValueText.text = $"{(int)_status.Hunger}/100";
+        if (energyValueText != null) energyValueText.text = $"{(int)_status.Energy}/100";
+
+        if (_sliderCoroutine != null) StopCoroutine(_sliderCoroutine);
+        _sliderCoroutine = StartCoroutine(AnimateSlidersCoroutine());
     }
 
-    private void SetFillArea(RectTransform fillArea, float value)
+    private IEnumerator AnimateSlidersCoroutine()
     {
-        if (fillArea == null) return;
-        float ratio = Mathf.Clamp01(value / 100f);
-        float fullWidth = fillArea.parent.GetComponent<RectTransform>().rect.width;
-        fillArea.sizeDelta = new Vector2(fullWidth * ratio, fillArea.sizeDelta.y);
+        float startClean  = cleanSlider  != null ? cleanSlider.value  : 0f;
+        float startHunger = hungerSlider != null ? hungerSlider.value : 0f;
+        float startEnergy = energySlider != null ? energySlider.value : 0f;
+        float startMood   = moodSlider   != null ? moodSlider.value   : 0f;
+
+        float elapsed = 0f;
+        const float duration = 0.5f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            if (cleanSlider  != null) cleanSlider.value  = Mathf.Lerp(startClean,  _status.Clean,  t);
+            if (hungerSlider != null) hungerSlider.value = Mathf.Lerp(startHunger, _status.Hunger, t);
+            if (energySlider != null) energySlider.value = Mathf.Lerp(startEnergy, _status.Energy, t);
+            if (moodSlider   != null) moodSlider.value   = Mathf.Lerp(startMood,   _status.Mood,   t);
+            yield return null;
+        }
+
+        if (cleanSlider  != null) cleanSlider.value  = _status.Clean;
+        if (hungerSlider != null) hungerSlider.value = _status.Hunger;
+        if (energySlider != null) energySlider.value = _status.Energy;
+        if (moodSlider   != null) moodSlider.value   = _status.Mood;
     }
 
-    private void ShowNotice(string message)
+    private void SetPersonality()
     {
-        if (noticeText == null) return;
+        if (personalityLabelText != null)
+            personalityLabelText.text = $"{ResolveCharName()}の性格";
+        if (personalityText != null)
+            personalityText.text = "ふつうの子";
+    }
+
+    private void SetSpeechBubble()
+    {
+        string speech;
+        if (_status.Hunger < 40f)      speech = "おなかすいたよ…";
+        else if (_status.Clean < 40f)  speech = "お風呂入りたいな…";
+        else if (_status.Energy < 40f) speech = "ちょっとつかれたかも…";
+        else if (_status.Mood < 40f)   speech = "なんかしょんぼりしてる…";
+        else if (_status.Hunger >= 70f && _status.Clean >= 70f &&
+                 _status.Energy >= 70f && _status.Mood >= 70f)
+                                       speech = "今日も元気だよ！";
+        else                           speech = "一緒にいられて嬉しいな";
+
+        if (speechBubbleRoot != null) speechBubbleRoot.SetActive(true);
+        if (speechBubbleText != null)
+        {
+            if (_typewriterCoroutine != null) StopCoroutine(_typewriterCoroutine);
+            _typewriterCoroutine = StartCoroutine(TypewriterCoroutine(speech));
+        }
+    }
+
+    private IEnumerator TypewriterCoroutine(string message)
+    {
+        speechBubbleText.text = "";
+        foreach (char c in message)
+        {
+            speechBubbleText.text += c;
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
+    public void ShowNotice(string message)
+    {
+        if (noticePanelRect == null) return;
         if (_noticeCoroutine != null) StopCoroutine(_noticeCoroutine);
-        _noticeCoroutine = StartCoroutine(ShowTextCoroutine(noticeText, message, noticeDuration));
+        if (noticeText != null) noticeText.text = message;
+        _noticeCoroutine = StartCoroutine(SlideNoticeCoroutine());
     }
 
-    private void ShowPopup(List<string> messages)
+    private IEnumerator SlideNoticeCoroutine()
     {
-        StatusPopup.Instance?.Show(messages);
-    }
+        float offScreenX = -Screen.width;
+        const float slideTime = 0.3f;
 
-    private System.Collections.IEnumerator ShowTextCoroutine(
-        TextMeshProUGUI tmp, string message, float duration)
-    {
-        tmp.text = message;
-        tmp.gameObject.SetActive(true);
-        yield return new WaitForSeconds(duration);
-        tmp.gameObject.SetActive(false);
+        noticePanelRect.gameObject.SetActive(true);
+        float elapsed = 0f;
+        while (elapsed < slideTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / slideTime);
+            float eased = 1f - (1f - t) * (1f - t);
+            noticePanelRect.anchoredPosition = new Vector2(Mathf.Lerp(offScreenX, _originalNoticeX, eased), noticePanelRect.anchoredPosition.y);
+            yield return null;
+        }
+        noticePanelRect.anchoredPosition = new Vector2(_originalNoticeX, noticePanelRect.anchoredPosition.y);
+
+        yield return new WaitForSeconds(noticeDuration);
+
+        elapsed = 0f;
+        while (elapsed < slideTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / slideTime);
+            float eased = t * t;
+            noticePanelRect.anchoredPosition = new Vector2(Mathf.Lerp(_originalNoticeX, offScreenX, eased), noticePanelRect.anchoredPosition.y);
+            yield return null;
+        }
+        noticePanelRect.anchoredPosition = new Vector2(offScreenX, noticePanelRect.anchoredPosition.y);
+        noticePanelRect.gameObject.SetActive(false);
     }
 
     public void OnBtnBath()
     {
+        ResetDailyCountIfNeeded();
+        if (_save.bathCountToday >= MaxBathPerDay) { ShowNotice($"今日のお風呂は{MaxBathPerDay}回までだよ！"); return; }
         if (!GameData.Instance.UseCoin(30)) { ShowNotice("コインが足りないよ…！"); return; }
+        _save.bathCountToday++;
         _status.AddClean(40f);
-        _status.AddMood(10f);
-        _status.AddEnergy(-5f);
         _status.AddTrust(3);
         _status.OnBath();
         GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "✨ 清潔 +40", "💕 機嫌 +10" });
+        cleanPopup?.Show("+40");
         RefreshAll();
     }
 
     public void OnBtnPet()
     {
+        ResetDailyCountIfNeeded();
+        if (_save.nadeCountToday >= MaxNadePerDay) { ShowNotice($"今日のなでなでは{MaxNadePerDay}回までだよ！"); return; }
         if (!GameData.Instance.UseCoin(10)) { ShowNotice("コインが足りないよ…！"); return; }
-        _status.AddMood(25f);
-        _status.AddEnergy(-5f);
-        _status.AddTrust(2);
+        _save.nadeCountToday++;
+        _status.AddEnergy(10f);
+        _status.AddTrust(3);
         GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "💕 機嫌 +25" });
+        energyPopup?.Show("+10");
         QuestManager.Instance?.NotifyNade();
         RefreshAll();
     }
 
     public void OnBtnPlay()
     {
+        ResetDailyCountIfNeeded();
+        if (_save.playCountToday >= MaxPlayPerDay) { ShowNotice($"今日のあそぶは{MaxPlayPerDay}回までだよ！"); return; }
         if (!GameData.Instance.UseCoin(20)) { ShowNotice("コインが足りないよ…！"); return; }
+        _save.playCountToday++;
         _status.AddEnergy(30f);
-        _status.AddMood(10f);
         _status.AddHunger(-10f);
         _status.AddTrust(3);
         _status.OnPlayed();
-        ShowPopup(new List<string> { "⚡ 元気 +30", "💕 機嫌 +10" });
+        GameContext.Instance?.SavePetStatus();
+        energyPopup?.Show("+30");
         RefreshAll();
     }
 
     public void OnBtnSleep()
     {
-        _status.AddEnergy(40f);
-        _status.AddMood(10f);
+        long cooldownTicks = (long)(SleepCooldownHours * System.TimeSpan.TicksPerHour);
+        long remaining = cooldownTicks - (System.DateTime.Now.Ticks - _save.lastSleepTicks);
+        if (_save.lastSleepTicks != 0 && remaining > 0)
+        {
+            int hours   = (int)(remaining / System.TimeSpan.TicksPerHour);
+            int minutes = (int)(remaining % System.TimeSpan.TicksPerHour / System.TimeSpan.TicksPerMinute);
+            ShowNotice($"ねんねはあと{hours}時間{minutes}分後だよ！");
+            return;
+        }
+        _save.lastSleepTicks = System.DateTime.Now.Ticks;
+        _status.AddEnergy(50f);
         _status.AddTrust(1);
         GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "😴 元気 +40", "💕 機嫌 +10" });
+        energyPopup?.Show("+50");
         RefreshAll();
     }
 
     public void OnBtnFood()
     {
-        if (oyatuSelectPanel != null)
-            oyatuSelectPanel.SetActive(true);
+        oyatuManager?.ShowPanel();
     }
 
-    public void OnBtnFood_Food()
+    private void ResetDailyCountIfNeeded()
     {
-        if (!GameData.Instance.UseCoin(20)) { ShowNotice("コインが足りないよ！"); return; }
-        _status.AddHunger(30f);
-        _status.AddEnergy(5f);
-        _status.AddMood(5f);
-        _status.AddTrust(1);
-        _status.OnFed();
-        ShowPopup(new List<string> { "🍚 空腹 +30", "⚡ 元気 +5" });
-        QuestManager.Instance?.NotifyFeed();
-        CloseOyatuPanel();
-        RefreshAll();
-    }
-
-    public void OnBtnFood_Biscuit()
-    {
-        if (!GameData.Instance.UseCoin(20)) { ShowNotice("コインが足りないよ！"); return; }
-        _status.AddHunger(20f);
-        _status.AddEnergy(10f);
-        _status.AddMood(15f);
-        _status.AddTrust(2);
-        _status.OnFed();
-        GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "🍪 空腹 +20", "💕 機嫌 +15" });
-        QuestManager.Instance?.NotifyFeed();
-        CloseOyatuPanel();
-        RefreshAll();
-    }
-
-    public void OnBtnFood_Jerky()
-    {
-        if (!GameData.Instance.UseCoin(20)) { ShowNotice("コインが足りないよ！"); return; }
-        _status.AddHunger(25f);
-        _status.AddEnergy(15f);
-        _status.AddMood(10f);
-        _status.AddTrust(2);
-        _status.OnFed();
-        GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "🥩 空腹 +25", "⚡ 元気 +15" });
-        QuestManager.Instance?.NotifyFeed();
-        CloseOyatuPanel();
-        RefreshAll();
-    }
-
-    public void OnBtnFood_Special()
-    {
-        if (!GameData.Instance.UseLunaStone(50)) { ShowNotice("ルナストーンが足りないよ！"); return; }
-        _status.AddHunger(100f);
-        _status.AddEnergy(20f);
-        _status.AddMood(20f);
-        _status.AddTrust(5);
-        _status.OnFed();
-        GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "🍽️ 空腹 全回復！", "💕 機嫌 +20" });
-        QuestManager.Instance?.NotifyFeed();
-        CloseOyatuPanel();
-        RefreshAll();
-    }
-
-    public void OnBtnFood_BirthdayCake()
-    {
-        if (!GameData.Instance.UseLunaStone(100)) { ShowNotice("ルナストーンが足りないよ！"); return; }
-        _status.AddHunger(100f);
-        _status.AddEnergy(30f);
-        _status.AddMood(30f);
-        _status.AddTrust(15);
-        _status.OnFed();
-        GameContext.Instance?.SavePetStatus();
-        ShowPopup(new List<string> { "🎂 空腹 全回復！", "💕 機嫌 +30", "⭐ 信頼度 大UP！" });
-        QuestManager.Instance?.NotifyFeed();
-        CloseOyatuPanel();
-        RefreshAll();
-    }
-
-    public void CloseOyatuPanel()
-    {
-        if (oyatuSelectPanel != null)
-            oyatuSelectPanel.SetActive(false);
+        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        if (_save.lastBathDate != today) { _save.bathCountToday = 0; _save.lastBathDate = today; }
+        if (_save.lastNadeDate != today) { _save.nadeCountToday = 0; _save.lastNadeDate = today; }
+        if (_save.lastPlayDate != today) { _save.playCountToday = 0; _save.lastPlayDate = today; }
     }
 }

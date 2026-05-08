@@ -40,12 +40,52 @@ public class CharacterPanelCardManager : MonoBehaviour
     {
         if (SaveManager.Instance != null && characterIds.Length > currentIndex)
         {
-            SaveManager.Instance.Data.selectedCharacterId = characterIds[currentIndex];
-            SaveManager.Instance.Data.iconId = characterIds[currentIndex];
+            var data = SaveManager.Instance.Data;
+            data.selectedCharacterId = characterIds[currentIndex];
+            data.iconId = characterIds[currentIndex];
+            SetInitialPersonality(data, characterIds[currentIndex]);
             SaveManager.Instance.Save();
         }
 
         if (onboardingManager != null)
             onboardingManager.Next();
+    }
+
+    private void SetInitialPersonality(SaveData data, string characterId)
+    {
+        switch (characterId)
+        {
+            case "poko":
+                data.personalityActivity    =  60;
+                data.personalityDependency  =  70;
+                data.personalityDiligence   =   0;
+                data.personalityHonesty     =  80;
+                data.personalitySensitivity =  40;
+                break;
+            case "eru":
+                data.personalityActivity    = -40;
+                data.personalityDependency  = -50;
+                data.personalityDiligence   =  20;
+                data.personalityHonesty     = -30;
+                data.personalitySensitivity = -60;
+                break;
+            case "koko":
+                data.personalityActivity    = -20;
+                data.personalityDependency  =  40;
+                data.personalityDiligence   = -20;
+                data.personalityHonesty     =  60;
+                data.personalitySensitivity =  70;
+                break;
+            case "paru":
+                data.personalityActivity    =  30;
+                data.personalityDependency  = -60;
+                data.personalityDiligence   =  10;
+                data.personalityHonesty     = -80;
+                data.personalitySensitivity =  20;
+                break;
+            default:
+                Debug.LogWarning($"[CharacterPanelCardManager] 未定義のキャラID: {characterId}");
+                break;
+        }
     }
 }

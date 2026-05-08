@@ -97,6 +97,26 @@ public class SaveData
     public bool[] tutorialQuestsClaimed = new bool[5];
     public bool[] dailyQuestsClaimed    = new bool[4];
 
+    // --- おやつ使用カウント ---
+    public int freeOyatuCountToday = 0;
+    public string lastFreeOyatuDate = "";
+
+    // --- お世話回数制限 ---
+    public int bathCountToday = 0;
+    public string lastBathDate = "";
+    public int nadeCountToday = 0;
+    public string lastNadeDate = "";
+    public int playCountToday = 0;
+    public string lastPlayDate = "";
+    public long lastSleepTicks = 0; // ねんね8時間クールダウン用
+
+    // --- 性格パラメータ（初期値はキャラ選択時にセット） ---
+    public int personalityActivity    = 0; // 活動性（-100〜+100）
+    public int personalityDependency  = 0; // 甘えん坊度（-100〜+100）
+    public int personalityHonesty     = 0; // 素直さ（-100〜+100）
+    public int personalityDiligence   = 0; // 勤勉さ（-100〜+100）
+    public int personalitySensitivity = 0; // 感受性（-100〜+100）
+
     public SaveData()
     {
         // 新規作成時にGUIDを生成

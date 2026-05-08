@@ -96,27 +96,53 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u6A5F\u5ACCFill"
+      name: "\u6A5F\u5ACCFill_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 270
-        height: 52
+        height: 40
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 10, y: 10, z: 10, w: 10}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 47b28f0dc138fa0d0800000000000000
-      internalID: -3409362233107928204
+      spriteID: 888494e83e5234992bf8cbe067536427
+      internalID: -1199529617
       vertices: []
       indices: 
       edges: []
@@ -137,6 +163,7 @@ TextureImporter:
     nameFileIdTable:
       "\u6A5F\u5ACCFiFF": -3409362233107928204
       "\u6A5F\u5ACCFill": -3409362233107928204
+      "\u6A5F\u5ACCFill_0": -1199529617
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
