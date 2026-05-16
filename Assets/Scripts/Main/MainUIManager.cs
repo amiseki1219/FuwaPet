@@ -57,6 +57,16 @@ public class MainUIManager : MonoBehaviour
     private PetStatus _status;
     private SaveData _save;
 
+    private void OnEnable()
+    {
+        GameData.OnWalletChanged += SetWallet;
+    }
+
+    private void OnDisable()
+    {
+        GameData.OnWalletChanged -= SetWallet;
+    }
+
     private void Start()
     {
         if (GameContext.Instance != null)
@@ -187,7 +197,7 @@ public class MainUIManager : MonoBehaviour
 
     private void SetCondition()
     {
-        float avg = (_status.Hunger + _status.Mood + _status.Energy) / 3f;
+        float avg = (_status.Hunger + _status.Clean + _status.Energy) / 3f;
         string text;
         Sprite icon;
 
@@ -235,7 +245,7 @@ public class MainUIManager : MonoBehaviour
     private void SetConditionBar()
     {
         if (moodFillArea == null) return;
-        float ratio = Mathf.Clamp01((_status.Mood + _status.Hunger + _status.Energy) / 3f / 100f);
+        float ratio = Mathf.Clamp01((_status.Hunger + _status.Clean + _status.Energy) / 3f / 100f);
         // Fill Area は pivot=(0,0.5)・anchor=left(0,0.5)
         // 最大幅 = 親の幅 - 左マージン(anchoredPosition.x)
         var parentRect = moodFillArea.parent.GetComponent<RectTransform>();

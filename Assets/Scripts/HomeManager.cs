@@ -47,7 +47,8 @@ public class HomeManager : MonoBehaviour
         {
             // 🏠 通常モード
             string pet = SaveManager.Instance.Data.petName;
-            DateTime startDate = DateTime.Parse(SaveManager.Instance.Data.startDate);
+            if (!DateTime.TryParse(SaveManager.Instance.Data.startDate, out DateTime startDate))
+                startDate = DateTime.Today;
             int days = (DateTime.Today - startDate).Days + 1;
 
             dayText.text = $"{user} と {pet} が\n出会って {days} 日";

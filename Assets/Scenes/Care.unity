@@ -206,8 +206,6 @@ GameObject:
   - component: {fileID: 4295892}
   - component: {fileID: 4295891}
   - component: {fileID: 4295890}
-  - component: {fileID: 4295893}
-  - component: {fileID: 4295894}
   m_Layer: 5
   m_Name: "\u30DE\u30AB\u30ED\u30F3Button"
   m_TagString: Untagged
@@ -331,32 +329,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4295888}
   m_CullTransparentMesh: 1
---- !u!114 &4295893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4295888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: macaron
---- !u!114 &4295894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4295888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1758087355}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: macaron
 --- !u!1 &10770572
 GameObject:
   m_ObjectHideFlags: 0
@@ -2173,6 +2145,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1761244622}
   - {fileID: 1272287526}
   - {fileID: 2070474888}
   - {fileID: 1332305949}
@@ -2680,7 +2653,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 618}
+  m_SizeDelta: {x: 0, y: 668}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &271393080
 MonoBehaviour:
@@ -2712,7 +2685,7 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 50
-    m_Bottom: 0
+    m_Bottom: 50
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
@@ -3172,7 +3145,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -1}
+  m_AnchoredPosition: {x: 0, y: -1}
   m_SizeDelta: {x: 250, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &313607303
@@ -3414,7 +3387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e19eb7ed5ce74414b69c8b4efdf127a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
-  popupText: {fileID: 0}
+  popupText: {fileID: 388591347}
   floatDistance: 50
   duration: 1
 --- !u!114 &388591347
@@ -3851,7 +3824,6 @@ GameObject:
   - component: {fileID: 463809219}
   - component: {fileID: 463809218}
   - component: {fileID: 463809217}
-  - component: {fileID: 463809220}
   m_Layer: 5
   m_Name: "\u30D5\u30EB\u30FC\u30C4\u30BF\u30EB\u30C8Button"
   m_TagString: Untagged
@@ -3975,19 +3947,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463809215}
   m_CullTransparentMesh: 1
---- !u!114 &463809220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 463809215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: fruit_tart
 --- !u!1 &476738869
 GameObject:
   m_ObjectHideFlags: 0
@@ -4149,8 +4108,8 @@ Canvas:
   m_GameObject: {fileID: 507223201}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 625514841}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -4748,8 +4707,6 @@ GameObject:
   - component: {fileID: 602438391}
   - component: {fileID: 602438390}
   - component: {fileID: 602438389}
-  - component: {fileID: 602438392}
-  - component: {fileID: 602438393}
   m_Layer: 5
   m_Name: "\u30D7\u30EA\u30F3Button"
   m_TagString: Untagged
@@ -4873,32 +4830,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602438387}
   m_CullTransparentMesh: 1
---- !u!114 &602438392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 602438387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: pudding
---- !u!114 &602438393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 602438387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1758087355}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: pudding
 --- !u!1 &625514839
 GameObject:
   m_ObjectHideFlags: 0
@@ -5173,41 +5104,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 630979482}
   m_CullTransparentMesh: 1
---- !u!1 &655304700
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 655304701}
-  m_Layer: 5
-  m_Name: PopupSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &655304701
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 655304700}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 495.91998, y: 946.6}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &668059328
 GameObject:
   m_ObjectHideFlags: 0
@@ -5510,8 +5406,6 @@ GameObject:
   - component: {fileID: 728447358}
   - component: {fileID: 728447357}
   - component: {fileID: 728447356}
-  - component: {fileID: 728447359}
-  - component: {fileID: 728447360}
   m_Layer: 5
   m_Name: "\u3044\u3061\u3054\u30B1\u30FC\u30ADButton"
   m_TagString: Untagged
@@ -5635,32 +5529,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728447354}
   m_CullTransparentMesh: 1
---- !u!114 &728447359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 728447354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: strawberry_cake
---- !u!114 &728447360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 728447354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1758087355}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: strawberry_cake
 --- !u!1 &768650880
 GameObject:
   m_ObjectHideFlags: 0
@@ -6472,7 +6340,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 7.0135, y: 0}
+  m_AnchoredPosition: {x: 7.013504, y: 0}
   m_SizeDelta: {x: 4.0269, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &824431038
@@ -6583,7 +6451,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.499999, y: 0}
+  m_AnchoredPosition: {x: 2.5, y: 0}
   m_SizeDelta: {x: 45, y: 12}
   m_Pivot: {x: 0.49999997, y: 0.5}
 --- !u!1 &849981526
@@ -7239,6 +7107,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918147677}
   m_CullTransparentMesh: 1
+--- !u!1 &924527121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 924527123}
+  - component: {fileID: 924527122}
+  m_Layer: 0
+  m_Name: GameContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &924527122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924527121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4be5ae197824b3c882d93ad336673d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.GameContext
+--- !u!4 &924527123
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924527121}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 418.935, y: 873.2266, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &937265099
 GameObject:
   m_ObjectHideFlags: 0
@@ -7919,8 +7831,8 @@ RectTransform:
   - {fileID: 424837437}
   - {fileID: 768650881}
   - {fileID: 10770573}
-  - {fileID: 1125959022}
   - {fileID: 575855755}
+  - {fileID: 1125959022}
   - {fileID: 694196024}
   m_Father: {fileID: 123376009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8470,7 +8382,7 @@ GameObject:
   - component: {fileID: 1125959024}
   - component: {fileID: 1125959023}
   m_Layer: 5
-  m_Name: Button
+  m_Name: GiveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8728,7 +8640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e19eb7ed5ce74414b69c8b4efdf127a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
-  popupText: {fileID: 0}
+  popupText: {fileID: 1133170567}
   floatDistance: 50
   duration: 1
 --- !u!114 &1133170567
@@ -9001,7 +8913,6 @@ RectTransform:
   m_Children:
   - {fileID: 1988322730}
   - {fileID: 205396128}
-  - {fileID: 1761244622}
   m_Father: {fileID: 123376009}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9115,8 +9026,6 @@ GameObject:
   - component: {fileID: 1272287529}
   - component: {fileID: 1272287528}
   - component: {fileID: 1272287527}
-  - component: {fileID: 1272287530}
-  - component: {fileID: 1272287531}
   m_Layer: 5
   m_Name: "\u306B\u307C\u3057Button"
   m_TagString: Untagged
@@ -9240,32 +9149,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272287525}
   m_CullTransparentMesh: 1
---- !u!114 &1272287530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272287525}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: niboshi
---- !u!114 &1272287531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1272287525}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1758087355}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: niboshi
 --- !u!1 &1295611645
 GameObject:
   m_ObjectHideFlags: 0
@@ -9760,8 +9643,6 @@ GameObject:
   - component: {fileID: 1332305952}
   - component: {fileID: 1332305951}
   - component: {fileID: 1332305950}
-  - component: {fileID: 1332305953}
-  - component: {fileID: 1332305954}
   m_Layer: 5
   m_Name: "\u30D3\u30B9\u30B1\u30C3\u30C8Button"
   m_TagString: Untagged
@@ -9885,32 +9766,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332305948}
   m_CullTransparentMesh: 1
---- !u!114 &1332305953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332305948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: biscuit
---- !u!114 &1332305954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332305948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1758087355}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: biscuit
 --- !u!1 &1371244537
 GameObject:
   m_ObjectHideFlags: 0
@@ -10235,7 +10090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e19eb7ed5ce74414b69c8b4efdf127a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
-  popupText: {fileID: 0}
+  popupText: {fileID: 1376042995}
   floatDistance: 50
   duration: 1
 --- !u!114 &1376042995
@@ -10546,21 +10401,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414381971}
   m_CullTransparentMesh: 1
---- !u!115 &1430347122
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: OyatuButtonId
-  m_Namespace: 
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &1446828819
 GameObject:
   m_ObjectHideFlags: 0
@@ -11162,7 +11002,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -1}
+  m_AnchoredPosition: {x: 0, y: -1}
   m_SizeDelta: {x: 190, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1488514275
@@ -11253,7 +11093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e19eb7ed5ce74414b69c8b4efdf127a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
-  popupText: {fileID: 0}
+  popupText: {fileID: 1496369674}
   floatDistance: 50
   duration: 1
 --- !u!114 &1496369674
@@ -11582,7 +11422,6 @@ GameObject:
   - component: {fileID: 1548348653}
   - component: {fileID: 1548348652}
   - component: {fileID: 1548348651}
-  - component: {fileID: 1548348654}
   m_Layer: 5
   m_Name: "\u30CF\u30F3\u30D0\u30FC\u30B0Button"
   m_TagString: Untagged
@@ -11706,19 +11545,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548348649}
   m_CullTransparentMesh: 1
---- !u!114 &1548348654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548348649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: hamburg
 --- !u!1 &1563854983
 GameObject:
   m_ObjectHideFlags: 0
@@ -11931,50 +11757,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1567052977}
   m_CullTransparentMesh: 1
---- !u!1 &1584295537
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1584295539}
-  - component: {fileID: 1584295538}
-  m_Layer: 0
-  m_Name: GameContext
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1584295538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1584295537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a4be5ae197824b3c882d93ad336673d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.Core.GameContext
---- !u!4 &1584295539
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1584295537}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 343.20157, y: 1288.487, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1598714667
 GameObject:
   m_ObjectHideFlags: 0
@@ -12226,7 +12008,6 @@ GameObject:
   - component: {fileID: 1621644351}
   - component: {fileID: 1621644350}
   - component: {fileID: 1621644349}
-  - component: {fileID: 1621644352}
   m_Layer: 5
   m_Name: "\u30D1\u30D5\u30A7Button"
   m_TagString: Untagged
@@ -12350,19 +12131,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1621644347}
   m_CullTransparentMesh: 1
---- !u!114 &1621644352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1621644347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: parfait
 --- !u!1 &1623896165
 GameObject:
   m_ObjectHideFlags: 0
@@ -12928,21 +12696,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751266730}
   m_CullTransparentMesh: 1
---- !u!115 &1758087355
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: OyatuButtonId
-  m_Namespace: 
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &1761244621
 GameObject:
   m_ObjectHideFlags: 0
@@ -12968,16 +12721,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761244621}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1241937150}
+  m_Father: {fileID: 205396128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 210, y: -405}
+  m_AnchoredPosition: {x: -0.000030517578, y: -165.03477}
   m_SizeDelta: {x: 761.1774, y: 46.877}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1761244623
@@ -13539,7 +13292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 152.75, y: -221.22}
+  m_AnchoredPosition: {x: 152.75, y: -221.21997}
   m_SizeDelta: {x: 194.5766, y: 153.3645}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1821537266
@@ -13943,6 +13696,9 @@ MonoBehaviour:
     playCountToday: 0
     lastPlayDate: 
     lastSleepTicks: 0
+    lastNameChangeDate: 
+    lastCharNameChangeDate: 
+    lastBirthdayChangeDate: 
     personalityActivity: 0
     personalityDependency: 0
     personalityHonesty: 0
@@ -15016,7 +14772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -1}
+  m_AnchoredPosition: {x: 0, y: -1}
   m_SizeDelta: {x: 250, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1969413796
@@ -15856,7 +15612,6 @@ GameObject:
   - component: {fileID: 2070474891}
   - component: {fileID: 2070474890}
   - component: {fileID: 2070474889}
-  - component: {fileID: 2070474892}
   m_Layer: 5
   m_Name: "\u306B\u3093\u3058\u3093Button"
   m_TagString: Untagged
@@ -15980,19 +15735,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070474887}
   m_CullTransparentMesh: 1
---- !u!114 &2070474892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2070474887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1430347122}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OyatuButtonId
-  oyatuId: carrot
 --- !u!1 &2087863308
 GameObject:
   m_ObjectHideFlags: 0
@@ -16345,10 +16087,9 @@ SceneRoots:
   - {fileID: 625514842}
   - {fileID: 507223205}
   - {fileID: 1041924204}
-  - {fileID: 655304701}
   - {fileID: 1868804524}
   - {fileID: 137671731}
   - {fileID: 1598714669}
-  - {fileID: 1584295539}
+  - {fileID: 924527123}
   - {fileID: 508581907}
   - {fileID: 1855416605}

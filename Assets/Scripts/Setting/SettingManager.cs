@@ -16,12 +16,16 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private GameObject profileDetailPanel;
     [SerializeField] private TextMeshProUGUI profileIdText;
     [SerializeField] private TMP_InputField nameInputField;
+    [SerializeField] private TMP_InputField charNameInputField;
     [SerializeField] private TMP_InputField birthdayInputField;
     [SerializeField] private TextMeshProUGUI anniversaryValueText;
     [SerializeField] private GameObject profileSaveButton;
     [SerializeField] private GameObject editButton;
     [SerializeField] private RawImage profileIconImage;
     [SerializeField] private TextMeshProUGUI characterNameValueText;
+    [SerializeField] private TextMeshProUGUI profileAlertText;
+    [SerializeField] private TextMeshProUGUI profileErrorText;
+    [SerializeField] private Button cancelButton;
 
     [Header("--- Data Transfer Panel ---")]
     [SerializeField] private GameObject dataTransferPanel;
@@ -48,7 +52,11 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI errorText;
 
     private int selectedReasonIndex = -1;
-    private bool _isProfileEditing = false;
+    private bool _isProfileEditing  = false;
+    private bool _awaitingConfirm   = false;
+    private string _origName        = "";
+    private string _origCharName    = "";
+    private string _origBirthday    = "";
 
     private static readonly string[] ReasonLabels = {
         "使わなくなった",
@@ -181,24 +189,136 @@ public class SettingManager : MonoBehaviour
         }
 
         if (profileSaveButton != null) profileSaveButton.SetActive(false);
-        _isProfileEditing = false;
+        if (cancelButton != null)      cancelButton.gameObject.SetActive(false);
+        if (profileAlertText != null)  profileAlertText.gameObject.SetActive(false);
+        if (charNameInputField != null) charNameInputField.gameObject.SetActive(false);
+        _isProfileEditing  = false;
+        _awaitingConfirm   = false;
+
+        CheckLockStateOnOpen(data);
+    }
+
+    private void CheckLockStateOnOpen(SaveData data)
+    {
+        bool nameLocked     = IsLocked(data.lastNameChangeDate);
+        bool charNameLocked = IsLocked(data.lastCharNameChangeDate);
+        bool birthdayLocked = IsLocked(data.lastBirthdayChangeDate);
+
+        int lockedCount = (nameLocked ? 1 : 0) + (charNameLocked ? 1 : 0) + (birthdayLocked ? 1 : 0);
+
+        string message = "";
+
+        if (lockedCount == 1)
+        {
+            // 単体：「名前はXXXXまで変更できません」
+            if (nameLocked)     message = "名前は" + GetUnlockDate(data.lastNameChangeDate) + "まで変更できません";
+            if (charNameLocked) message = "キャラクター名は" + GetUnlockDate(data.lastCharNameChangeDate) + "まで変更できません";
+            if (birthdayLocked) message = "誕生日は" + GetUnlockDate(data.lastBirthdayChangeDate) + "まで変更できません";
+        }
+        else if (lockedCount == 2)
+        {
+            // 複数：「名前・キャラクター名はXXXXまで変更できません」（最遅の解除日）
+            var names = new System.Collections.Generic.List<string>();
+            var dates = new System.Collections.Generic.List<string>();
+            if (nameLocked)     { names.Add("名前");         dates.Add(data.lastNameChangeDate); }
+            if (charNameLocked) { names.Add("キャラクター名"); dates.Add(data.lastCharNameChangeDate); }
+            if (birthdayLocked) { names.Add("誕生日");        dates.Add(data.lastBirthdayChangeDate); }
+
+            string latestDate = dates[0];
+            foreach (var d in dates)
+            {
+                if (System.DateTime.TryParse(d, out System.DateTime dt) &&
+                    System.DateTime.TryParse(latestDate, out System.DateTime current) &&
+                    dt > current)
+                    latestDate = d;
+            }
+            message = string.Join("・", names) + "は" + GetUnlockDate(latestDate) + "まで変更できません";
+        }
+        else if (lockedCount == 3)
+        {
+            // 全項目：「XXXXまで変更できません」（最遅の解除日のみ）
+            string latestDate = data.lastNameChangeDate;
+            foreach (var d in new[] { data.lastCharNameChangeDate, data.lastBirthdayChangeDate })
+            {
+                if (System.DateTime.TryParse(d, out System.DateTime dt) &&
+                    System.DateTime.TryParse(latestDate, out System.DateTime current) &&
+                    dt > current)
+                    latestDate = d;
+            }
+            message = GetUnlockDate(latestDate) + "まで変更できません";
+        }
+
+        if (profileErrorText != null)
+        {
+            if (lockedCount > 0)
+            {
+                profileErrorText.text = message;
+                profileErrorText.gameObject.SetActive(true);
+            }
+            else
+            {
+                profileErrorText.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void OnEditButtonClicked()
     {
-        if (nameInputField != null)
+        var data = SaveManager.Instance?.Data;
+        if (data == null) return;
+
+        bool nameLocked     = IsLocked(data.lastNameChangeDate);
+        bool charNameLocked = IsLocked(data.lastCharNameChangeDate);
+        bool birthdayLocked = IsLocked(data.lastBirthdayChangeDate);
+
+        // 全項目ロック中は編集不可（エラーメッセージは LoadProfileUI で表示済み）
+        if (nameLocked && charNameLocked && birthdayLocked) return;
+
+        // ロックエラーテキストを非表示
+        if (profileErrorText != null) profileErrorText.gameObject.SetActive(false);
+
+        // ロックされていないフィールドを編集可能に
+        if (!nameLocked && nameInputField != null)
         {
             nameInputField.interactable = true;
             nameInputField.onValueChanged.RemoveListener(OnProfileFieldChanged);
             nameInputField.onValueChanged.AddListener(OnProfileFieldChanged);
         }
-        if (birthdayInputField != null)
+        if (!charNameLocked && charNameInputField != null)
+        {
+            if (characterNameValueText != null) characterNameValueText.gameObject.SetActive(false);
+            charNameInputField.text = data.petNickname ?? "";
+            charNameInputField.gameObject.SetActive(true);
+            charNameInputField.interactable = true;
+            charNameInputField.onValueChanged.RemoveListener(OnProfileFieldChanged);
+            charNameInputField.onValueChanged.AddListener(OnProfileFieldChanged);
+        }
+        if (!birthdayLocked && birthdayInputField != null)
         {
             birthdayInputField.interactable = true;
             birthdayInputField.onValueChanged.RemoveListener(OnProfileFieldChanged);
             birthdayInputField.onValueChanged.AddListener(OnProfileFieldChanged);
         }
+
+        // 元の値を保存（変更検出用）
+        _origName     = data.userName ?? "";
+        _origCharName = data.petNickname ?? "";
+        _origBirthday = data.ownerBirthday ?? "";
+
+        if (profileSaveButton != null) profileSaveButton.SetActive(true);
+        if (cancelButton != null)      cancelButton.gameObject.SetActive(true);
+
         _isProfileEditing = true;
+        _awaitingConfirm  = false;
+    }
+
+    public void OnCancelClicked()
+    {
+        // 入力値を編集前に戻す
+        if (nameInputField != null)     nameInputField.text     = _origName;
+        if (charNameInputField != null) charNameInputField.text = _origCharName;
+        if (birthdayInputField != null) birthdayInputField.text = _origBirthday;
+        ResetProfileEditState();
     }
 
     private void OnProfileFieldChanged(string value)
@@ -209,9 +329,35 @@ public class SettingManager : MonoBehaviour
     private void ResetProfileEditState()
     {
         if (nameInputField != null) nameInputField.interactable = false;
+        if (charNameInputField != null)
+        {
+            charNameInputField.interactable = false;
+            charNameInputField.gameObject.SetActive(false);
+        }
+        if (characterNameValueText != null) characterNameValueText.gameObject.SetActive(true);
         if (birthdayInputField != null) birthdayInputField.interactable = false;
         if (profileSaveButton != null) profileSaveButton.SetActive(false);
+        if (cancelButton != null)      cancelButton.gameObject.SetActive(false);
+        if (profileAlertText != null)  profileAlertText.gameObject.SetActive(false);
         _isProfileEditing = false;
+        _awaitingConfirm  = false;
+    }
+
+    // ─── 2週間ロックヘルパー ──────────────────────────────────
+
+    private bool IsLocked(string dateStr)
+    {
+        if (string.IsNullOrEmpty(dateStr)) return false;
+        if (System.DateTime.TryParse(dateStr, out System.DateTime d))
+            return (System.DateTime.Now - d).TotalDays < 14.0;
+        return false;
+    }
+
+    private string GetUnlockDate(string dateStr)
+    {
+        if (System.DateTime.TryParse(dateStr, out System.DateTime d))
+            return d.AddDays(14).ToString("yyyy/MM/dd");
+        return "";
     }
 
     public void OnProfileIconClicked()
@@ -222,13 +368,93 @@ public class SettingManager : MonoBehaviour
     public void OnProfileSaveClicked()
     {
         if (SaveManager.Instance == null) return;
-        if (nameInputField != null)
-            SaveManager.Instance.Data.userName = nameInputField.text;
-        if (birthdayInputField != null)
-            SaveManager.Instance.Data.ownerBirthday = birthdayInputField.text;
-        SaveManager.Instance.Save();
-        ResetProfileEditState();
-        Debug.Log("[ProfileDetail] 保存しました");
+        var data = SaveManager.Instance.Data;
+
+        if (!_awaitingConfirm)
+        {
+            // 誕生日フォーマット検証（変更がある場合のみ）
+            if (birthdayInputField != null &&
+                birthdayInputField.interactable &&
+                birthdayInputField.text != _origBirthday &&
+                !string.IsNullOrEmpty(birthdayInputField.text))
+            {
+                string birthdayText = birthdayInputField.text;
+                bool formatOk = System.Text.RegularExpressions.Regex.IsMatch(birthdayText, @"^\d{1,2}/\d{1,2}$");
+                string birthdayError = "";
+                if (!formatOk)
+                {
+                    birthdayError = "誕生日は「月/日」の形式で入力してください（例：3/15）";
+                }
+                else
+                {
+                    var parts = birthdayText.Split('/');
+                    int month = int.Parse(parts[0]);
+                    int day   = int.Parse(parts[1]);
+                    if (month < 1 || month > 12)
+                        birthdayError = "月は1〜12の範囲で入力してください";
+                    else if (day < 1 || day > 31)
+                        birthdayError = "日は1〜31の範囲で入力してください";
+                }
+                if (!string.IsNullOrEmpty(birthdayError))
+                {
+                    if (profileAlertText != null)
+                    {
+                        profileAlertText.text = birthdayError;
+                        profileAlertText.gameObject.SetActive(true);
+                    }
+                    return;
+                }
+            }
+
+            // 1回目：変更項目を検出してAlertTextを表示
+            var changed = new System.Collections.Generic.List<string>();
+            if (nameInputField != null && nameInputField.text != _origName)                       changed.Add("名前");
+            if (charNameInputField != null && charNameInputField.gameObject.activeSelf
+                && charNameInputField.text != _origCharName)                                      changed.Add("キャラクター名");
+            if (birthdayInputField != null && birthdayInputField.text != _origBirthday)           changed.Add("誕生日");
+
+            if (changed.Count == 0)
+            {
+                ResetProfileEditState();
+                return;
+            }
+
+            string fields = string.Join("・", changed);
+            if (profileAlertText != null)
+            {
+                profileAlertText.text = "2週間" + fields + "を変更できませんが変更しますか？";
+                profileAlertText.gameObject.SetActive(true);
+            }
+            _awaitingConfirm = true;
+        }
+        else
+        {
+            // 2回目：保存して変更日を記録
+            string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+
+            if (nameInputField != null && nameInputField.text != _origName)
+            {
+                data.userName            = nameInputField.text;
+                data.lastNameChangeDate  = today;
+            }
+            if (charNameInputField != null && charNameInputField.gameObject.activeSelf
+                && charNameInputField.text != _origCharName)
+            {
+                data.petNickname             = charNameInputField.text;
+                data.lastCharNameChangeDate  = today;
+                if (characterNameValueText != null) characterNameValueText.text = charNameInputField.text;
+            }
+            if (birthdayInputField != null && birthdayInputField.text != _origBirthday)
+            {
+                data.ownerBirthday           = birthdayInputField.text;
+                data.lastBirthdayChangeDate  = today;
+            }
+
+            SaveManager.Instance.Save();
+            Debug.Log("[ProfileDetail] 保存しました");
+            ResetProfileEditState();
+            CheckLockStateOnOpen(data);
+        }
     }
 
     // --- Data Transfer Panel ---

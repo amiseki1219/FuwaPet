@@ -110,6 +110,11 @@ public class SaveData
     public string lastPlayDate = "";
     public long lastSleepTicks = 0; // ねんね8時間クールダウン用
 
+    // --- プロフィール変更日（2週間ロック用） ---
+    public string lastNameChangeDate     = "";
+    public string lastCharNameChangeDate = "";
+    public string lastBirthdayChangeDate = "";
+
     // --- 性格パラメータ（初期値はキャラ選択時にセット） ---
     public int personalityActivity    = 0; // 活動性（-100〜+100）
     public int personalityDependency  = 0; // 甘えん坊度（-100〜+100）
