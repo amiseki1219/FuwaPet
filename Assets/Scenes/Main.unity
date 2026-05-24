@@ -1688,7 +1688,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 166.21, y: -407.22}
+  m_AnchoredPosition: {x: 166.21002, y: -407.21997}
   m_SizeDelta: {x: 100, y: 80}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &170451640
@@ -12311,7 +12311,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 184.42, y: -333}
+  m_AnchoredPosition: {x: 184.41998, y: -333}
   m_SizeDelta: {x: 120, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &546352819
@@ -23967,6 +23967,7 @@ MonoBehaviour:
   closeButton: {fileID: 170451640}
   scrollContent: {fileID: 1829438404}
   noticeItemPrefab: {fileID: 4470749754587570873, guid: 5d00b1a4cf5ec4bd0bf2b49c09cb298f, type: 3}
+  badgeManager: {fileID: 728267300}
 --- !u!114 &1321205461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27895,6 +27896,23 @@ MonoBehaviour:
     coachMarkShown: 0
     tutorialQuestsClaimed: 0000000000
     dailyQuestsClaimed: 00000000
+    freeOyatuCountToday: 0
+    lastFreeOyatuDate: 
+    bathCountToday: 0
+    lastBathDate: 
+    nadeCountToday: 0
+    lastNadeDate: 
+    playCountToday: 0
+    lastPlayDate: 
+    lastSleepTicks: 0
+    lastNameChangeDate: 
+    lastCharNameChangeDate: 
+    lastBirthdayChangeDate: 
+    personalityActivity: 0
+    personalityDependency: 0
+    personalityHonesty: 0
+    personalityDiligence: 0
+    personalitySensitivity: 0
 --- !u!4 &1567965650
 Transform:
   m_ObjectHideFlags: 0
@@ -30315,50 +30333,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779529864}
   m_CullTransparentMesh: 1
---- !u!1 &1814398370
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1814398372}
-  - component: {fileID: 1814398371}
-  m_Layer: 0
-  m_Name: BadgeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1814398371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814398370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0674c3b1611744278b95288734952f72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BadgeManager
---- !u!4 &1814398372
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814398370}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 440.07187, y: 596.5542, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1829438403
 GameObject:
   m_ObjectHideFlags: 0
@@ -32472,7 +32446,7 @@ Canvas:
   m_GameObject: {fileID: 1981582848}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 519420031}
   m_PlaneDistance: 10
   m_PixelPerfect: 0
@@ -40240,4 +40214,3 @@ SceneRoots:
   - {fileID: 1855818265}
   - {fileID: 2107069599}
   - {fileID: 1753688365}
-  - {fileID: 1814398372}

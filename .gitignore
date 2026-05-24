@@ -8,6 +8,7 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/YurufuBuild/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 *.log
@@ -122,6 +123,10 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+
+# 3Dモデル（大きいバイナリ、Git管理外）
+*.fbx
+*.FBX
 
 # Fonts（大きいバイナリ、Git管理外）
 Assets/Fonts/*.ttf

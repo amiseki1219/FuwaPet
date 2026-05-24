@@ -34,44 +34,50 @@ public class GameData : MonoBehaviour
         // SaveManager側でLoadが完了している必要があるお！
     }
 
+    // --- お財布変化イベント（購読すると AddCoin/UseCoin/AddLunaStone/UseLunaStone で自動通知） ---
+    public static event Action OnWalletChanged;
+
     // --- データの更新メソッドたち ---
 
     public void AddCoin(int amount)
     {
         CurrentSave.coinCount += Mathf.Max(0, amount);
         Save();
+        OnWalletChanged?.Invoke();
     }
 
     public bool UseCoin(int amount)
     {
-    if (CurrentSave.coinCount < amount)
-    {
-        Debug.LogWarning("コインが足りないよ！");
-        return false;
+        if (CurrentSave.coinCount < amount)
+        {
+            Debug.LogWarning("コインが足りないよ！");
+            return false;
+        }
+        CurrentSave.coinCount -= amount;
+        Save();
+        OnWalletChanged?.Invoke();
+        return true;
     }
-    CurrentSave.coinCount -= amount;
-    Save();
-    return true;
-    }
-    
 
     public void AddLunaStone(int amount)
     {
         CurrentSave.lunaStoneCount += amount;
         if (CurrentSave.lunaStoneCount < 0) CurrentSave.lunaStoneCount = 0;
         Save();
+        OnWalletChanged?.Invoke();
     }
 
     public bool UseLunaStone(int amount)
     {
         if (CurrentSave.lunaStoneCount < amount)
-    {
-        Debug.LogWarning("ルナストーンが足りないよ！");
-        return false;
-    }
-    CurrentSave.lunaStoneCount -= amount;
-    Save();
-    return true;
+        {
+            Debug.LogWarning("ルナストーンが足りないよ！");
+            return false;
+        }
+        CurrentSave.lunaStoneCount -= amount;
+        Save();
+        OnWalletChanged?.Invoke();
+        return true;
     }
 
     public void SetPetName(string newName)

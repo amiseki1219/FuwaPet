@@ -38,6 +38,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Care.unity
     guid: ef272466cd1fa4934a9266b5eed7e16e
+  - enabled: 1
+    path: Assets/Scenes/Bath.unity
+    guid: 90248b5247a914fea8b9035fdd3a9925
+  - enabled: 1
+    path: Assets/Scenes/Sleep.unity
+    guid: 843103d7633384d02806c56e9bb2ff75
+  - enabled: 1
+    path: Assets/Scenes/Play.unity
+    guid: af247b292462146d6921a08a09ced6d4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

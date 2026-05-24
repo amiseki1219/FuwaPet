@@ -61,44 +61,44 @@ public class BadgeManager : MonoBehaviour
     {
         if (noticeBadge == null) return;
         var readIds = SaveManager.Instance?.Data?.readNoticeIds;
-        // 未読IDがあるか確認（NoticeManager.allNoticeIds 経由）
         var allIds = NoticeManager.GetAllNoticeIds();
         bool hasUnread = false;
         foreach (var id in allIds)
         {
             if (readIds == null || !readIds.Contains(id)) { hasUnread = true; break; }
         }
+        Debug.Log($"[BadgeManager] readNoticeIds count: {readIds?.Count ?? -1}");
+        Debug.Log($"[BadgeManager] allIds count: {allIds.Count}");
+        Debug.Log($"[BadgeManager] hasUnread: {hasUnread}");
         noticeBadge.SetActive(hasUnread);
     }
 
     private void CheckShopBadge()
     {
         if (shopBadge == null) return;
-        var data = SaveManager.Instance?.Data;
-        bool show = data == null || data.lastShopVersion != currentShopVersion;
-        shopBadge.SetActive(show);
+        // 現時点は常に非表示。アップデート時に currentShopVersion を更新して有効化
+        shopBadge.SetActive(false);
     }
 
     private void CheckGachaBadge()
     {
         if (gachaBadge == null) return;
-        var data = SaveManager.Instance?.Data;
-        bool show = data == null || data.lastGachaVersion != currentGachaVersion;
-        gachaBadge.SetActive(show);
+        // 現時点は常に非表示。アップデート時に currentGachaVersion を更新して有効化
+        gachaBadge.SetActive(false);
     }
 
     private void CheckCollectionBadge()
     {
         if (collectionBadge == null) return;
-        var data = SaveManager.Instance?.Data;
-        bool show = data == null || data.lastCollectionVersion != currentCollectionVersion;
-        collectionBadge.SetActive(show);
+        // 現時点は常に非表示。アップデート時に currentCollectionVersion を更新して有効化
+        collectionBadge.SetActive(false);
     }
 
     // ─── 外部から呼ぶ公開メソッド ─────────────────────────────
 
     public void OnQuestPanelClosed()    => CheckQuestBadge();
     public void OnNoticePanelClosed()   => CheckNoticeBadge();
+    public void HideNoticeBadge()       { if (noticeBadge != null) noticeBadge.SetActive(false); }
 
     public void OnShopVisited()
     {
