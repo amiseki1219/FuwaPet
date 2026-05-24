@@ -124,6 +124,10 @@ __pycache__/
 venv/
 .venv/
 
+# 3Dモデル（大きいバイナリ、Git管理外）
+*.fbx
+*.FBX
+
 # Fonts（大きいバイナリ、Git管理外）
 Assets/Fonts/*.ttf
 Assets/Fonts/*.otf
