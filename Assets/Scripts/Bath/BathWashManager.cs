@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -24,7 +27,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         new ShampooData { id = "rainbow",   displayName = "レインボーせっけん", imageName = "RainbowImage", description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪"         },
     };
 
-    private const int MaxRub = 24;
+    [Header("こすり設定")]
+    [SerializeField] private float requiredDistancePerScrub = 80f;
+    [SerializeField] private int maxScrubCount = 24;
+    [SerializeField] private Vector2 particleOffset = Vector2.zero;
+    [SerializeField] private RectTransform scrubArea;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI percentText;
@@ -41,30 +48,65 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     [Header("手のカーソル")]
     [SerializeField] private RectTransform handCursor;
-    [SerializeField] private BathSparkleUI sparkle;
 
     [Header("泡 (BubbleGroupの子を順番に登録)")]
     [SerializeField] private BubbleController[] bubbles;
 
-    private int _rubCount;
+    private int _scrubCount;
     private bool _isComplete;
     private bool _inputBlocked;
+    private bool _isDragging;
+    private Vector2 _lastTouchPos;
+    private float _accumulatedDistance;
     private string _shampooId;
     private System.Collections.IEnumerator _sliderCoroutine;
+
+    // Screen Space Camera 対応：scrubArea 判定に使うカメラ
+    private Camera _canvasCamera;
+
+    // ── ライフサイクル ────────────────────────────────────────────────────────
+
+    private void Awake()
+    {
+        // Screen Space Camera の場合 worldCamera が必要
+        // null のまま使うと ScreenSpaceOverlay として誤判定する
+        var canvas = GetComponentInParent<Canvas>();
+        _canvasCamera = canvas != null ? canvas.worldCamera : null;
+        Debug.Log($"[BathWash] Awake: canvas={canvas?.name} renderMode={canvas?.renderMode} worldCamera={_canvasCamera?.name ?? "null"}");
+    }
+
+    private void OnEnable()
+    {
+        EnhancedTouchSupport.Enable();
+    }
+
+    private void OnDisable()
+    {
+        EnhancedTouchSupport.Disable();
+    }
 
     // ── 初期化 ────────────────────────────────────────────────────────────────
 
     public void Initialize(string shampooId)
     {
-        _shampooId    = shampooId;
-        _rubCount     = 0;
-        _isComplete   = false;
-        _inputBlocked = true;  // GoNextButton のクリックイベントを1フレーム遮断
+        _shampooId           = shampooId;
+        _scrubCount          = 0;
+        _isComplete          = false;
+        _inputBlocked        = true;
+        _isDragging          = false;
+        _accumulatedDistance = 0f;
+
+        // canvas camera を再取得（Awake後に別 Canvas に移動した場合のため）
+        var canvas = GetComponentInParent<Canvas>();
+        _canvasCamera = canvas != null ? canvas.worldCamera : null;
+
         StartCoroutine(UnblockInputNextFrame());
 
         if (completeButton != null) completeButton.SetActive(false);
         if (hintText != null) hintText.SetActive(true);
         if (handCursor != null) handCursor.gameObject.SetActive(false);
+
+        Debug.Log($"[BathWash] Initialize: shampooId={shampooId} canvasCamera={_canvasCamera?.name ?? "null"} scrubArea={scrubArea?.name ?? "null"}");
 
         UpdateUI();
         ResetBubbles();
@@ -75,51 +117,147 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         yield return null;
         _inputBlocked = false;
+        Debug.Log("[BathWash] Input unblocked");
     }
 
-    // ── タップ検知 ────────────────────────────────────────────────────────────
+    // ── ドラッグ開始・終了 ────────────────────────────────────────────────────
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log($"[BathWash] OnPointerDown rubCount={_rubCount} isComplete={_isComplete} blocked={_inputBlocked}");
-        if (_isComplete || _rubCount >= MaxRub || _inputBlocked) return;
+        Debug.Log($"[BathWash] OnPointerDown pos={eventData.position} isComplete={_isComplete} scrubCount={_scrubCount} blocked={_inputBlocked}");
 
-        if (handCursor != null)
-        {
-            handCursor.gameObject.SetActive(true);
-            // HandCursor は ScreenSpaceOverlay Canvas にあるため cam=null で変換
-            var parentRect = handCursor.parent as RectTransform;
-            Vector2 local;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                parentRect, eventData.position, null, out local);
-            handCursor.anchoredPosition = local;
-        }
+        if (_isComplete || _scrubCount >= maxScrubCount || _inputBlocked) return;
 
-        sparkle?.Play(handCursor != null ? handCursor.anchoredPosition : Vector2.zero);
-        touchEffect?.Play(eventData.position);
-        _rubCount++;
-        UpdateUI();
-        UpdateBubbles(_rubCount);
+        _isDragging          = true;
+        _lastTouchPos        = eventData.position;
+        _accumulatedDistance = 0f;
 
-        if (_rubCount >= MaxRub)
-            OnWashComplete();
+        bool inArea = IsInScrubArea(eventData.position);
+        Debug.Log($"[BathWash] OnPointerDown: inArea={inArea} cam={_canvasCamera?.name ?? "null"}");
+
+        UpdateFollowEffects(eventData.position, show: inArea);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (handCursor != null) handCursor.gameObject.SetActive(false);
+        Debug.Log($"[BathWash] OnPointerUp pos={eventData.position} scrubCount={_scrubCount}");
+        _isDragging = false;
+        UpdateFollowEffects(eventData.position, show: false);
+    }
+
+    // ── こすり判定（毎フレーム） ───────────────────────────────────────────────
+
+    private void Update()
+    {
+        if (!_isDragging || _isComplete || _inputBlocked) return;
+
+        Vector2 currentPos = Vector2.zero;
+        bool hasInput = false;
+
+        if (Touch.activeTouches.Count > 0)
+        {
+            currentPos = Touch.activeTouches[0].screenPosition;
+            hasInput = true;
+        }
+        else if (Mouse.current?.leftButton.isPressed == true)
+        {
+            currentPos = Mouse.current.position.ReadValue();
+            hasInput = true;
+        }
+
+        if (!hasInput)
+        {
+            _isDragging = false;
+            UpdateFollowEffects(Vector2.zero, show: false);
+            return;
+        }
+
+        bool inArea = IsInScrubArea(currentPos);
+
+        Debug.Log($"[BathWash] Update: pos={currentPos} inArea={inArea} scrub={_scrubCount}");
+
+        // ① エフェクトは scrubArea 内のときだけ表示する
+        UpdateFollowEffects(currentPos, show: inArea);
+
+        float dist = Vector2.Distance(currentPos, _lastTouchPos);
+        _lastTouchPos = currentPos;
+
+        if (!inArea) return;
+
+        // ② こすり距離が閾値を超えたらカウント
+        _accumulatedDistance += dist;
+        if (_accumulatedDistance >= requiredDistancePerScrub)
+        {
+            _accumulatedDistance -= requiredDistancePerScrub;
+            _scrubCount++;
+            Debug.Log($"[BathWash] ★ scrubCount++ = {_scrubCount}");
+            UpdateUI();
+            UpdateBubbles(_scrubCount);
+
+            if (_scrubCount >= maxScrubCount)
+                OnWashComplete();
+        }
+    }
+
+    // ── エフェクト追従（毎フレーム共通処理） ──────────────────────────────────
+
+    // show=true : 表示して位置更新 / show=false : 非表示にする
+    private void UpdateFollowEffects(Vector2 screenPos, bool show)
+    {
+        // HandCursor は OverlayCanvas（ScreenSpaceOverlay）にあるため camera=null で変換
+        if (handCursor != null)
+        {
+            handCursor.gameObject.SetActive(show);
+            if (show)
+            {
+                var parentRect = handCursor.parent as RectTransform;
+                if (parentRect != null)
+                {
+                    Vector2 local;
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                        parentRect, screenPos, null, out local);
+                    handCursor.anchoredPosition = local;
+                }
+            }
+        }
+
+        // Particle：show=true で連続放出、false で停止（emission.enabled のみ制御）
+        if (show)
+            touchEffect?.StartContinuous(screenPos);
+        else
+            touchEffect?.StopContinuous();
+    }
+
+    // ── scrubArea 判定（Screen Space Camera 対応） ─────────────────────────────
+
+    private bool IsInScrubArea(Vector2 screenPos)
+    {
+        if (scrubArea == null)
+        {
+            Debug.LogWarning("[BathWash] IsInScrubArea: scrubArea is NULL → returning true");
+            return true;
+        }
+        // RectangleContainsScreenPoint は orthographic camera + CanvasScaler 環境で誤判定することがある
+        // ScreenPointToLocalPointInRectangle でローカル座標に変換してから rect 判定する
+        Vector2 localPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            scrubArea, screenPos, _canvasCamera, out localPos);
+        bool result = scrubArea.rect.Contains(localPos);
+        Debug.Log($"[BathWash] IsInScrubArea: screen={screenPos} cam={_canvasCamera?.name ?? "null"} local={localPos} rect={scrubArea.rect} result={result}");
+        return result;
     }
 
     // ── UI更新 ────────────────────────────────────────────────────────────────
 
     private void UpdateUI()
     {
-        float pct = (float)_rubCount / MaxRub * 100f;
+        float pct = (float)_scrubCount / maxScrubCount * 100f;
+        Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
         if (percentText  != null) percentText.text  = $"{Mathf.RoundToInt(pct)}%";
-        if (rubCountText != null) rubCountText.text = $"あと {_rubCount} 回";
+        if (rubCountText != null) rubCountText.text = $"あと {_scrubCount} 回";
         if (gaugeSlider  != null)
         {
-            float target = (float)_rubCount / MaxRub;
+            float target = (float)_scrubCount / maxScrubCount;
             if (_sliderCoroutine != null) StopCoroutine(_sliderCoroutine);
             _sliderCoroutine = AnimateSliderCoroutine(gaugeSlider, gaugeSlider.value, target, 0.3f);
             StartCoroutine(_sliderCoroutine);
@@ -145,9 +283,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     // [0]Head_01 [1]Head_02 [2]Head_03 [3]Ear_L [4]Ear_R
     // [5]Body_01 [6]Body_02 [7]Body_03 [8]Body_04 [9]Tail
 
-    private void UpdateBubbles(int rubCount)
+    private void UpdateBubbles(int scrubCount)
     {
-        int stage = rubCount / 6;
+        int stage = scrubCount / 6;
         switch (stage)
         {
             case 0:
@@ -204,7 +342,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnSkip()
     {
-        _rubCount = MaxRub;
+        _scrubCount = maxScrubCount;
         UpdateUI();
         OnWashComplete();
     }
@@ -212,8 +350,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private void OnWashComplete()
     {
         _isComplete = true;
+        _isDragging = false;
+        touchEffect?.StopContinuous();
         if (hintText != null) hintText.SetActive(false);
         if (completeButton != null) completeButton.SetActive(true);
+        Debug.Log("[BathWash] WashComplete!");
     }
 
     public void OnComplete()
@@ -221,15 +362,12 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         var save = SaveManager.Instance?.Data;
         if (save == null) return;
 
-        // 清潔度 +40（上限100）
         save.clean = Mathf.Clamp(save.clean + 40f, 0f, 100f);
 
-        // お風呂カウント（日付をまたいだらリセット）
         ResetBathCountIfNewDay(save);
         save.bathCountToday++;
         save.lastBathDate = System.DateTime.Now.ToString("yyyy-MM-dd");
 
-        // シャンプーに応じた性格パラ変化
         ApplyPersonality(save);
 
         Debug.Log($"[OnComplete] clean={save.clean} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
