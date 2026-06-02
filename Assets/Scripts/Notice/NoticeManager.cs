@@ -70,6 +70,7 @@ public class NoticeManager : MonoBehaviour
         Debug.Log($"ダミーデータ件数: {dummyNotices.Count}");
         if (noticePanel != null)
             noticePanel.SetActive(true);
+
         GenerateNotices();
     }
 

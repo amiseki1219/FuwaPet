@@ -42,7 +42,6 @@ public class CharacterPanelCardManager : MonoBehaviour
         {
             var data = SaveManager.Instance.Data;
             data.selectedCharacterId = characterIds[currentIndex];
-            data.iconId = characterIds[currentIndex];
             SetInitialPersonality(data, characterIds[currentIndex]);
             SaveManager.Instance.Save();
         }

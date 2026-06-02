@@ -30,7 +30,10 @@ public class SceneLoader : MonoBehaviour
         LoadScene("Main");
     }
 
-    public void GotoCare() => LoadScene("Care");
+    public void GotoCare()  => LoadScene("Care");
+    public void GotoBath()  => LoadScene("Bath");
+    public void GotoPlay()  => LoadScene("Play");
+    public void GotoSleep() => LoadScene("Sleep");
     public void GoToSetting() => LoadScene("Setting");
     public void GoToShop() => LoadScene("Shop");
     public void GoToCoinPurchase() => LoadScene("CoinPurchase");

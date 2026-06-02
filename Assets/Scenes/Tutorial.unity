@@ -2544,6 +2544,10 @@ MonoBehaviour:
     seVolume: 0.5
     isNotificationOn: 1
     isSeOn: 1
+    readNoticeIds: []
+    lastShopVersion: 
+    lastGachaVersion: 
+    lastCollectionVersion: 
     ownedDecoIds: []
     isFirstTimePackBought: 0
     lastPackAPurchaseTicks: 0
@@ -2581,6 +2585,20 @@ MonoBehaviour:
     coachMarkShown: 0
     tutorialQuestsClaimed: 0000000000
     dailyQuestsClaimed: 00000000
+    freeOyatuCountToday: 0
+    lastFreeOyatuDate: 
+    bathCountToday: 0
+    lastBathDate: 
+    nadeCountToday: 0
+    lastNadeDate: 
+    playCountToday: 0
+    lastPlayDate: 
+    lastSleepTicks: 0
+    personalityActivity: 0
+    personalityDependency: 0
+    personalityHonesty: 0
+    personalityDiligence: 0
+    personalitySensitivity: 0
 --- !u!1 &456339779
 GameObject:
   m_ObjectHideFlags: 0
@@ -3245,7 +3263,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -477}
+  m_AnchoredPosition: {x: 0, y: -575}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &516261989
@@ -8802,58 +8820,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512153494}
   m_CullTransparentMesh: 1
---- !u!1 &1524813548
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1524813550}
-  - component: {fileID: 1524813549}
-  m_Layer: 0
-  m_Name: ProfileSelectionPanel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1524813549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524813548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33f634dbf46d04df79fed7b9bc57c5e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProfileSelectionPanel
-  iconSettings:
-  - iconId: Icon1
-    button: {fileID: 0}
-    selectedFrame: {fileID: 0}
-  - iconId: Icon2
-    button: {fileID: 0}
-    selectedFrame: {fileID: 0}
-  nextButton: {fileID: 0}
---- !u!4 &1524813550
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524813548}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 191.00844, y: 332.9287, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1531960484
 GameObject:
   m_ObjectHideFlags: 0
@@ -11239,7 +11205,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9115605020260906401, guid: 7ed3410727584408bb4e7ea6497764f0, type: 3}
+  m_Sprite: {fileID: -6640404073067587070, guid: 7ed3410727584408bb4e7ea6497764f0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12526,7 +12492,6 @@ SceneRoots:
   - {fileID: 736358417}
   - {fileID: 71350028}
   - {fileID: 1734943864}
-  - {fileID: 1524813550}
   - {fileID: 17888129}
   - {fileID: 732340132}
   - {fileID: 426969272}

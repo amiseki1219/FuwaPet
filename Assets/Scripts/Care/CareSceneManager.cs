@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using Game.Core;
@@ -54,10 +55,12 @@ public class CareSceneManager : MonoBehaviour
     [Header("おやつ")]
     [SerializeField] private OyatuManager oyatuManager;
 
-    private const int MaxBathPerDay  = 3;
-    private const int MaxNadePerDay  = 10;
-    private const int MaxPlayPerDay  = 5;
-    private const float SleepCooldownHours = 8f;
+    [Header("お風呂完了エフェクト")]
+    [SerializeField] private Animator characterAnimator;
+    [SerializeField] private GameObject sparkleEffect;
+
+    private const int MaxNadePerDay = 10;
+    private const int MaxPlayPerDay = 5;
 
     private PetStatus _status;
     private SaveData _save;
@@ -78,7 +81,6 @@ public class CareSceneManager : MonoBehaviour
         {
             Debug.LogWarning("GameContextがないのでダミーで動作します");
             _status = new PetStatus();
-            _status.AddMood(60f);
             _status.AddClean(70f);
             _status.AddEnergy(80f);
             _status.AddHunger(50f);
@@ -94,7 +96,7 @@ public class CareSceneManager : MonoBehaviour
             _save.petName = "テスト";
         }
 
-        _status.ApplyTimeDecay();
+        // ApplyTimeDecay は MainUIManager.Start() で適用済みのため Care では呼ばない
         LoadCharacterInfo();
 
         if (noticePanelRect != null)
@@ -107,6 +109,29 @@ public class CareSceneManager : MonoBehaviour
         }
 
         RefreshAll();
+
+        if (BathWashManager.BathJustCompleted)
+        {
+            BathWashManager.BathJustCompleted = false;
+            ShowNotice("お風呂完了！清潔 +40 ✨");
+            PlayBathCompleteEffect();
+        }
+    }
+
+    private void PlayBathCompleteEffect()
+    {
+        if (characterAnimator != null) characterAnimator.SetTrigger("Happy");
+        if (sparkleEffect != null)
+        {
+            sparkleEffect.SetActive(true);
+            StartCoroutine(HideSparkleAfterDelay(5f));
+        }
+    }
+
+    private IEnumerator HideSparkleAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (sparkleEffect != null) sparkleEffect.SetActive(false);
     }
 
     public void RefreshAll()
@@ -198,7 +223,7 @@ public class CareSceneManager : MonoBehaviour
 
     private void SetCondition()
     {
-        float avg = (_status.Mood + _status.Clean + _status.Energy) / 3f;
+        float avg = (_status.Hunger + _status.Clean + _status.Energy) / 3f;
         string text;
 
         if (avg >= 80f)      text = "絶好調！";
@@ -328,28 +353,18 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnBath()
     {
-        ResetDailyCountIfNeeded();
-        if (_save.bathCountToday >= MaxBathPerDay) { ShowNotice($"今日のお風呂は{MaxBathPerDay}回までだよ！"); return; }
-        if (!GameData.Instance.UseCoin(30)) { ShowNotice("コインが足りないよ…！"); return; }
-        _save.bathCountToday++;
-        _status.AddClean(40f);
-        _status.AddTrust(3);
-        _status.OnBath();
-        GameContext.Instance?.SavePetStatus();
-        cleanPopup?.Show("+40");
-        RefreshAll();
+        GoToScene("Bath");
     }
 
     public void OnBtnPet()
     {
         ResetDailyCountIfNeeded();
         if (_save.nadeCountToday >= MaxNadePerDay) { ShowNotice($"今日のなでなでは{MaxNadePerDay}回までだよ！"); return; }
-        if (!GameData.Instance.UseCoin(10)) { ShowNotice("コインが足りないよ…！"); return; }
         _save.nadeCountToday++;
-        _status.AddEnergy(10f);
-        _status.AddTrust(3);
+        _status.AddEnergy(3f);
+        _status.AddTrust(2);
         GameContext.Instance?.SavePetStatus();
-        energyPopup?.Show("+10");
+        energyPopup?.Show("+3");
         QuestManager.Instance?.NotifyNade();
         RefreshAll();
     }
@@ -363,7 +378,6 @@ public class CareSceneManager : MonoBehaviour
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
         _status.AddTrust(3);
-        _status.OnPlayed();
         GameContext.Instance?.SavePetStatus();
         energyPopup?.Show("+30");
         RefreshAll();
@@ -371,27 +385,24 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnSleep()
     {
-        long cooldownTicks = (long)(SleepCooldownHours * System.TimeSpan.TicksPerHour);
-        long remaining = cooldownTicks - (System.DateTime.Now.Ticks - _save.lastSleepTicks);
-        if (_save.lastSleepTicks != 0 && remaining > 0)
-        {
-            int hours   = (int)(remaining / System.TimeSpan.TicksPerHour);
-            int minutes = (int)(remaining % System.TimeSpan.TicksPerHour / System.TimeSpan.TicksPerMinute);
-            ShowNotice($"ねんねはあと{hours}時間{minutes}分後だよ！");
-            return;
-        }
-        _save.lastSleepTicks = System.DateTime.Now.Ticks;
-        _status.AddEnergy(50f);
-        _status.AddTrust(1);
-        GameContext.Instance?.SavePetStatus();
-        energyPopup?.Show("+50");
-        RefreshAll();
+        GoToScene("Sleep");
+    }
+
+    private void GoToScene(string sceneName)
+    {
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.LoadSceneWithLoading(sceneName);
+        else
+            SceneManager.LoadScene(sceneName);
     }
 
     public void OnBtnFood()
     {
         oyatuManager?.ShowPanel();
     }
+
+    public void ShowHungerPopup(string text) => hungerPopup?.Show(text);
+    public void ShowEnergyPopup(string text) => energyPopup?.Show(text);
 
     private void ResetDailyCountIfNeeded()
     {

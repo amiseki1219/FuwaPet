@@ -545,7 +545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9115605020260906401, guid: 7ed3410727584408bb4e7ea6497764f0, type: 3}
+  m_Sprite: {fileID: -6640404073067587070, guid: 7ed3410727584408bb4e7ea6497764f0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -661,7 +661,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000030517578, y: -477.00003}
+  m_AnchoredPosition: {x: 0, y: -575}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1404974386
@@ -770,6 +770,10 @@ MonoBehaviour:
     seVolume: 0.5
     isNotificationOn: 1
     isSeOn: 1
+    readNoticeIds: []
+    lastShopVersion: 
+    lastGachaVersion: 
+    lastCollectionVersion: 
     ownedDecoIds: []
     isFirstTimePackBought: 0
     lastPackAPurchaseTicks: 0
@@ -782,6 +786,7 @@ MonoBehaviour:
     nextPlay: 0
     nextBath: 0
     onboardingCompleted: 0
+    accountLinkShown: 0
     ownedIcons:
     - Icon1
     - Icon2
@@ -795,6 +800,31 @@ MonoBehaviour:
     clean: 50
     energy: 50
     mood: 50
+    tutorialQuestsDone: 0000000000
+    tutorialBonusClaimed: 0
+    tutorialAllCompleted: 0
+    tutorialCompletedDate: 
+    dailyQuestsDone: 00000000
+    dailyBonusClaimed: 0
+    dailyNadeCount: 0
+    lastQuestResetDate: 
+    coachMarkShown: 0
+    tutorialQuestsClaimed: 0000000000
+    dailyQuestsClaimed: 00000000
+    freeOyatuCountToday: 0
+    lastFreeOyatuDate: 
+    bathCountToday: 0
+    lastBathDate: 
+    nadeCountToday: 0
+    lastNadeDate: 
+    playCountToday: 0
+    lastPlayDate: 
+    lastSleepTicks: 0
+    personalityActivity: 0
+    personalityDependency: 0
+    personalityHonesty: 0
+    personalityDiligence: 0
+    personalitySensitivity: 0
 --- !u!4 &1445710367
 Transform:
   m_ObjectHideFlags: 0

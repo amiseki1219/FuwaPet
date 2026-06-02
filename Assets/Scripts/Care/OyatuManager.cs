@@ -15,7 +15,6 @@ public class OyatuData
     public int lunaCost;              // 有償ルナストーン消費（0なら無償）
     public int hungerAmount;          // おなか回復量
     public int energyAmount;          // 元気回復量
-    public int moodAmount;            // 気分回復量
     public bool fullRecovery;         // 全パラ回復フラグ
     public int trustAmount;           // 信頼度加算
     public int personalityActivity;   // やんちゃ変化
@@ -33,17 +32,17 @@ public class OyatuManager : MonoBehaviour
     private static readonly List<OyatuData> AllOyatu = new List<OyatuData>
     {
         // ── 無償おやつ ──────────────────────────────────────────────────────────────
-        new OyatuData { id = "niboshi",         displayName = "にぼし",            imageName = "にぼし",        coinCost = 15,  hungerAmount = 10,                                                                        isFree = true  },
-        new OyatuData { id = "biscuit",         displayName = "ビスケット",        imageName = "ビスケット",    coinCost = 20,  hungerAmount = 15,                                                                        isFree = true  },
-        new OyatuData { id = "carrot",          displayName = "にんじんスティック", imageName = "にんじん",      coinCost = 15,  energyAmount = 10,                                                                        isFree = true  },
+        new OyatuData { id = "niboshi",         displayName = "にぼし",            imageName = "にぼし",        coinCost = 15,  hungerAmount = 10, trustAmount = 3,                                                   isFree = true  },
+        new OyatuData { id = "biscuit",         displayName = "ビスケット",        imageName = "ビスケット",    coinCost = 20,  hungerAmount = 15, trustAmount = 3,                                                   isFree = true  },
+        new OyatuData { id = "carrot",          displayName = "にんじんスティック", imageName = "にんじん",      coinCost = 15,  energyAmount = 10, trustAmount = 3,                                                   isFree = true  },
 
         // ── 有償おやつ ──────────────────────────────────────────────────────────────
-        new OyatuData { id = "strawberry_cake", displayName = "いちごケーキ",      imageName = "いちごケーキ",  lunaCost = 80,  hungerAmount = 25,  personalityDependency = 5,                                           isFree = false },
-        new OyatuData { id = "pudding",         displayName = "プリン",            imageName = "プリン",        lunaCost = 80,  moodAmount = 25,    personalityHonesty = 5,                                              isFree = false },
-        new OyatuData { id = "fruit_tart",      displayName = "フルーツタルト",    imageName = "フルーツタルト", lunaCost = 120, hungerAmount = 20,  energyAmount = 20,  personalityDiligence = 5,                       isFree = false },
-        new OyatuData { id = "macaron",         displayName = "ハートマカロン",    imageName = "マカロン",      lunaCost = 150, moodAmount = 35,    personalitySensitivity = 5,                                          isFree = false },
-        new OyatuData { id = "hamburg",         displayName = "特製ハンバーグ",    imageName = "ハンバーグ",    lunaCost = 200, hungerAmount = 100, trustAmount = 30, personalityActivity = 5,                           isFree = false },
-        new OyatuData { id = "parfait",         displayName = "スペシャルパフェ",  imageName = "パフェ",        lunaCost = 300, fullRecovery = true, trustAmount = 50,
+        new OyatuData { id = "strawberry_cake", displayName = "いちごケーキ",      imageName = "いちごケーキ",  lunaCost = 80,  hungerAmount = 25,  trustAmount = 5,  personalityDependency = 5,                       isFree = false },
+        new OyatuData { id = "pudding",         displayName = "プリン",            imageName = "プリン",        lunaCost = 80,  hungerAmount = 20,  trustAmount = 5,  personalityHonesty = 5,                          isFree = false },
+        new OyatuData { id = "fruit_tart",      displayName = "フルーツタルト",    imageName = "フルーツタルト", lunaCost = 120, hungerAmount = 20,  energyAmount = 20, trustAmount = 5, personalityDiligence = 5,     isFree = false },
+        new OyatuData { id = "macaron",         displayName = "ハートマカロン",    imageName = "マカロン",      lunaCost = 150, hungerAmount = 15,  energyAmount = 15, trustAmount = 5, personalitySensitivity = 5,   isFree = false },
+        new OyatuData { id = "hamburg",         displayName = "特製ハンバーグ",    imageName = "ハンバーグ",    lunaCost = 200, hungerAmount = 100, trustAmount = 35,  personalityActivity = 5,                        isFree = false },
+        new OyatuData { id = "parfait",         displayName = "スペシャルパフェ",  imageName = "パフェ",        lunaCost = 300, fullRecovery = true, trustAmount = 55,
                         personalityActivity = 3, personalityDependency = 3, personalityDiligence = 3, personalityHonesty = 3, personalitySensitivity = 3,                                                                isFree = false },
     };
 
@@ -67,6 +66,21 @@ public class OyatuManager : MonoBehaviour
 
     [Header("参照")]
     [SerializeField] private CareSceneManager careManager;
+
+    // true=hungerPopup / false=energyPopup
+    // true=hungerPopup / false=energyPopup
+    private static readonly Dictionary<string, (bool useHunger, string text)> PopupMap = new()
+    {
+        { "niboshi",         (true,  "+10") },
+        { "biscuit",         (true,  "+15") },
+        { "carrot",          (false, "+10") },
+        { "strawberry_cake", (true,  "+25") },
+        { "pudding",         (true,  "+20") },
+        { "fruit_tart",      (true,  "+20 / +20") },
+        { "macaron",         (true,  "+15 / +15") },
+        { "hamburg",         (true,  "全回復") },
+        { "parfait",         (true,  "全回復") },
+    };
 
     private static readonly Dictionary<string, string> ButtonNameToId = new()
     {
@@ -142,10 +156,12 @@ public class OyatuManager : MonoBehaviour
             selectOyatuEffect.text = BuildEffectText(_selectedOyatu);
         if (selectOyatuImage != null)
         {
-            // macOS HFS+ は NFD でファイル名を保存するため FormD に正規化してロード
-            var normalizedName = _selectedOyatu.imageName.Normalize(System.Text.NormalizationForm.FormD);
-            var tex = Resources.Load<Texture2D>($"FoodUI/{normalizedName}");
-            Debug.Log($"画像読み込み: FoodUI/{normalizedName} → {(tex != null ? "成功" : "失敗")}");
+            // FormC → FormD → 正規化なし の順にフォールバック
+            var tex = Resources.Load<Texture2D>($"FoodUI/{_selectedOyatu.imageName.Normalize(System.Text.NormalizationForm.FormC)}");
+            if (tex == null)
+                tex = Resources.Load<Texture2D>($"FoodUI/{_selectedOyatu.imageName.Normalize(System.Text.NormalizationForm.FormD)}");
+            if (tex == null)
+                tex = Resources.Load<Texture2D>($"FoodUI/{_selectedOyatu.imageName}");
             selectOyatuImage.texture = tex;
         }
     }
@@ -194,13 +210,11 @@ public class OyatuManager : MonoBehaviour
         {
             status.AddHunger(100f);
             status.AddEnergy(100f);
-            status.AddMood(100f);
         }
         else
         {
             if (_selectedOyatu.hungerAmount != 0) status.AddHunger(_selectedOyatu.hungerAmount);
             if (_selectedOyatu.energyAmount != 0) status.AddEnergy(_selectedOyatu.energyAmount);
-            if (_selectedOyatu.moodAmount   != 0) status.AddMood(_selectedOyatu.moodAmount);
         }
 
         // 信頼度加算
@@ -214,8 +228,14 @@ public class OyatuManager : MonoBehaviour
         if (_selectedOyatu.isFree)
             save.freeOyatuCountToday++;
 
-        GameContext.Instance.SavePetStatus();
+        GameContext.Instance?.SavePetStatus();
         QuestManager.Instance?.NotifyFeed();
+
+        if (careManager != null && PopupMap.TryGetValue(_selectedOyatu.id, out var popup))
+        {
+            if (popup.useHunger) careManager.ShowHungerPopup(popup.text);
+            else                 careManager.ShowEnergyPopup(popup.text);
+        }
 
         careManager?.ShowNotice($"{_selectedOyatu.displayName}をあげたよ！");
         careManager?.RefreshAll();
@@ -269,13 +289,11 @@ public class OyatuManager : MonoBehaviour
         {
             sb.AppendLine("おなか 全回復");
             sb.AppendLine("元気 全回復");
-            sb.AppendLine("気分 全回復");
         }
         else
         {
             if (data.hungerAmount != 0) sb.AppendLine($"おなか +{data.hungerAmount}");
             if (data.energyAmount != 0) sb.AppendLine($"元気 +{data.energyAmount}");
-            if (data.moodAmount   != 0) sb.AppendLine($"気分 +{data.moodAmount}");
         }
 
         if (data.trustAmount > 0) sb.AppendLine($"信頼度 +{data.trustAmount}");
