@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveManager
   Data:
-    ownerName: 
+    userName: 
     ownerBirthday: 
     playerId: 
     profileImagePath: 
@@ -358,6 +358,7 @@ MonoBehaviour:
     characterId: 
     petColorSlot: 0
     petName: 
+    petNickname: 
     selectedCharacterId: 
     startDate: 
     lastDate: 
@@ -371,17 +372,23 @@ MonoBehaviour:
     seVolume: 0.5
     isNotificationOn: 1
     isSeOn: 1
+    readNoticeIds: []
+    lastShopVersion: 
+    lastGachaVersion: 
+    lastCollectionVersion: 
     ownedDecoIds: []
     isFirstTimePackBought: 0
     lastPackAPurchaseTicks: 0
     lastPackBPurchaseTicks: 0
     totalBillingAmount: 0
     selectedBadgeId: 
+    firstLoginDate: 
     nextPet: 0
     nextEat: 0
     nextPlay: 0
     nextBath: 0
     onboardingCompleted: 0
+    accountLinkShown: 0
     ownedIcons:
     - Icon1
     ownedFrames:
@@ -390,6 +397,38 @@ MonoBehaviour:
     - DefaultBG
     words: []
     diaries: []
+    hunger: 50
+    clean: 50
+    energy: 50
+    mood: 50
+    tutorialQuestsDone: 0000000000
+    tutorialBonusClaimed: 0
+    tutorialAllCompleted: 0
+    tutorialCompletedDate: 
+    dailyQuestsDone: 00000000
+    dailyBonusClaimed: 0
+    dailyNadeCount: 0
+    lastQuestResetDate: 
+    coachMarkShown: 0
+    tutorialQuestsClaimed: 0000000000
+    dailyQuestsClaimed: 00000000
+    freeOyatuCountToday: 0
+    lastFreeOyatuDate: 
+    bathCountToday: 0
+    lastBathDate: 
+    nadeCountToday: 0
+    lastNadeDate: 
+    playCountToday: 0
+    lastPlayDate: 
+    lastSleepTicks: 0
+    lastNameChangeDate: 
+    lastCharNameChangeDate: 
+    lastBirthdayChangeDate: 
+    personalityActivity: 0
+    personalityDependency: 0
+    personalityHonesty: 0
+    personalityDiligence: 0
+    personalitySensitivity: 0
 --- !u!4 &560117662
 Transform:
   m_ObjectHideFlags: 0
@@ -792,8 +831,8 @@ Canvas:
   m_GameObject: {fileID: 1427064679}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1689443102}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

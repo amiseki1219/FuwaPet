@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Art/UI.meta
 guid: 3e196cf1b93ed40c89079e10eaae93ea
+========
+guid: 48805ff1af9ce46ffa2231370fd31717
+>>>>>>>> origin/main:Assets/Prefabs 1.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

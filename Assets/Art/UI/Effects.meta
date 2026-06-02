@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Art/UI/Effects.meta
 guid: 83eb51da506444002bea3504e69968b2
+========
+guid: 09382f64b6fd24394af4d8b429caae17
+>>>>>>>> origin/main:Assets/Prefabs/Bath.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
