@@ -1,0 +1,149 @@
+using UnityEngine;
+using UnityEngine.Rendering;
+
+public class WindowViewController : MonoBehaviour
+{
+    public enum TimeOfDay { Day, Evening, Night }
+
+    [System.Serializable]
+    public class TimeOfDaySetting
+    {
+        public Texture2D windowTexture;
+        public Color ambientColor = Color.white;
+        public float ambientIntensity = 1f;
+        public Color sunLightColor = Color.white;
+        public float sunLightIntensity = 1f;
+        public float roomLightIntensity = 1.5f;
+        public Color roomLightColor = new Color(1f, 0.95f, 0.85f);
+        public float fillLightIntensity = 0.5f;
+        public Color fillLightColor = Color.white;
+        public float moonLightIntensity = 0f;
+    }
+
+    [SerializeField] private MeshRenderer viewPlaneRenderer;
+    [SerializeField] private Light sunLight;
+    [SerializeField] private Light roomLight;
+    [SerializeField] private Light fillLight;
+    [SerializeField] private Light moonLight;
+    [SerializeField] private Camera mainCamera;
+
+    [SerializeField] private TimeOfDaySetting daySetting = new TimeOfDaySetting
+    {
+        ambientColor       = new Color(1.0f, 0.95f, 0.85f),
+        ambientIntensity   = 1.0f,
+        sunLightColor      = new Color(1.0f, 0.98f, 0.9f),
+        sunLightIntensity  = 1.0f,
+        roomLightIntensity = 1.5f,
+        roomLightColor     = new Color(1.0f, 0.95f, 0.85f),
+        fillLightIntensity = 0.5f,
+        moonLightIntensity = 0f,
+    };
+
+    [SerializeField] private TimeOfDaySetting eveningSetting = new TimeOfDaySetting
+    {
+        ambientColor       = new Color(0.957f, 0.933f, 0.902f), // #F4EEE6
+        ambientIntensity   = 0.18f,
+        sunLightColor      = new Color(1.0f, 0.816f, 0.651f),   // #FFD0A6
+        sunLightIntensity  = 0.25f,
+        roomLightIntensity = 0.25f,
+        roomLightColor     = new Color(1.0f, 0.953f, 0.878f),   // #FFF3E0
+        fillLightIntensity = 0.06f,
+        fillLightColor     = new Color(0.937f, 0.910f, 0.878f), // #EFE8E0
+        moonLightIntensity = 0f,
+    };
+
+    [SerializeField] private TimeOfDaySetting nightSetting = new TimeOfDaySetting
+    {
+        ambientColor       = new Color(0.4f,   0.36f,  0.3f),
+        ambientIntensity   = 1.0f,
+        sunLightColor      = new Color(0.8f,   0.75f,  0.6f),
+        sunLightIntensity  = 0.3f,
+        roomLightIntensity = 5.0f,
+        roomLightColor     = new Color(1.0f,   0.711f, 0.203f),
+        fillLightIntensity = 0.5f,
+        moonLightIntensity = 0.35f,
+    };
+
+    private TimeOfDay _currentTimeOfDay = (TimeOfDay)(-1);
+    private float _checkInterval = 60f;
+    private float _timeSinceLastCheck = 60f;
+
+    private void Start()
+    {
+        CheckAndApplyTimeOfDay();
+    }
+
+    private void Update()
+    {
+        _timeSinceLastCheck += Time.deltaTime;
+        if (_timeSinceLastCheck < _checkInterval) return;
+        _timeSinceLastCheck = 0f;
+        CheckAndApplyTimeOfDay();
+    }
+
+    private void CheckAndApplyTimeOfDay()
+    {
+        var now = System.DateTime.Now;
+        int hour = now.Hour;
+
+        TimeOfDay newTime;
+        if (hour >= 6 && hour <= 16)
+            newTime = TimeOfDay.Day;
+        else if (hour >= 17 && hour <= 18)
+            newTime = TimeOfDay.Evening;
+        else
+            newTime = TimeOfDay.Night;
+
+        if (newTime == _currentTimeOfDay) return;
+
+        _currentTimeOfDay = newTime;
+        SetTimeOfDay(newTime);
+    }
+
+    public void SetTimeOfDay(TimeOfDay time)
+    {
+        TimeOfDaySetting setting = time switch
+        {
+            TimeOfDay.Day     => daySetting,
+            TimeOfDay.Evening => eveningSetting,
+            TimeOfDay.Night   => nightSetting,
+            _                 => null,
+        };
+
+        if (setting == null) return;
+
+        if (viewPlaneRenderer != null && setting.windowTexture != null)
+            viewPlaneRenderer.material.mainTexture = setting.windowTexture;
+
+        RenderSettings.ambientMode      = AmbientMode.Flat;
+        RenderSettings.ambientLight     = setting.ambientColor * setting.ambientIntensity;
+        RenderSettings.ambientIntensity = setting.ambientIntensity;
+
+        if (sunLight != null)
+        {
+            sunLight.gameObject.SetActive(setting.sunLightIntensity > 0f);
+            sunLight.color     = setting.sunLightColor;
+            sunLight.intensity = setting.sunLightIntensity;
+        }
+
+        if (roomLight != null)
+        {
+            roomLight.gameObject.SetActive(setting.roomLightIntensity > 0f);
+            roomLight.color     = setting.roomLightColor;
+            roomLight.intensity = setting.roomLightIntensity;
+        }
+
+        if (fillLight != null)
+        {
+            fillLight.gameObject.SetActive(setting.fillLightIntensity > 0f);
+            fillLight.color     = setting.fillLightColor;
+            fillLight.intensity = setting.fillLightIntensity;
+        }
+
+        if (moonLight != null)
+        {
+            moonLight.gameObject.SetActive(setting.moonLightIntensity > 0f);
+            moonLight.intensity = setting.moonLightIntensity;
+        }
+    }
+}
