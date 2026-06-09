@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: a6583f08ab9ea4a4bbca93b73cec494c
+guid: 08b3ac0160abd47b9b4e3a1e88527f74
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5107608962211522720
-    second: Color_0
+      213: 3595682558770685616
+    second: screenshot-20260610-003946_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -38,7 +38,7 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 1
-    aniso: 4
+    aniso: 1
     mipBias: 0
     wrapU: 1
     wrapV: 1
@@ -55,9 +55,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Color_0
+      name: screenshot-20260610-003946_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2048
-        height: 2048
+        width: 1180
+        height: 1774
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 067d7cbc5b02e19b0800000000000000
-      internalID: -5107608962211522720
+      spriteID: 0b628988c3e66e130800000000000000
+      internalID: 3595682558770685616
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Color_0: -5107608962211522720
+      screenshot-20260610-003946_0: 3595682558770685616
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

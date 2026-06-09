@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b492b48201b2f4c78a20015266478298
+guid: 13acaa1adb8db409fbf38b1683bbaba2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8831668708563954787
-    second: plushtoy3dmodel_roughness_0
+      213: 2614409540733933147
+    second: screenshot-20260610-003507_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: plushtoy3dmodel_roughness_0
+      name: screenshot-20260610-003507_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2048
-        height: 2048
+        width: 1180
+        height: 1774
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d93dc1c0a1c9f6580800000000000000
-      internalID: -8831668708563954787
+      spriteID: b5696d420af384420800000000000000
+      internalID: 2614409540733933147
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      plushtoy3dmodel_roughness_0: -8831668708563954787
+      screenshot-20260610-003507_0: 2614409540733933147
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
