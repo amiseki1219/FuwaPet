@@ -7,19 +7,23 @@ public class PetoWalk : MonoBehaviour
 
     [Header("参照")]
     [SerializeField] public WalkZone walkZone;
+    [SerializeField] private Transform visualRoot; // PokoVisualRoot を設定する
 
     [Header("移動")]
-    [SerializeField] public float moveSpeed       = 0.08f;
-    [SerializeField] public float rotationSpeed   = 4f;
-    [SerializeField] public float arrivalDistance  = 0.15f;
-    [SerializeField] public float decelDistance    = 0.4f;   // この距離内で減速開始
+    [SerializeField] public float moveSpeed      = 0.08f;
+    [SerializeField] public float rotationSpeed  = 4f;
+    [SerializeField] public float arrivalDistance = 0.15f;
+    [SerializeField] public float decelDistance   = 0.4f;
 
     [Header("待機")]
     [SerializeField] public float idleTimeMin = 2f;
     [SerializeField] public float idleTimeMax = 5f;
 
     [Header("向き転換")]
-    [SerializeField] public float turnAlignAngle = 15f;      // この角度以内で向き完了とみなす
+    [SerializeField] public float turnAlignAngle = 15f;
+
+    [Header("メッシュ向き補正")]
+    [SerializeField] private float meshFacingYOffset = -90f;
 
     public State CurrentState { get; private set; } = State.Idle;
 
@@ -32,11 +36,11 @@ public class PetoWalk : MonoBehaviour
         "FurnitureSlot_Shelf", "FurnitureSlot_Rug"
     };
 
-    private float           _fixedY;
-    private Vector3         _targetPoint;
-    private float           _idleTimer;
-    private float           _currentSpeed;
-    private Animator        _animator;
+    private float    _fixedY;
+    private Vector3  _targetPoint;
+    private float    _idleTimer;
+    private float    _currentSpeed;
+    private Animator _animator;
     private readonly List<Collider> _obstacleColliders = new List<Collider>();
 
     // ─── Unity ────────────────────────────────────────────
@@ -63,9 +67,9 @@ public class PetoWalk : MonoBehaviour
     // ─── Idle ─────────────────────────────────────────────
     private void EnterIdle()
     {
-        CurrentState   = State.Idle;
-        _currentSpeed  = 0f;
-        _idleTimer     = Random.Range(idleTimeMin, idleTimeMax);
+        CurrentState  = State.Idle;
+        _currentSpeed = 0f;
+        _idleTimer    = Random.Range(idleTimeMin, idleTimeMax);
         SetAnimatorSpeed(0f);
     }
 
@@ -87,17 +91,16 @@ public class PetoWalk : MonoBehaviour
 
     private void UpdateTurn()
     {
-        Vector3 pos   = transform.position;
-        Vector3 dirXZ = new Vector3(_targetPoint.x - pos.x, 0f, _targetPoint.z - pos.z);
-        if (dirXZ.sqrMagnitude < 0.001f) { EnterIdle(); return; }
-        dirXZ.Normalize();
+        // targetPosition - transform.position のワールド方向から角度を計算
+        Vector3 moveDir = _targetPoint - transform.position;
+        moveDir.y = 0f;
+        if (moveDir.sqrMagnitude < 0.001f) { EnterIdle(); return; }
 
-        float targetY  = Quaternion.LookRotation(dirXZ).eulerAngles.y;
-        float currentY = transform.eulerAngles.y;
-        float angleDiff = Mathf.Abs(Mathf.DeltaAngle(currentY, targetY));
+        float targetAngle  = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + meshFacingYOffset;
+        float currentAngle = visualRoot != null ? visualRoot.localEulerAngles.y : transform.eulerAngles.y;
+        float angleDiff    = Mathf.Abs(Mathf.DeltaAngle(currentAngle, targetAngle));
 
-        float newY = Mathf.LerpAngle(currentY, targetY, rotationSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(0f, newY, 0f);
+        ApplyVisualRotation(targetAngle);
 
         if (angleDiff < turnAlignAngle)
             EnterWalk();
@@ -113,10 +116,9 @@ public class PetoWalk : MonoBehaviour
 
     private void UpdateWalk()
     {
-        Vector3 pos     = transform.position;
-        float   distXZ  = new Vector2(pos.x - _targetPoint.x, pos.z - _targetPoint.z).magnitude;
+        Vector3 pos    = transform.position;
+        float   distXZ = new Vector2(pos.x - _targetPoint.x, pos.z - _targetPoint.z).magnitude;
 
-        // 到達 → Idle へ
         if (distXZ <= arrivalDistance)
         {
             _currentSpeed = 0f;
@@ -129,31 +131,36 @@ public class PetoWalk : MonoBehaviour
         float targetSpeed = (distXZ < decelDistance)
             ? moveSpeed * (distXZ / decelDistance)
             : moveSpeed;
-
-        // 加速・減速（MoveTowards でなめらかに）
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, moveSpeed * 4f * Time.deltaTime);
 
-        Vector3 dirXZ = new Vector3(_targetPoint.x - pos.x, 0f, _targetPoint.z - pos.z).normalized;
+        // 移動方向をワールド座標で計算（transform.forward は使わない）
+        Vector3 moveDir = _targetPoint - pos;
+        moveDir.y = 0f;
 
-        // 移動（Y固定）
-        Vector3 newPos = pos + dirXZ * _currentSpeed * Time.deltaTime;
-        newPos.y = _fixedY;
-        transform.position = newPos;
-
-        // 向き（Y軸のみ、Walk中も微調整）
-        if (dirXZ.sqrMagnitude > 0.001f)
+        if (moveDir.sqrMagnitude > 0.001f)
         {
-            float targetY  = Quaternion.LookRotation(dirXZ).eulerAngles.y;
-            float currentY = transform.eulerAngles.y;
-            float newY     = Mathf.LerpAngle(currentY, targetY, rotationSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0f, newY, 0f);
+            // PokoWalkRoot の position のみ変更
+            Vector3 newPos = pos + moveDir.normalized * _currentSpeed * Time.deltaTime;
+            newPos.y = _fixedY;
+            transform.position = newPos;
+
+            // PokoVisualRoot の localRotation のみ変更
+            float targetAngle = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + meshFacingYOffset;
+            ApplyVisualRotation(targetAngle);
         }
 
-        // アニメ速度を移動速度に同期（てちてち感）
         SetAnimatorSpeed(_currentSpeed / moveSpeed);
     }
 
     // ─── ヘルパー ──────────────────────────────────────────
+    private void ApplyVisualRotation(float targetAngle)
+    {
+        if (visualRoot == null) return;
+        float currentAngle = visualRoot.localEulerAngles.y;
+        float newAngle     = Mathf.LerpAngle(currentAngle, targetAngle, rotationSpeed * Time.deltaTime);
+        visualRoot.localRotation = Quaternion.Euler(0f, newAngle, 0f);
+    }
+
     private void SetAnimatorSpeed(float speed)
     {
         if (_animator != null) _animator.speed = speed;
