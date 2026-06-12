@@ -8,4 +8,5 @@ public class FaceExpressionData
     public Texture2D leftEyeTexture;
     public Texture2D rightEyeTexture;
     public Texture2D mouthTexture;
+    public bool showCheek;
 }

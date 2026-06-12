@@ -5,6 +5,8 @@ public class PokoFaceController : MonoBehaviour
     [SerializeField] private Renderer eyeLRenderer;
     [SerializeField] private Renderer eyeRRenderer;
     [SerializeField] private Renderer mouthRenderer;
+    [SerializeField] private GameObject cheekL;
+    [SerializeField] private GameObject cheekR;
     [SerializeField] private FaceExpressionDatabase database;
     [SerializeField] private string defaultExpressionKey = "Normal";
 
@@ -34,6 +36,13 @@ public class PokoFaceController : MonoBehaviour
         ApplyTexture(eyeLRenderer,  _currentLeftEye);
         ApplyTexture(eyeRRenderer,  _currentRightEye);
         ApplyTexture(mouthRenderer, _currentMouth);
+        SetCheekVisible(data.showCheek);
+    }
+
+    public void SetCheekVisible(bool visible)
+    {
+        if (cheekL != null) cheekL.SetActive(visible);
+        if (cheekR != null) cheekR.SetActive(visible);
     }
 
     public void SetEyes(Texture2D leftEyeTexture, Texture2D rightEyeTexture)
