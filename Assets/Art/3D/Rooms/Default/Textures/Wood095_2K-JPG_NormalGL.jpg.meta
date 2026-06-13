@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 7a28bbb9d063b42aab10e6bf5bfa6042
+guid: eee0766d163304646be08f0da79c472e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -871523316386872845
-    second: Floor_FeltNoise_0
+      213: -6070715655044811143
+    second: Wood095_2K-JPG_NormalGL_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -40,9 +40,9 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -55,9 +55,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Floor_FeltNoise_0
+      name: Wood095_2K-JPG_NormalGL_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 512
-        height: 512
+        width: 2048
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3f14a49492ab7e3f0800000000000000
-      internalID: -871523316386872845
+      spriteID: 976b6a8964c70cba0800000000000000
+      internalID: -6070715655044811143
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Floor_FeltNoise_0: -871523316386872845
+      Wood095_2K-JPG_NormalGL_0: -6070715655044811143
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

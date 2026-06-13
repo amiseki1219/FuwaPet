@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 43d12c804e44a43edac91e161931cc37
+guid: f457c5cb018264933af4b4abf6649650
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3892680081933246568
-    second: woodentable3dmodel_metallic_0
+      213: 6535150151684398975
+    second: screenshot-20260614-010717_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: woodentable3dmodel_metallic_0
+      name: screenshot-20260614-010717_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2048
-        height: 2048
+        width: 1460
+        height: 2417
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 89f512cf61c6af9c0800000000000000
-      internalID: -3892680081933246568
+      spriteID: f7f1df0307481ba50800000000000000
+      internalID: 6535150151684398975
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      woodentable3dmodel_metallic_0: -3892680081933246568
+      screenshot-20260614-010717_0: 6535150151684398975
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
