@@ -64,6 +64,9 @@ public class WindowViewController : MonoBehaviour
         moonLightIntensity = 0.35f,
     };
 
+    [Header("デバッグ・開発用")]
+    [SerializeField] private bool forceDayLighting = false;
+
     private TimeOfDay _currentTimeOfDay = (TimeOfDay)(-1);
     private float _checkInterval = 60f;
     private float _timeSinceLastCheck = 60f;
@@ -83,6 +86,16 @@ public class WindowViewController : MonoBehaviour
 
     private void CheckAndApplyTimeOfDay()
     {
+        if (forceDayLighting)
+        {
+            if (_currentTimeOfDay != TimeOfDay.Day)
+            {
+                _currentTimeOfDay = TimeOfDay.Day;
+                SetTimeOfDay(TimeOfDay.Day);
+            }
+            return;
+        }
+
         var now = System.DateTime.Now;
         int hour = now.Hour;
 
