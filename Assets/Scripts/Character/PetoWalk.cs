@@ -10,9 +10,9 @@ public class PetoWalk : MonoBehaviour
     [SerializeField] private Transform visualRoot; // PokoVisualRoot を設定する
 
     [Header("移動")]
-    [SerializeField] public float moveSpeed      = 0.08f;
+    [SerializeField] public float moveSpeed      = 0.5f;
     [SerializeField] public float rotationSpeed  = 4f;
-    [SerializeField] public float arrivalDistance = 0.15f;
+    [SerializeField] public float arrivalDistance = 0.2f;
     [SerializeField] public float decelDistance   = 0.4f;
 
     [Header("待機")]
@@ -72,6 +72,7 @@ public class PetoWalk : MonoBehaviour
         _idleTimer    = Random.Range(idleTimeMin, idleTimeMax);
         SetAnimatorSpeed(0f);
     }
+
 
     private void UpdateIdle()
     {
