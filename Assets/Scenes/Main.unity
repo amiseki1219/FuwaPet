@@ -14378,7 +14378,7 @@ Transform:
   m_GameObject: {fileID: 634730818}
   serializedVersion: 2
   m_LocalRotation: {x: -0.61237246, y: 0.3535534, z: 0.3535534, w: 0.61237246}
-  m_LocalPosition: {x: -0.01, y: 0.06, z: -0}
+  m_LocalPosition: {x: -0.01, y: 0.02, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -31468,6 +31468,8 @@ MonoBehaviour:
   decelDistance: 0.4
   idleTimeMin: 2
   idleTimeMax: 5
+  idleWaitSeconds: 5
+  walkingParamName: IsWalking
   turnAlignAngle: 15
   meshFacingYOffset: 180
 --- !u!4 &1664290876

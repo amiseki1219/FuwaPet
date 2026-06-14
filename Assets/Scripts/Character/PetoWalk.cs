@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class PetoWalk : MonoBehaviour
 {
-    public enum State { Idle, Turn, Walk, Cry }
+    public enum State { Idle, Turn, Walk, Cry, IdleWaiting }
 
     [Header("参照")]
     [SerializeField] public WalkZone walkZone;
@@ -19,13 +19,17 @@ public class PetoWalk : MonoBehaviour
     [SerializeField] public float idleTimeMin = 2f;
     [SerializeField] public float idleTimeMax = 5f;
 
+    [Header("待機モーション")]
+    [SerializeField] public float idleWaitSeconds = 5f;
+    [SerializeField] private string walkingParamName = "IsWalking";
+
     [Header("向き転換")]
     [SerializeField] public float turnAlignAngle = 15f;
 
     [Header("メッシュ向き補正")]
     [SerializeField] private float meshFacingYOffset = -90f;
 
-    public State CurrentState { get; private set; } = State.Idle;
+    public State CurrentState { get; private set; } = State.IdleWaiting;
 
     private const int   MaxTargetRetries    = 10;
     private const float ObstacleCheckRadius = 0.3f;
@@ -49,7 +53,7 @@ public class PetoWalk : MonoBehaviour
         _fixedY = transform.position.y;
         CollectObstacleColliders();
         _animator = GetComponentInChildren<Animator>();
-        EnterIdle();
+        EnterIdleWaiting();
     }
 
     private void Update()
@@ -58,10 +62,30 @@ public class PetoWalk : MonoBehaviour
 
         switch (CurrentState)
         {
-            case State.Idle: UpdateIdle(); break;
-            case State.Turn: UpdateTurn(); break;
-            case State.Walk: UpdateWalk(); break;
+            case State.IdleWaiting: UpdateIdleWaiting(); break;
+            case State.Idle:        UpdateIdle();        break;
+            case State.Turn:        UpdateTurn();        break;
+            case State.Walk:        UpdateWalk();        break;
         }
+    }
+
+    // ─── IdleWaiting ──────────────────────────────────────
+    private void EnterIdleWaiting()
+    {
+        CurrentState  = State.IdleWaiting;
+        _currentSpeed = 0f;
+        _idleTimer    = idleWaitSeconds;
+        SetAnimatorIsWalking(false);
+        SetAnimatorSpeed(1f);
+    }
+
+    private void UpdateIdleWaiting()
+    {
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer > 0f) return;
+
+        _targetPoint = PickNextTarget();
+        EnterTurn();
     }
 
     // ─── Idle ─────────────────────────────────────────────
@@ -72,7 +96,6 @@ public class PetoWalk : MonoBehaviour
         _idleTimer    = Random.Range(idleTimeMin, idleTimeMax);
         SetAnimatorSpeed(0f);
     }
-
 
     private void UpdateIdle()
     {
@@ -87,6 +110,7 @@ public class PetoWalk : MonoBehaviour
     private void EnterTurn()
     {
         CurrentState = State.Turn;
+        SetAnimatorIsWalking(true);
         SetAnimatorSpeed(0f);
     }
 
@@ -95,7 +119,7 @@ public class PetoWalk : MonoBehaviour
         // targetPosition - transform.position のワールド方向から角度を計算
         Vector3 moveDir = _targetPoint - transform.position;
         moveDir.y = 0f;
-        if (moveDir.sqrMagnitude < 0.001f) { EnterIdle(); return; }
+        if (moveDir.sqrMagnitude < 0.001f) { EnterIdleWaiting(); return; }
 
         float targetAngle  = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + meshFacingYOffset;
         float currentAngle = visualRoot != null ? visualRoot.localEulerAngles.y : transform.eulerAngles.y;
@@ -112,6 +136,7 @@ public class PetoWalk : MonoBehaviour
     {
         CurrentState  = State.Walk;
         _currentSpeed = 0f;
+        SetAnimatorIsWalking(true);
         SetAnimatorSpeed(1f);
     }
 
@@ -124,7 +149,7 @@ public class PetoWalk : MonoBehaviour
         {
             _currentSpeed = 0f;
             SetAnimatorSpeed(0f);
-            EnterIdle();
+            EnterIdleWaiting();
             return;
         }
 
@@ -165,6 +190,12 @@ public class PetoWalk : MonoBehaviour
     private void SetAnimatorSpeed(float speed)
     {
         if (_animator != null) _animator.speed = speed;
+    }
+
+    private void SetAnimatorIsWalking(bool isWalking)
+    {
+        if (_animator != null && !string.IsNullOrEmpty(walkingParamName))
+            _animator.SetBool(walkingParamName, isWalking);
     }
 
     private Vector3 PickNextTarget()
