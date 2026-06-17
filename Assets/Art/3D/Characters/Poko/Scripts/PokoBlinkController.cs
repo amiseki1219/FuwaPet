@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PokoBlinkController : MonoBehaviour
 {
-    [SerializeField] private PokoFaceController faceController;
+    [SerializeField] private FaceController faceController;
     [SerializeField] private Texture2D closeEyeL;
     [SerializeField] private Texture2D closeEyeR;
     [SerializeField] private float minBlinkInterval = 3f;
