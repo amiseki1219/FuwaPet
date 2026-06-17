@@ -1807,14 +1807,128 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4b9e40535153b4a9285e1ac0eedd24f7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7082033269683862908, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1457760487}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6342197697331701134, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 154533989}
+    - targetCorrespondingSourceObject: {fileID: 6342197697331701134, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 154533988}
   m_SourcePrefab: {fileID: 100100000, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
 --- !u!4 &154533982 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6003249480620703540, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
   m_PrefabInstance: {fileID: 154533981}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &154533983 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7082033269683862908, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+  m_PrefabInstance: {fileID: 154533981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &154533984 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1722642026355531453, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+  m_PrefabInstance: {fileID: 154533981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &154533985 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8466633142783823303, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+  m_PrefabInstance: {fileID: 154533981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &154533986 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7030497526416407916, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+  m_PrefabInstance: {fileID: 154533981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &154533987 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6342197697331701134, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
+  m_PrefabInstance: {fileID: 154533981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &154533988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154533987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52cff418a70fc43c7863f4515235506b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PokoBlinkController
+  faceController: {fileID: 154533989}
+  closeEyeL: {fileID: 2800000, guid: 6515aeb4a02b64637a44310976227cb3, type: 3}
+  closeEyeR: {fileID: 2800000, guid: f6795362fbd1a4d229f84a22eb75d4f5, type: 3}
+  minBlinkInterval: 3
+  maxBlinkInterval: 6
+  blinkDuration: 0.12
+  enableBlink: 1
+  skipBlinkExpressionKeys:
+  - SlightHappy
+  - Happy
+  - Relaxed
+--- !u!114 &154533989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154533987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c3d68cc39f66484b80fd1a833dbf338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FaceController
+  eyeLRenderer: {fileID: 154533986}
+  eyeRRenderer: {fileID: 154533985}
+  mouthRenderer: {fileID: 154533984}
+  cheekObject: {fileID: 1457760486}
+  normal:
+    eyeL: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    eyeR: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouth: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    cheekOn: 0
+  fun:
+    eyeL: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    eyeR: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouth: {fileID: 2800000, guid: f402c344ff2584ee5bfc52299c2c3ba5, type: 3}
+    cheekOn: 0
+  slightHappy:
+    eyeL: {fileID: 2800000, guid: bb130bf5bf89d4ecca703ffab5683db5, type: 3}
+    eyeR: {fileID: 2800000, guid: 5f5d2422329944f6aa0ffd3d5f118b17, type: 3}
+    mouth: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    cheekOn: 0
+  happy:
+    eyeL: {fileID: 2800000, guid: bb130bf5bf89d4ecca703ffab5683db5, type: 3}
+    eyeR: {fileID: 2800000, guid: 5f5d2422329944f6aa0ffd3d5f118b17, type: 3}
+    mouth: {fileID: 2800000, guid: f402c344ff2584ee5bfc52299c2c3ba5, type: 3}
+    cheekOn: 1
+  sad:
+    eyeL: {fileID: 2800000, guid: 7115feeb89b774be086fe752193edf14, type: 3}
+    eyeR: {fileID: 2800000, guid: b0270a4bc019b4e00b7e5cf9d15bd173, type: 3}
+    mouth: {fileID: 2800000, guid: c8137413bfc8e471288cfcd0b04172ef, type: 3}
+    cheekOn: 0
+  angry:
+    eyeL: {fileID: 2800000, guid: 2d5e23733ea2646d3bc09a5be63474a0, type: 3}
+    eyeR: {fileID: 2800000, guid: 87f5c16c4791946efb6266d8722e4067, type: 3}
+    mouth: {fileID: 2800000, guid: 3dd5adca086e54006a7d08030f543a42, type: 3}
+    cheekOn: 0
+  surprised:
+    eyeL: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    eyeR: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouth: {fileID: 2800000, guid: dcae421007e114e29a38d4a651a9cd4a, type: 3}
+    cheekOn: 0
+  relaxed:
+    eyeL: {fileID: 2800000, guid: 6515aeb4a02b64637a44310976227cb3, type: 3}
+    eyeR: {fileID: 2800000, guid: f6795362fbd1a4d229f84a22eb75d4f5, type: 3}
+    mouth: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    cheekOn: 1
+  tempDuration: 2.5
 --- !u!1 &169231285
 GameObject:
   m_ObjectHideFlags: 0
@@ -27837,6 +27951,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452306815}
   m_CullTransparentMesh: 1
+--- !u!1 &1457760486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1457760487}
+  m_Layer: 0
+  m_Name: CheeksGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1457760487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457760486}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 154533983}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1461677375
 GameObject:
   m_ObjectHideFlags: 0
