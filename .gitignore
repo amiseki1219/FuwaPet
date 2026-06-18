@@ -127,6 +127,8 @@ venv/
 # 3Dモデル（大きいバイナリ、Git管理外）
 *.fbx
 *.FBX
+# テスト用FBXのmeta（FBX本体は上記ルールで除外済み、metaも追跡不要）
+Assets/Art/3D/Characters/Poko/Action/PokoChan_v2_EatTest.fbx.meta
 
 # Fonts（大きいバイナリ、Git管理外）
 Assets/Fonts/*.ttf
