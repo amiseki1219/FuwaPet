@@ -51,6 +51,9 @@ public class CarePokoController : MonoBehaviour
         }
         if (dishRoot  != null) dishRoot.SetActive(false);
         if (snackRoot != null) snackRoot.SetActive(false);
+
+        // Care 通常状態は Normal 表情 + Blink
+        faceController?.SetExpression("Normal");
     }
 
     // ── 公開 API ────────────────────────────────────────────────────────────
@@ -61,6 +64,7 @@ public class CarePokoController : MonoBehaviour
     /// </summary>
     public void PlayEat()
     {
+        Debug.Log("[CarePokoController] PlayEat called. coroutine already running: " + (_eatCoroutine != null));
         if (_eatCoroutine != null) return;
         _eatCoroutine = StartCoroutine(EatSequence());
     }
@@ -74,7 +78,10 @@ public class CarePokoController : MonoBehaviour
         // 0F: Fun 表情 + Eat 開始
         faceController?.SetExpression("Fun");
         if (pokoAnimator != null)
+        {
             pokoAnimator.SetBool(IsEatingHash, true);
+            Debug.Log("[CarePokoController] IsEating = true. Current state: " + pokoAnimator.GetCurrentAnimatorStateInfo(0).IsName("Poko_Eat"));
+        }
 
         // 18F: 皿・おやつ ON
         yield return new WaitForSeconds(kDishOn);
@@ -98,9 +105,13 @@ public class CarePokoController : MonoBehaviour
         yield return new WaitForSeconds(kEatEnd - kDishOff);
 
         if (pokoAnimator != null)
+        {
             pokoAnimator.SetBool(IsEatingHash, false);
+            Debug.Log("[CarePokoController] IsEating = false. Returning to Idle.");
+        }
 
-        faceController?.ResetToAuto();
+        // Eat 終了後は Normal + Blink に戻す
+        faceController?.SetExpression("Normal");
         SetButtonsInteractable(true);
         _eatCoroutine = null;
     }
