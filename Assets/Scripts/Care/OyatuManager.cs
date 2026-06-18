@@ -65,7 +65,8 @@ public class OyatuManager : MonoBehaviour
     // 各ボタンの SelectBadge は OyatuButtonId コンポーネント経由で取得
 
     [Header("参照")]
-    [SerializeField] private CareSceneManager careManager;
+    [SerializeField] private CareSceneManager    careManager;
+    [SerializeField] private CarePokoController  carePokoController;
 
     // true=hungerPopup / false=energyPopup
     // true=hungerPopup / false=energyPopup
@@ -240,6 +241,7 @@ public class OyatuManager : MonoBehaviour
         careManager?.ShowNotice($"{_selectedOyatu.displayName}をあげたよ！");
         careManager?.RefreshAll();
         HidePanel();
+        carePokoController?.PlayEat();
     }
 
     // ── プライベートヘルパー ────────────────────────────────────────────────────
