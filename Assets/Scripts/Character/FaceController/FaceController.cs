@@ -154,6 +154,8 @@ public class FaceController : MonoBehaviour
     private int CalcDaysSinceLastInteraction()
     {
         if (_save == null) return 0;
+        // GameContextが未初期化（MainシーンでGameContextが存在しない場合など）は評価しない
+        if (_status == null) return 0;
 
         DateTime last = DateTime.Today;
 

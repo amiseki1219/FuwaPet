@@ -18,6 +18,11 @@ public class WindowViewController : MonoBehaviour
         public float fillLightIntensity = 0.5f;
         public Color fillLightColor = Color.white;
         public float moonLightIntensity = 0f;
+
+        [Header("BookShelfLight")]
+        public bool bookShelfLightEnabled = false;
+        public Color bookShelfLightColor = new Color(1f, 0.733f, 0.486f);
+        public float bookShelfLightIntensity = 0.5f;
     }
 
     [SerializeField] private MeshRenderer viewPlaneRenderer;
@@ -25,6 +30,7 @@ public class WindowViewController : MonoBehaviour
     [SerializeField] private Light roomLight;
     [SerializeField] private Light fillLight;
     [SerializeField] private Light moonLight;
+    [SerializeField] private Light bookShelfLight;
     [SerializeField] private Camera mainCamera;
 
     [SerializeField] private TimeOfDaySetting daySetting = new TimeOfDaySetting
@@ -64,8 +70,10 @@ public class WindowViewController : MonoBehaviour
         moonLightIntensity = 0.35f,
     };
 
+    public enum ForceTimeOfDay { Auto, Day, Evening, Night }
+
     [Header("デバッグ・開発用")]
-    [SerializeField] private bool forceDayLighting = false;
+    [SerializeField] private ForceTimeOfDay forcedTimeOfDay = ForceTimeOfDay.Auto;
 
     private TimeOfDay _currentTimeOfDay = (TimeOfDay)(-1);
     private float _checkInterval = 60f;
@@ -86,12 +94,19 @@ public class WindowViewController : MonoBehaviour
 
     private void CheckAndApplyTimeOfDay()
     {
-        if (forceDayLighting)
+        if (forcedTimeOfDay != ForceTimeOfDay.Auto)
         {
-            if (_currentTimeOfDay != TimeOfDay.Day)
+            var forced = forcedTimeOfDay switch
             {
-                _currentTimeOfDay = TimeOfDay.Day;
-                SetTimeOfDay(TimeOfDay.Day);
+                ForceTimeOfDay.Day     => TimeOfDay.Day,
+                ForceTimeOfDay.Evening => TimeOfDay.Evening,
+                ForceTimeOfDay.Night   => TimeOfDay.Night,
+                _                      => TimeOfDay.Day,
+            };
+            if (_currentTimeOfDay != forced)
+            {
+                _currentTimeOfDay = forced;
+                SetTimeOfDay(forced);
             }
             return;
         }
@@ -157,6 +172,16 @@ public class WindowViewController : MonoBehaviour
         {
             moonLight.gameObject.SetActive(setting.moonLightIntensity > 0f);
             moonLight.intensity = setting.moonLightIntensity;
+        }
+
+        if (bookShelfLight != null)
+        {
+            bookShelfLight.gameObject.SetActive(setting.bookShelfLightEnabled);
+            if (setting.bookShelfLightEnabled)
+            {
+                bookShelfLight.color     = setting.bookShelfLightColor;
+                bookShelfLight.intensity = setting.bookShelfLightIntensity;
+            }
         }
     }
 }
