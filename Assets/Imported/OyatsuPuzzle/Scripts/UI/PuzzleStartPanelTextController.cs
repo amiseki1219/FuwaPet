@@ -29,31 +29,31 @@ namespace OyatsuPuzzle
             {
                 stage = 1,
                 goalText = "ステージ1の目標",
-                supportMessageText = "ステージ1\nにぼしを5個集めよう",
+                supportMessageText = "にぼしを5個集めよう！",
             },
             new StageTextEntry
             {
                 stage = 2,
                 goalText = "ステージ2の目標",
-                supportMessageText = "ステージ2\nにぼし5個\nビスケット3個を集めよう",
+                supportMessageText = "にぼし5個\nビスケット3個を集めよう！",
             },
             new StageTextEntry
             {
                 stage = 3,
                 goalText = "ステージ3の目標",
-                supportMessageText = "ステージ3\nコインピースを8個集めよう",
+                supportMessageText = "コインピースを8個集めよう！",
             },
             new StageTextEntry
             {
                 stage = 4,
                 goalText = "ステージ4の目標",
-                supportMessageText = "ステージ4\nにぼし6個＋にんじん4個＋ビスケット4個集めよう",
+                supportMessageText = "にぼし6個＋にんじん4個＋ビスケット4個集めよう！",
             },
             new StageTextEntry
             {
                 stage = 5,
                 goalText = "ステージ5の目標",
-                supportMessageText = "ステージ5\nプリン、ハートマカロン、いちごケーキ3個ずつ集めよう",
+                supportMessageText = "プリン＋ハートマカロン＋いちごケーキ3個ずつ集めよう！",
             },
         };
 
@@ -74,3 +74,4 @@ namespace OyatsuPuzzle
         }
     }
 }
+///////////
