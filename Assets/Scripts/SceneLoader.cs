@@ -26,7 +26,7 @@ public class SceneLoader : MonoBehaviour
 
     public void GotoMain()
     {
-        Debug.Log("Careボタンが押されたお！");
+        Debug.Log("Careボタンが押された！");
         LoadScene("Main");
     }
 
