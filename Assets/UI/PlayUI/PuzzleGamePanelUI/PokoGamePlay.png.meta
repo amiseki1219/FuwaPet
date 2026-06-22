@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8c13bf98483964af6b095e2a017c772d
+guid: 1a082a86ffc454b1487d3b528bd1670c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7651895242900624139
-    second: Stage3_0
+      213: -8169830755219636633
+    second: PokoGamePlay_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stage3_0
+      name: PokoGamePlay_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 453
-        height: 236
+        y: 34
+        width: 432
+        height: 414
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5fc286c61d10fc590800000000000000
-      internalID: -7651895242900624139
+      spriteID: 76e7218b63eee9e80800000000000000
+      internalID: -8169830755219636633
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c2297777fc10945bd9bbcefd60ab61ef
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stage3_0: -7651895242900624139
+      PokoGamePlay_0: -8169830755219636633
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
