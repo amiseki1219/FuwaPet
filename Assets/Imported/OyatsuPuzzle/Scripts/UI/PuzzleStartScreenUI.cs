@@ -79,6 +79,8 @@ namespace OyatsuPuzzle
         [SerializeField] private PuzzleManager          puzzleManager;
         [SerializeField] private PuzzleDailyPlayManager dailyPlayManager;
         [SerializeField] private PuzzleScreenController screenController;
+        [SerializeField] private PuzzleStartPanelTextController textController;
+        [SerializeField] private PuzzleStartPanelImageController startPanelImageController;
 
         private void Awake()
         {
@@ -132,12 +134,12 @@ namespace OyatsuPuzzle
             if (stepBadgeText != null) stepBadgeText.text = $"STEP {stage}";
             if (subtitleText  != null) subtitleText.text  = "Poko Snack Puzzle";
 
-            if (supportMessageText != null) supportMessageText.text = "Collect snacks!";
-
             if (remainingPlaysValueText != null)
-                remainingPlaysValueText.text = $"Plays {remaining} / {maxPlays}";
+                remainingPlaysValueText.text = $"{remaining}";
             if (remainingPlaysNoteText != null)
-                remainingPlaysNoteText.text = $"{remaining} plays left today";
+                remainingPlaysNoteText.text = remaining > 0
+                    ? $"今日はあと{remaining}回あそべるよ♪"
+                    : "今日はもう遊びきったよ♪";
 
             if (stageProgressLabel != null) stageProgressLabel.text = $"STEP {stage}";
 
@@ -145,20 +147,11 @@ namespace OyatsuPuzzle
 
             if (challengeTitleText != null) challengeTitleText.text = "Today's Challenge";
 
-            if (goalTitleText != null) goalTitleText.text = $"Stage {stage} Goal";
+            // ステージ別の GoalText / SupportMessageText は PuzzleStartPanelTextController が管理（二重管理回避）
+            if (textController != null) textController.ApplyStage(stage);
 
-            if (data.goals != null && data.goals.Count > 0)
-            {
-                var sb = new System.Text.StringBuilder();
-                foreach (var g in data.goals)
-                {
-                    sb.AppendLine($"{g.pieceType.ToEnglishName()} x{g.requiredCount}");
-                    Debug.Log($"[OyatsuPuzzle] StartPanel goal: {g.pieceType.ToEnglishName()} x{g.requiredCount}");
-                }
-                if (goalItemText  != null) goalItemText.text  = sb.ToString().TrimEnd();
-                if (goalCountText != null) goalCountText.text = "";
-                if (goalNoteText  != null) goalNoteText.text  = "";
-            }
+            // CharacterImage / GoalImage の切り替え（キャラはSaveData、目標画像は現在ステージ）
+            startPanelImageController?.Apply(stage);
 
             if (rewardListTitleText != null) rewardListTitleText.text = "Stage Rewards";
 
@@ -178,8 +171,8 @@ namespace OyatsuPuzzle
             if (allClearSubText    != null) allClearSubText.text    = "Today's reward completed!";
             if (allClearDetailText != null) allClearDetailText.text = "All 5 stages cleared.";
             if (allClearRewardText != null) allClearRewardText.text = "Reward: Free Coin +150 + Trust +50pt";
-            if (allClearNoteText   != null) allClearNoteText.text   = "Come back tomorrow!";
-            if (allClearPlaysText  != null) allClearPlaysText.text  = "All done today!";
+            if (allClearNoteText   != null) allClearNoteText.text   = "また明日あそぼうね♪";
+            if (allClearPlaysText  != null) allClearPlaysText.text  = "今日の分はクリア済み！";
 
             RefreshStageDots(allClearDotImages, currentStage: 5, allCleared: true);
         }
@@ -251,9 +244,9 @@ namespace OyatsuPuzzle
             int maxPlays  = dailyPlayManager != null ? dailyPlayManager.MaxPlays : 5;
 
             if (remainingPlaysValueText != null)
-                remainingPlaysValueText.text = "All done today!";
+                remainingPlaysValueText.text = "今日の分はクリア済み！";
             if (remainingPlaysNoteText != null)
-                remainingPlaysNoteText.text = "Come back tomorrow!";
+                remainingPlaysNoteText.text = "また明日あそぼうね♪";
 
             RefreshStageDots(stageDotImages, currentStage: 5, allCleared: true);
         }

@@ -1,25 +1,10 @@
 fileFormatVersion: 2
-guid: f83b989d151504580b6f0d2991ef9afb
+guid: 3b532965181694e1c9cfbfdff6132559
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1547804281730946603
-    second: Line_0
-  - first:
-      213: -3953923034041246989
-    second: Line_1
-  - first:
-      213: 7125965934803250217
-    second: Line_2
-  - first:
-      213: 28523761897398784
-    second: Line_3
-  - first:
-      213: -8970951058964038786
-    second: Line_4
-  - first:
-      213: -87026920168542980
-    second: Line_5
+      213: 8392612678938019516
+    second: Stage4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -141,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Line_0
+      name: Stage4_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 102
-        height: 5
+        width: 453
+        height: 236
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,118 +141,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b26d66a2bc7ea7510800000000000000
-      internalID: 1547804281730946603
+      spriteID: cb64a89f3cc887470800000000000000
+      internalID: 8392612678938019516
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Line_1
+      name: Stage4_1
       rect:
         serializedVersion: 2
-        x: 13
+        x: 0
         y: 0
-        width: 18
-        height: 5
+        width: 453
+        height: 236
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3fa9cb603f7d029c0800000000000000
-      internalID: -3953923034041246989
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Line_2
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 0
-        width: 17
-        height: 5
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 92c6b71434484e260800000000000000
-      internalID: 7125965934803250217
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Line_3
-      rect:
-        serializedVersion: 2
-        x: 52
-        y: 0
-        width: 17
-        height: 5
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0026d87d536556000800000000000000
-      internalID: 28523761897398784
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Line_4
-      rect:
-        serializedVersion: 2
-        x: 71
-        y: 0
-        width: 18
-        height: 5
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e7bb801ca87c08380800000000000000
-      internalID: -8970951058964038786
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Line_5
-      rect:
-        serializedVersion: 2
-        x: 91
-        y: 0
-        width: 11
-        height: 5
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cfc25792a71dacef0800000000000000
-      internalID: -87026920168542980
+      spriteID: 0c732fcc915704d12a5e258ae8551079
+      internalID: 2026258933
       vertices: []
       indices: 
       edges: []
@@ -276,7 +173,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: fc6feb1e388994c6f8c58bd43cc39d65
+    spriteID: 209b0dcb0fd244906adfb3f22f584254
     internalID: 0
     vertices: []
     indices: 
@@ -286,12 +183,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Line_0: 1547804281730946603
-      Line_1: -3953923034041246989
-      Line_2: 7125965934803250217
-      Line_3: 28523761897398784
-      Line_4: -8970951058964038786
-      Line_5: -87026920168542980
+      Stage4_0: 8392612678938019516
+      Stage4_1: 2026258933
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

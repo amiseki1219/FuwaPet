@@ -36,6 +36,17 @@ namespace OyatsuPuzzle
         [SerializeField] private Transform boardRoot;
         [SerializeField] private float swipeThreshold = 5f;
 
+        [Header("Piece Sprites")]
+        [Tooltip("PieceType ごとのピース画像。未設定(None)の種類は PieceColor の単色表示にフォールバックします。")]
+        [SerializeField] private PieceSprite[] pieceSprites;
+
+        [System.Serializable]
+        public class PieceSprite
+        {
+            public PieceType type;
+            public Sprite    sprite;
+        }
+
         [Header("Buttons")]
         [SerializeField] private Button pauseButton;
 
@@ -44,7 +55,6 @@ namespace OyatsuPuzzle
         [SerializeField] private PuzzleScreenController screenController;
 
         private Image[,]           _bgImages;
-        private TextMeshProUGUI[,] _labels;
         private int                _size;
         private int                _selRow = -1;
         private int                _selCol = -1;
@@ -122,7 +132,6 @@ namespace OyatsuPuzzle
                 Destroy(boardRoot.GetChild(i).gameObject);
 
             _bgImages = new Image[_size, _size];
-            _labels   = new TextMeshProUGUI[_size, _size];
             _selRow   = -1;
             _selCol   = -1;
 
@@ -131,7 +140,7 @@ namespace OyatsuPuzzle
             {
                 grid.constraint      = GridLayoutGroup.Constraint.FixedColumnCount;
                 grid.constraintCount = _size;
-                grid.cellSize        = new Vector2(95f, 95f);
+                grid.cellSize        = new Vector2(150f, 150f);
                 grid.spacing         = new Vector2(8f, 8f);
             }
 
@@ -204,7 +213,7 @@ namespace OyatsuPuzzle
             go.AddComponent<RectTransform>().sizeDelta = new Vector2(95f, 95f);
 
             var img = go.AddComponent<Image>();
-            img.color = PieceColor(piece);
+            ApplyPieceVisual(img, piece);
             _bgImages[row, col] = img;
 
             var btn = go.AddComponent<Button>();
@@ -212,22 +221,6 @@ namespace OyatsuPuzzle
 
             int r = row, c = col;
             btn.onClick.AddListener(() => OnCellClicked(r, c));
-
-            var lblGO = new GameObject("Label");
-            lblGO.transform.SetParent(go.transform, false);
-            var lblRT = lblGO.AddComponent<RectTransform>();
-            lblRT.anchorMin = Vector2.zero;
-            lblRT.anchorMax = Vector2.one;
-            lblRT.offsetMin = lblRT.offsetMax = Vector2.zero;
-
-            var tmp = lblGO.AddComponent<TextMeshProUGUI>();
-            tmp.text          = CellLabelText(piece, col, row);
-            tmp.fontSize      = 22f;
-            tmp.fontStyle     = FontStyles.Bold;
-            tmp.alignment     = TextAlignmentOptions.Center;
-            tmp.color         = Color.black;
-            tmp.raycastTarget = false;
-            _labels[row, col] = tmp;
 
             var swipe = go.AddComponent<SwipeCellHandler>();
             swipe.BoardRow    = row;
@@ -797,14 +790,13 @@ namespace OyatsuPuzzle
 
         private void RefreshBoardVisual(PuzzleSession session)
         {
-            if (_bgImages == null || _labels == null) return;
+            if (_bgImages == null) return;
             var grid = session.Board.Grid;
             for (int row = 0; row < _size; row++)
                 for (int col = 0; col < _size; col++)
                 {
                     PieceType p = grid[row, col];
-                    _bgImages[row, col].color = PieceColor(p);
-                    _labels[row, col].text    = CellLabelText(p, col, row);
+                    ApplyPieceVisual(_bgImages[row, col], p);
                 }
             Debug.Log("[OyatsuPuzzle] Board visual refreshed.");
         }
@@ -849,13 +841,32 @@ namespace OyatsuPuzzle
         // Piece helpers
         // ──────────────────────────────────────────
 
-        private static string CellLabelText(PieceType t, int col, int row)
+        // PieceType に対応する Sprite を返す。未登録 / null は null（単色フォールバック）。
+        private Sprite SpriteFor(PieceType piece)
         {
-#if UNITY_EDITOR
-            return $"{PieceDebugLabel(t)}\n{col},{row}";
-#else
-            return "";
-#endif
+            if (pieceSprites == null) return null;
+            foreach (var ps in pieceSprites)
+                if (ps != null && ps.type == piece) return ps.sprite;
+            return null;
+        }
+
+        // セル Image にピースの見た目を適用する。
+        // Sprite があれば画像表示、無ければ従来の単色表示にフォールバック。
+        private void ApplyPieceVisual(Image img, PieceType piece)
+        {
+            if (img == null) return;
+            var sprite = SpriteFor(piece);
+            if (sprite != null)
+            {
+                img.sprite         = sprite;
+                img.color          = Color.white;
+                img.preserveAspect = true;
+            }
+            else
+            {
+                img.sprite = null;
+                img.color  = PieceColor(piece);
+            }
         }
 
         private static string PieceDebugLabel(PieceType t)
