@@ -62,6 +62,8 @@ namespace OyatsuPuzzle
         [SerializeField] private float collectFlyDuration = 0.6f;
         [Tooltip("複数同時回収時、1個ごとに飛び出しを遅らせる間隔(秒)。0で同時。")]
         [SerializeField] private float collectFlyStagger = 0.06f;
+        [Tooltip("クリア時、全ての回収演出(飛行＋ぷにっ＋装飾)が終わってから PuzzleClearPanel を出すまでの余白(秒)。")]
+        [SerializeField] private float clearPanelDelayAfterCollectEffects = 0.15f;
         [Tooltip("到着時の装飾用スプライト(星パーティクル)。未設定なら菱形で代用（Overlayでも見える）。キラン1回につき星2個＋回収アイテム1個＋追加装飾2個の計5要素を出す。")]
         [SerializeField] private Sprite sparkleSprite;
         [Tooltip("回収アイテム画像のサイズ倍率（star基準=sparkleSizeMax比）。主役を大きく見せる。")]
@@ -157,6 +159,10 @@ namespace OyatsuPuzzle
         [Header("References")]
         [SerializeField] private PuzzleManager          puzzleManager;
         [SerializeField] private PuzzleScreenController screenController;
+        [Tooltip("PuzzleClearPanel に付けたクラッカー演出。クリア画面表示時に再生し、完了後に結果画面へ進む。")]
+        [SerializeField] private PuzzleClearCrackerEffectUI puzzleClearCrackerEffect;
+        [Tooltip("PuzzleFailPanel に付けた涙演出。失敗画面表示時に再生し、完了後に失敗結果画面へ進む。")]
+        [SerializeField] private PuzzleFailTearEffectUI puzzleFailTearEffect;
 
         [Header("Support Messages")]
         [Tooltip("状況別の応援メッセージ。各タイミングでランダム表示。空配列ならそのタイミングは無表示。")]
@@ -227,6 +233,12 @@ namespace OyatsuPuzzle
         [SerializeField] private float supportHoldSeconds      = 2.5f;
         [SerializeField] private float supportStartHoldSeconds = 3.5f;
 
+        [Header("Result Support Messages (クリア/失敗時)")]
+        [Tooltip("ステージクリア時に SupportMessageText へ出す文言。")]
+        [SerializeField] private string clearSupportMessage = "やったね！クリアだよ〜♪";
+        [Tooltip("ステージ失敗時に SupportMessageText へ出す文言。")]
+        [SerializeField] private string failSupportMessage  = "おしい！もう一回チャレンジしてみよ〜";
+
         private Image[,]           _bgImages;
         private int                _size;
         private int                _selRow = -1;
@@ -251,6 +263,13 @@ namespace OyatsuPuzzle
 
         // 同じ GoalItemSlot へのキラキラ連打を抑えるクールダウン（slot → 次に出せる時刻）
         private readonly Dictionary<GoalItemSlot, float> _sparkleNextTime = new Dictionary<GoalItemSlot, float>();
+
+        // 進行中の回収演出(飛行→ぷにっ→装飾フェード)の本数。クリア画面はこれが 0 になってから出す。
+        private int _activeCollectEffects;
+
+        // 表示用のゴール個数（pieceType→表示数）。内部 clearedCount とは分離し、
+        // 回収アイコンがスロットへ到着した時点で 1 ずつ追従させる（キラン演出中に数字が増える）。
+        private readonly Dictionary<PieceType, int> _shownGoalCount = new Dictionary<PieceType, int>();
 
 
         private void Awake()
@@ -322,9 +341,12 @@ namespace OyatsuPuzzle
             LogPieceWeights(_currentStage);
 
             if (stageLabelText != null)
-                stageLabelText.text = $"Stage {_currentStage}";
+                stageLabelText.text = $"ステージ{_currentStage}";
 
             RefreshMovesLabel(session.RemainingMoves);
+            // 表示用ゴール個数を内部値に初期化（ステージ開始時は 0）。
+            _shownGoalCount.Clear();
+            foreach (var g in session.Goals) _shownGoalCount[g.pieceType] = g.clearedCount;
             RefreshGoalLabel(session.Goals);
             BuildBoard(session);
 
@@ -899,7 +921,9 @@ namespace OyatsuPuzzle
 
                 if (cleared)
                 {
-                    // ステージクリア（ApplyGoalProgress 内でクリア遷移を予約済み）。ここで終了。
+                    // ステージクリア。最後の回収演出(飛行→ぷにっ→装飾フェード)が終わってから
+                    // PuzzleClearPanel を表示する（演出を最後まで見せる）。ここで終了。
+                    yield return StartCoroutine(WaitCollectEffectsThenShowClear());
                     yield break;
                 }
 
@@ -939,6 +963,9 @@ namespace OyatsuPuzzle
                 bool goalProgressed = SumCleared(session) > beforeCleared;
                 UpdateSupportAfterMove(session, combo, goalProgressed);
             }
+
+            // 表示用ゴール個数を内部値へ最終同期（取りこぼし補正・通常 no-op）。
+            SyncShownGoalToModel(session);
 
             // Unlock before fail-check so that game-over lock is set by CheckFail if needed.
             _inputLocked = false;
@@ -1069,6 +1096,10 @@ namespace OyatsuPuzzle
             const float popDur = 0.12f;
             float flyDur = Mathf.Max(0.05f, collectFlyDuration); // Inspectorで調整可（既定0.6=ゆっくり）
 
+            // この回収演出を「進行中」として計上（クリア画面はこれが0になるまで待つ）。
+            // 飛行→ぷにっ→装飾フェードが全て終わった時点で1本ぶん減算する。
+            _activeCollectEffects++;
+
             var seq = DOTween.Sequence();
             if (delay > 0f) seq.AppendInterval(delay);            // 自分の順番までは元位置で待機
             seq.Append(rt.DOScale(1.25f, popDur).SetEase(Ease.OutBack))  // ひと膨らみ＝拾い上げ
@@ -1078,13 +1109,33 @@ namespace OyatsuPuzzle
                 {
                     if (go != null) Destroy(go);
                     PulseSlot(slot);                 // 到着時にスロットアイコンをぷるっと
+                    BumpShownGoal(piece);            // 到着した瞬間に表示カウントを1つ進める（キラン演出中に増える）
                     // キラン演出：星×2 ＋ 回収アイテムのプレーン画像×1。
                     // 装飾アイテム画像は装飾専用の CollectDecorSpriteFor(piece) で解決する。
                     // （飛ぶアイコンの sprite=GoalSpriteFor とは別管理。goalSprites には依存しない）
-                    SpawnSparkleBurst(slot, overlayParent, CollectDecorSpriteFor(piece));
+                    float burstDur = SpawnSparkleBurst(slot, overlayParent, CollectDecorSpriteFor(piece));
+                    // 装飾フェード完了後に「進行中」を1本ぶん減算（演出を最後まで見せてからクリア表示）。
+                    StartCoroutine(After(burstDur, () => _activeCollectEffects = Mathf.Max(0, _activeCollectEffects - 1)));
                 });
 
             return delay + popDur + flyDur;
+        }
+
+        // 回収アイコンがスロットへ到着した時点で、表示用ゴール個数を1つ進めてラベルを更新する。
+        // 内部 clearedCount は ApplyGoalProgress で先に加算済みだが、見た目の数字はここで追従させる。
+        private void BumpShownGoal(PieceType piece)
+        {
+            int cur = _shownGoalCount.TryGetValue(piece, out var v) ? v : 0;
+            _shownGoalCount[piece] = cur + 1;
+            RefreshGoalLabel(puzzleManager?.CurrentSession?.Goals);
+        }
+
+        // 表示用ゴール個数を内部値へ最終同期（回収演出の取りこぼし補正）。通常は no-op。
+        private void SyncShownGoalToModel(PuzzleSession session)
+        {
+            if (session == null || session.Goals == null) return;
+            foreach (var g in session.Goals) _shownGoalCount[g.pieceType] = g.clearedCount;
+            RefreshGoalLabel(session.Goals);
         }
 
         // 回収到着時、ゴールスロットのアイコンを軽くパンチスケール（scaleのみ＝GridLayoutGroup非競合）。
@@ -1106,17 +1157,18 @@ namespace OyatsuPuzzle
         // 最大5要素を、Inspector で指定した各オフセット位置にふわっと出して柔らかく消す。
         // 位置は collectDecor*Offset（px相当・スロット中心基準）で個別に調整可能。
         // itemSprite: 回収した PieceType のプレーン画像（CollectDecorSpriteFor の結果。null可）。
-        private void SpawnSparkleBurst(GoalItemSlot slot, Transform parent, Sprite itemSprite)
+        // 戻り値: 装飾が出てから完全に消えるまでの総時間(秒)。何も出さなかった場合は 0。
+        private float SpawnSparkleBurst(GoalItemSlot slot, Transform parent, Sprite itemSprite)
         {
-            if (slot == null || slot.itemImage == null || parent == null) return;
+            if (slot == null || slot.itemImage == null || parent == null) return 0f;
 
             // 「1個集めるごとに1回キラン」。同じSlotで sparkleCooldown 秒以内の連打は抑制。
             float now = Time.unscaledTime;
-            if (_sparkleNextTime.TryGetValue(slot, out float next) && now < next) return;
+            if (_sparkleNextTime.TryGetValue(slot, out float next) && now < next) return 0f;
             _sparkleNextTime[slot] = now + Mathf.Max(0f, sparkleCooldown);
 
             var slotRt = slot.itemImage.transform as RectTransform;
-            if (slotRt == null) return;
+            if (slotRt == null) return 0f;
 
             Vector3 center = slotRt.position;
             float scale = Mathf.Abs(slotRt.lossyScale.y); // local(px相当) → world 変換係数
@@ -1207,6 +1259,10 @@ namespace OyatsuPuzzle
                              .SetDelay(Mathf.Max(0f, moveDur - fadeDur)))              // 終盤にふっと消える
                     .OnComplete(() => { if (go != null) Destroy(go); });
             }
+
+            // 全装飾は同じタイミングで動くため、総時間 ≒ ポップ(0.22) + 漂い(sparkleDuration)。
+            // クリア表示はこの時間ぶん待ってから出すために返す。
+            return 0.22f + Mathf.Max(0.05f, sparkleDuration);
         }
 
         // 全セルの scale を 1 に戻す（ポップ/選択の残りを消す）。
@@ -1375,7 +1431,10 @@ namespace OyatsuPuzzle
                 puzzleManager?.FinishClear();
                 Debug.Log($"[OyatsuPuzzle] Stage advanced: {prev} -> {PuzzleProgressManager.CurrentStage}");
                 _inputLocked = true;
-                StartCoroutine(After(0.4f, () => screenController?.ShowClear()));
+                // クリア時の応援メッセージを表示（UpdateSupportAfterMove は IsCleared で抑止されるため上書きされない）。
+                SetSupportMessage(clearSupportMessage);
+                // クリア画面の表示は ResolveMatchesRoutine 側で「回収演出の完了を待ってから」行う。
+                // （ここで固定Delay表示すると最後の回収演出・装飾が見えきる前に切り替わるため）
                 return true;
             }
 
@@ -1461,10 +1520,20 @@ namespace OyatsuPuzzle
             Debug.Log("[OyatsuPuzzle] Stage failed.");
             _inputLocked = true;
             puzzleManager?.FinishFail();
+            // 失敗時の応援メッセージを表示。
+            SetSupportMessage(failSupportMessage);
             StartCoroutine(After(0.4f, () =>
             {
                 Debug.Log("[OyatsuPuzzle] ShowFail called.");
+                // PuzzleFailPanel（透明背景・盤面の上）を表示。
                 screenController?.ShowFail();
+
+                // 涙演出は PuzzleFailPanel 側の PuzzleFailTearEffectUI に委譲。
+                // 演出完了後に失敗結果画面へ進む。未設定でも安全に遷移する。
+                if (puzzleFailTearEffect != null)
+                    puzzleFailTearEffect.Play(() => screenController?.ShowStageFailResult());
+                else
+                    screenController?.ShowStageFailResult();
             }));
         }
 
@@ -1663,7 +1732,9 @@ namespace OyatsuPuzzle
         // Support message (応援メッセージ) helpers
         // ──────────────────────────────────────────
 
-        // 状況別メッセージをランダム表示（直前と同じ文言は避ける）。holdSeconds 後に自動消去。
+        // 状況別メッセージをランダム表示（直前と同じ文言は避ける）。
+        // 時間経過では消さず、次のメッセージが来るまで表示し続ける（上書き方式）。
+        // ※ holdSeconds は後方互換のため残置（未使用）。
         private void ShowSupport(string[] pool, float holdSeconds)
         {
             if (pool == null || pool.Length == 0) return;
@@ -1673,8 +1744,8 @@ namespace OyatsuPuzzle
             SetSupportMessage(msg);
             _lastSupportMsg = msg;
 
-            if (_supportClearCo != null) StopCoroutine(_supportClearCo);
-            _supportClearCo = StartCoroutine(ClearSupportAfter(holdSeconds));
+            // 時間経過での自動消去は廃止。万一過去の消去コルーチンが残っていれば停止だけする。
+            if (_supportClearCo != null) { StopCoroutine(_supportClearCo); _supportClearCo = null; }
         }
 
         private string PickSupport(string[] pool)
@@ -1770,8 +1841,10 @@ namespace OyatsuPuzzle
 
                 if (slot.countText != null)
                 {
-                    // 表示は必要数で頭打ち（例: 達成後は 6 / 6）。ゴール判定ロジックには影響しない。
-                    int shown = Mathf.Min(g.clearedCount, g.requiredCount);
+                    // 表示は「表示用カウント(_shownGoalCount)」を使う＝回収アイコン到着時に増える。
+                    // 必要数で頭打ち（例: 達成後は 6 / 6）。ゴール判定ロジックには影響しない。
+                    int shownVal = _shownGoalCount.TryGetValue(g.pieceType, out var sc) ? sc : g.clearedCount;
+                    int shown = Mathf.Min(shownVal, g.requiredCount);
 
                     // Rich Text で 現在数 / スラッシュ / 必要数 を色分け（CountText は1つのまま）。
                     string cur = ColorUtility.ToHtmlStringRGB(currentCountColor);
@@ -1787,8 +1860,34 @@ namespace OyatsuPuzzle
 
         private IEnumerator After(float delay, Action action)
         {
-            yield return new WaitForSeconds(delay);
+            if (delay > 0f) yield return new WaitForSeconds(delay);
             action?.Invoke();
+        }
+
+        // 進行中の回収演出(飛行＋ぷにっ＋装飾フェード)が全て終わるのを待ってから PuzzleClearPanel を表示する。
+        // 何らかで演出が終わらない場合に固まらないよう、フェイルセーフのタイムアウトを設ける。
+        private IEnumerator WaitCollectEffectsThenShowClear()
+        {
+            const float timeout = 4f; // フェイルセーフ上限
+            float waited = 0f;
+            while (_activeCollectEffects > 0 && waited < timeout)
+            {
+                waited += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            // 演出が消えきった後の余白（Inspectorで微調整可）。
+            float pad = Mathf.Max(0f, clearPanelDelayAfterCollectEffects);
+            if (pad > 0f) yield return new WaitForSeconds(pad);
+
+            // PuzzleClearPanel（透明背景・盤面の上）を表示。
+            screenController?.ShowClear();
+
+            // クラッカー演出は PuzzleClearPanel 側の PuzzleClearCrackerEffectUI に委譲。
+            // 演出完了後に結果画面へ進む（タップ遷移は廃止）。未設定でも安全に遷移する。
+            if (puzzleClearCrackerEffect != null)
+                puzzleClearCrackerEffect.Play(() => screenController?.ShowStageClearResult());
+            else
+                screenController?.ShowStageClearResult();
         }
 
         // ──────────────────────────────────────────
