@@ -4,7 +4,7 @@ using UnityEngine;
 namespace OyatsuPuzzle
 {
     // Checks on startup / StartPanel refresh whether the date has changed.
-    // On a new day: resets plays, stage, AllClear flag, reward claims, and session state.
+    // On a new day: resets plays, stage, reward claims, and session state.
     public static class PuzzleDailyResetManager
     {
         private const string KeyLastDate = "OyatsuPuzzle_LastPuzzlePlayDate";
@@ -34,9 +34,6 @@ namespace OyatsuPuzzle
 
             // Reset stage
             PuzzleProgressManager.ResetProgress();
-
-            // Reset AllClear
-            PuzzleAllClearManager.ResetAllClear();
 
             // Reset reward claims
             PuzzleRewardClaimManager.ResetAll();

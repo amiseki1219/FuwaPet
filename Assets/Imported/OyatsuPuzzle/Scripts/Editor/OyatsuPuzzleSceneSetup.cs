@@ -142,7 +142,7 @@ namespace OyatsuPuzzle
             SetLabelFontSize(plusBtn, 22);
 
             // ═══════════════════════════════════════════════════
-            // NormalStartRoot — shown in normal state, hidden in AllClear
+            // NormalStartRoot — main start screen content
             // ═══════════════════════════════════════════════════
             var normalStartRootGO = new GameObject("NormalStartRoot");
             normalStartRootGO.transform.SetParent(panel.transform, false);
@@ -224,60 +224,7 @@ namespace OyatsuPuzzle
             var homeBtn = CreateButton(normalT, "HomeButton", "Home",  440f, -345f, new Color(1f, 0.80f, 0.70f), w: 130f, h: 130f);
 
             // ═══════════════════════════════════════════════════
-            // AllClearRoot — hidden in normal state, shown in AllClear
-            // ═══════════════════════════════════════════════════
-            var allClearRootGO = new GameObject("AllClearRoot");
-            allClearRootGO.transform.SetParent(panel.transform, false);
-            {
-                var rt = allClearRootGO.AddComponent<RectTransform>();
-                rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
-                rt.offsetMin = rt.offsetMax = Vector2.zero;
-                var bg = allClearRootGO.AddComponent<Image>();
-                bg.color = new Color(1f, 0.95f, 0.75f, 0.97f);
-            }
-            var acT = allClearRootGO.transform;
-
-            var allClearTitleTmp = CreateTMPLabel(acT, "AllClearTitleText",
-                "All Clear!", 0f, 400f, 72, new Color(0.8f, 0.3f, 0.1f), w: 900f, h: 140f);
-            var allClearSubTmp = CreateTMPLabel(acT, "AllClearSubText",
-                "Today's reward completed!", 0f, 260f, 36, new Color(0.45f, 0.22f, 0.08f), w: 900f, h: 80f);
-            var allClearDetailTmp = CreateTMPLabel(acT, "AllClearDetailText",
-                "All 5 stages cleared.", 0f, 175f, 28, new Color(0.45f, 0.22f, 0.08f), w: 900f, h: 70f);
-            var allClearRewardTmp = CreateTMPLabel(acT, "AllClearRewardText",
-                "Reward: Free Coin +150 + Trust +50pt", 0f, 80f, 26, new Color(0.8f, 0.3f, 0.1f), w: 900f, h: 70f);
-
-            // AllClear stage progress dots (all lit up)
-            CreateColorBlock(acT, "AllClearProgressBg", 1080f, 110f, 0f, -60f, new Color(0.96f, 0.88f, 0.8f), fullWidth: true);
-            var allClearDotImgs = new Image[5];
-            for (int i = 1; i <= 5; i++)
-            {
-                float dotX = (i - 3) * 170f;
-                var dotGO = new GameObject($"AllClearDot{i}");
-                dotGO.transform.SetParent(acT, false);
-                var dotRT = dotGO.AddComponent<RectTransform>();
-                dotRT.anchorMin = dotRT.anchorMax = new Vector2(0.5f, 0.5f);
-                dotRT.sizeDelta        = new Vector2(88f, 88f);
-                dotRT.anchoredPosition = new Vector2(dotX, -60f);
-                var dotImg = dotGO.AddComponent<Image>();
-                dotImg.color = new Color(0.95f, 0.42f, 0.55f);
-                allClearDotImgs[i - 1] = dotImg;
-                CreateTMPLabel(acT, $"AllClearDotLabel{i}", i.ToString(), dotX, -60f, 34, Color.white, w: 88f, h: 88f);
-            }
-
-            var allClearPlaysTmp = CreateTMPLabel(acT, "AllClearPlaysText",
-                "All done today!", 0f, -190f, 28, new Color(0.6f, 0.2f, 0.3f), w: 700f, h: 70f);
-            var allClearNoteTmp = CreateTMPLabel(acT, "AllClearNoteText",
-                "Come back tomorrow!", 0f, -280f, 30, new Color(0.45f, 0.22f, 0.08f), w: 900f, h: 70f);
-
-            // AllClearRoot bottom nav
-            CreateColorBlock(acT, "AllClearNavBg", 1080f, 150f, 0f, -345f, new Color(1f, 0.88f, 0.82f), fullWidth: true);
-            var acHomeBtn        = CreateButton(acT, "HomeButton",      "Home",          -130f, -345f, new Color(1f, 0.80f, 0.70f), w: 180f, h: 130f);
-            var toPuzzleTopBtn   = CreateButton(acT, "ToPuzzleTopButton", "To Puzzle Top", 130f, -345f, new Color(0.55f, 0.75f, 0.95f), w: 220f, h: 130f);
-
-            allClearRootGO.SetActive(false);
-
-            // ═══════════════════════════════════════════════════
-            // DebugButtonsRoot — topmost sibling, above AllClearRoot overlay
+            // DebugButtonsRoot — topmost sibling
             // Active in Editor, inactive in release builds (Awake #if UNITY_EDITOR)
             // ═══════════════════════════════════════════════════
             var debugRootGO = new GameObject("DebugButtonsRoot");
@@ -347,23 +294,10 @@ namespace OyatsuPuzzle
             uiSO.FindProperty("rewardRow5Text").objectReferenceValue          = row5;
 
             uiSO.FindProperty("normalStartRoot").objectReferenceValue         = normalStartRootGO;
-            uiSO.FindProperty("allClearRoot").objectReferenceValue            = allClearRootGO;
-            uiSO.FindProperty("allClearTitleText").objectReferenceValue       = allClearTitleTmp;
-            uiSO.FindProperty("allClearSubText").objectReferenceValue         = allClearSubTmp;
-            uiSO.FindProperty("allClearDetailText").objectReferenceValue      = allClearDetailTmp;
-            uiSO.FindProperty("allClearRewardText").objectReferenceValue      = allClearRewardTmp;
-            uiSO.FindProperty("allClearNoteText").objectReferenceValue        = allClearNoteTmp;
-            uiSO.FindProperty("allClearPlaysText").objectReferenceValue       = allClearPlaysTmp;
-
-            var acDotsProp = uiSO.FindProperty("allClearDotImages");
-            acDotsProp.arraySize = allClearDotImgs.Length;
-            for (int i = 0; i < allClearDotImgs.Length; i++)
-                acDotsProp.GetArrayElementAtIndex(i).objectReferenceValue = allClearDotImgs[i];
 
             uiSO.FindProperty("startButton").objectReferenceValue             = startBtn.GetComponent<Button>();
             uiSO.FindProperty("helpButton").objectReferenceValue              = helpBtn.GetComponent<Button>();
             uiSO.FindProperty("homeButton").objectReferenceValue              = homeBtn.GetComponent<Button>();
-            uiSO.FindProperty("toPuzzleTopButton").objectReferenceValue       = toPuzzleTopBtn.GetComponent<Button>();
             uiSO.FindProperty("debugButtonsRoot").objectReferenceValue        = debugRootGO;
             uiSO.FindProperty("debugResetPlaysButton").objectReferenceValue   = debugResetBtn.GetComponent<Button>();
             uiSO.FindProperty("debugResetStageButton").objectReferenceValue   = debugResetStageBtn.GetComponent<Button>();
@@ -380,8 +314,6 @@ namespace OyatsuPuzzle
             UnityEventTools.AddPersistentListener(homeBtn.GetComponent<Button>().onClick,       ui.OnClickHome);
             UnityEventTools.AddPersistentListener(helpBtn.GetComponent<Button>().onClick,       ui.OnClickHelp);
             UnityEventTools.AddPersistentListener(plusBtn.GetComponent<Button>().onClick,       ui.OnClickPlus);
-            UnityEventTools.AddPersistentListener(acHomeBtn.GetComponent<Button>().onClick,        ui.OnClickHome);
-            UnityEventTools.AddPersistentListener(toPuzzleTopBtn.GetComponent<Button>().onClick,  ui.OnClickToPuzzleTop);
             UnityEventTools.AddPersistentListener(debugResetBtn.GetComponent<Button>().onClick,      ui.OnClickDebugResetPlays);
             UnityEventTools.AddPersistentListener(debugResetStageBtn.GetComponent<Button>().onClick, ui.OnClickDebugResetStage);
             UnityEventTools.AddPersistentListener(debugResetAllBtn.GetComponent<Button>().onClick,   ui.OnClickDebugResetAll);

@@ -129,10 +129,10 @@ TextureImporter:
       name: PokoPlay_0
       rect:
         serializedVersion: 2
-        x: 31
-        y: 10
-        width: 664
-        height: 636
+        x: 0
+        y: 0
+        width: 500
+        height: 500
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: de8f60e57feb243e8b5c741c062916e6
     internalID: 0
     vertices: []
     indices: 

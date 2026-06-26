@@ -26,6 +26,8 @@ namespace OyatsuPuzzle
         [Header("Stage Progress")]
         [SerializeField] private TMP_Text stageProgressLabel;
         [SerializeField] private Image[]  stageDotImages = new Image[5];
+        [Tooltip("ClearOverlay と同デザインの肉球進行バー（StartPanel用）。割り当て時はこちらを更新する。")]
+        [SerializeField] private PuzzleStageStartProgressBarUI startStageProgressBarUI;
 
         [Header("Challenge Section")]
         [SerializeField] private TMP_Text challengeTitleText;
@@ -46,24 +48,11 @@ namespace OyatsuPuzzle
 
         [Header("Root Objects")]
         [SerializeField] private GameObject normalStartRoot;
-        [SerializeField] private GameObject allClearRoot;
-
-        [Header("AllClear Texts")]
-        [SerializeField] private TMP_Text allClearTitleText;
-        [SerializeField] private TMP_Text allClearSubText;
-        [SerializeField] private TMP_Text allClearDetailText;
-        [SerializeField] private TMP_Text allClearRewardText;
-        [SerializeField] private TMP_Text allClearNoteText;
-        [SerializeField] private TMP_Text allClearPlaysText;
-
-        [Header("AllClear Stage Progress")]
-        [SerializeField] private Image[]  allClearDotImages = new Image[5];
 
         [Header("Buttons")]
         [SerializeField] private Button startButton;
         [SerializeField] private Button helpButton;
         [SerializeField] private Button homeButton;
-        [SerializeField] private Button toPuzzleTopButton;
 
         [Header("Debug Root (Editor Only)")]
         [SerializeField] private GameObject debugButtonsRoot;
@@ -106,26 +95,12 @@ namespace OyatsuPuzzle
             Debug.Log("[OyatsuPuzzle] StartPanel Refresh.");
             Debug.Log($"[OyatsuPuzzle] currentStage={stage}");
 
-            bool allCleared = PuzzleAllClearManager.IsAllClearedToday;
-            Debug.Log($"[OyatsuPuzzle] AllClearToday={allCleared}");
-
-            if (allCleared)
-            {
-                Debug.Log("[OyatsuPuzzle] Showing AllClearRoot.");
-                Debug.Log("[OyatsuPuzzle] Hiding NormalStartRoot.");
-                ShowAllClearState(remaining, maxPlays);
-                return;
-            }
-
-            Debug.Log("[OyatsuPuzzle] Showing NormalStartRoot.");
-            Debug.Log("[OyatsuPuzzle] Hiding AllClearRoot.");
             ShowNormalState(stage, remaining, maxPlays, data);
         }
 
         private void ShowNormalState(int stage, int remaining, int maxPlays, StageDataSO data)
         {
             if (normalStartRoot != null) normalStartRoot.SetActive(true);
-            if (allClearRoot    != null) allClearRoot.SetActive(false);
             if (startButton     != null) startButton.gameObject.SetActive(true);
 
             if (titleText != null) titleText.text = "Play Time";
@@ -145,6 +120,12 @@ namespace OyatsuPuzzle
 
             RefreshStageDots(stageDotImages, stage, allCleared: false);
 
+            // ClearOverlay と同デザインの肉球進行バー（StartPanel用）を現在ステージで更新。
+            // currentStage = これから挑戦するステージ。全クリア済み（CurrentStage 頭打ちで判別不可）の場合は
+            // IsAllCleared フラグで全ノード Cleared にする（残りプレイ回数とは無関係）。
+            if (startStageProgressBarUI != null)
+                startStageProgressBarUI.RefreshForStart(stage, PuzzleStageRegistry.StageCount, PuzzleProgressManager.IsAllCleared);
+
             if (challengeTitleText != null) challengeTitleText.text = "Today's Challenge";
 
             // ステージ別の GoalText / SupportMessageText は PuzzleStartPanelTextController が管理（二重管理回避）
@@ -158,23 +139,6 @@ namespace OyatsuPuzzle
             SetRewardRows();
 
             if (startButton != null) startButton.interactable = remaining > 0;
-        }
-
-        private void ShowAllClearState(int remaining, int maxPlays)
-        {
-            if (normalStartRoot    != null) normalStartRoot.SetActive(false);
-            if (allClearRoot       != null) allClearRoot.SetActive(true);
-            if (startButton        != null) startButton.gameObject.SetActive(false);
-            if (toPuzzleTopButton  != null) toPuzzleTopButton.gameObject.SetActive(true);
-
-            if (allClearTitleText  != null) allClearTitleText.text  = "All Clear!";
-            if (allClearSubText    != null) allClearSubText.text    = "Today's reward completed!";
-            if (allClearDetailText != null) allClearDetailText.text = "All 5 stages cleared.";
-            if (allClearRewardText != null) allClearRewardText.text = "Reward: Free Coin +150 + Trust +50pt";
-            if (allClearNoteText   != null) allClearNoteText.text   = "また明日あそぼうね♪";
-            if (allClearPlaysText  != null) allClearPlaysText.text  = "今日の分はクリア済み！";
-
-            RefreshStageDots(allClearDotImages, currentStage: 5, allCleared: true);
         }
 
         private void RefreshStageDots(Image[] dots, int currentStage, bool allCleared)
@@ -221,36 +185,6 @@ namespace OyatsuPuzzle
             if (screenController != null) screenController.ShowGame();
         }
 
-        public void OnClickToPuzzleTop()
-        {
-            Debug.Log("[OyatsuPuzzle] To Puzzle Top clicked.");
-            Debug.Log("[OyatsuPuzzle] AllClearToday remains true.");
-
-            if (allClearRoot      != null) allClearRoot.SetActive(false);
-            if (toPuzzleTopButton != null) toPuzzleTopButton.gameObject.SetActive(false);
-            if (startButton       != null) startButton.gameObject.SetActive(false);
-            if (normalStartRoot   != null) normalStartRoot.SetActive(true);
-
-            if (startButton != null)
-            {
-                startButton.interactable = false;
-                Debug.Log("[OyatsuPuzzle] Start button disabled because all stages cleared today.");
-            }
-
-            Debug.Log("[OyatsuPuzzle] Showing completed start state.");
-
-            int stage     = PuzzleProgressManager.CurrentStage;
-            int remaining = dailyPlayManager != null ? dailyPlayManager.RemainingPlays : 0;
-            int maxPlays  = dailyPlayManager != null ? dailyPlayManager.MaxPlays : 5;
-
-            if (remainingPlaysValueText != null)
-                remainingPlaysValueText.text = "今日の分はクリア済み！";
-            if (remainingPlaysNoteText != null)
-                remainingPlaysNoteText.text = "また明日あそぼうね♪";
-
-            RefreshStageDots(stageDotImages, currentStage: 5, allCleared: true);
-        }
-
         public void OnClickBack()  => Debug.Log("[OyatsuPuzzle] Back clicked");
         public void OnClickHome()  => Debug.Log("[OyatsuPuzzle] Home clicked");
         public void OnClickHelp()  => Debug.Log("[OyatsuPuzzle] Help clicked");
@@ -271,7 +205,6 @@ namespace OyatsuPuzzle
 #if UNITY_EDITOR
             PuzzleProgressManager.DebugResetStage();
 #endif
-            PuzzleAllClearManager.ResetAllClear();
             Refresh();
             Debug.Log("[OyatsuPuzzle] Start screen refreshed.");
         }
@@ -282,7 +215,6 @@ namespace OyatsuPuzzle
 #if UNITY_EDITOR
             PuzzleProgressManager.DebugResetStage();
 #endif
-            PuzzleAllClearManager.ResetAllClear();
             PuzzleRewardClaimManager.ResetAll();
             Stage4RandomRewardManager.ResetToday();
             PuzzleSessionStateManager.ResetAll();
