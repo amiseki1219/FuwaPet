@@ -201,24 +201,26 @@ public class CareSceneManager : MonoBehaviour
     private void SetTrustLevel()
     {
         int trust = _save.trust;
-        int[] thresholds = { 0, 100, 500, 1500 };
 
-        int level = PetStatus.GetTrustLevel(trust);
+        bool isMax = TrustFormula.IsMaxLevel(trust);
+        int remaining = TrustFormula.GetPtsToNextLevel(trust);
 
-        int currentStart = level <= thresholds.Length
-            ? thresholds[level - 1]
-            : thresholds[thresholds.Length - 1] + (level - thresholds.Length) * 2000;
+        if (isMax || remaining == 0)
+        {
+            if (trustSlider != null)
+                trustSlider.value = 1f;
 
-        int nextStart = level < thresholds.Length
-            ? thresholds[level]
-            : thresholds[thresholds.Length - 1] + (level - thresholds.Length + 1) * 2000;
+            if (trustRemainingText != null)
+                trustRemainingText.text = "Lv.100 カンスト達成！";
+        }
+        else
+        {
+            if (trustSlider != null)
+                trustSlider.value = TrustFormula.GetFillAmount(trust);
 
-        float fill = Mathf.Clamp01((float)(trust - currentStart) / (nextStart - currentStart));
-        if (trustSlider != null)
-            trustSlider.value = fill;
-
-        if (trustRemainingText != null)
-            trustRemainingText.text = $"あと{nextStart - trust}ptで信頼度アップ！";
+            if (trustRemainingText != null)
+                trustRemainingText.text = $"あと{remaining}ptで信頼度アップ！";
+        }
     }
 
     private void SetCondition()
