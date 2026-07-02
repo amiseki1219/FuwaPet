@@ -1739,7 +1739,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &271526023
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2594,6 +2594,9 @@ MonoBehaviour:
     playCountToday: 0
     lastPlayDate: 
     lastSleepTicks: 0
+    lastNameChangeDate: 
+    lastCharNameChangeDate: 
+    lastBirthdayChangeDate: 
     personalityActivity: 0
     personalityDependency: 0
     personalityHonesty: 0
