@@ -223,7 +223,7 @@ Tutorial.unity 起動
 - Tutorial 内のパネルを削除する際に呼び出し元ボタンも一緒に消す
 
 #### 関連ファイル
-- `HomeManager.cs`: 起動振り分けロジック
+- `HomeManager.cs`: 起動振り分けロジック（Start() での振り分けのみに簡素化済み。旧 UpdateUI・出会って◯日・誕生日演出・キャラ別背景は廃止。共通背景は Scene に直接配置）
 - `OnboardingManager.cs`: Tutorialフロー管理
 - `SceneLoader.cs`: `GoToStart()` / `GoToTutorial()`
 - `SaveData.cs`: `onboardingCompleted` フラグ
