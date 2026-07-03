@@ -84,6 +84,7 @@
 
 ### C# (Unity)
 - **命名**: PascalCase（クラス、メソッド、publicプロパティ）、camelCase（ローカル変数、privateフィールド）
+- **Pet系 → Character系へ寄せる（命名方針・2026/7/3）**: 新規コードやリネーム時は `Pet～` より `Character～` 系の名前を優先する（SaveData は既に `characterId`）。ただし一括全置換はせず、触った箇所ごとに段階的に寄せる。
 - **データアクセス層の分離**: Repository パターンを採用（DB変更に備える）
 - **非同期処理**: async/await を優先、コルーチン最小化
 - **null安全**: 可能な限り nullチェック、`??` 演算子活用
@@ -389,6 +390,11 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 - リアルタイム＝低遅延・低コストの mini級モデル、夜バッチ＝高品質なフル級モデル。Batch API と Prompt Caching の活用を検討。
 - 具体的なモデル名・単価は未確定。2026/7/23 のタスク10着手時に OpenAI 公式の models / pricing を確認して確定し、一括で整合させる。
 - **それまで本ファイル内の Gemini 前提の記述（技術スタックのAI欄・Q&A等）は意図的に据え置き。** 会話まわりの実装前に必ず requirements.md §9 の方針メモを参照すること。
+
+### 起動・DDOL・GameContext まわりの技術メモ（2026/7/3 確定）
+- **Manager は root 直下に配置する**。`DontDestroyOnLoad` はルート GameObject にのみ有効で、子オブジェクトに付けると警告が出て永続化されない。Main.unity では SaveManager / GameData / QuestManager / LoadingManager を空GameObjectの子から root 直下へ移動して解消済み（コード・Singleton は不変、配置のみ）。
+- **GameContext の guid 参照に注意**。`Assets/Scripts/Core/GameContext.cs`（guid `8a4be5ae197824b3c882d93ad336673d`・namespace `Game.Core`）。`PetStatus` を内部生成する（SerializeField は持たない）。Home.unity が旧 guid を参照して Missing Script になっていたのを現行 guid に修正済み。
+- **Script Execution Order**: `SaveManager(-200) → GameContext(-100) → デフォルト(0)`。GameContext.Awake が SaveManager.Data に依存するため、この順序は必須（設定済み）。
 
 ---
 
