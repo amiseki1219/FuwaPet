@@ -84,6 +84,7 @@
 
 ### C# (Unity)
 - **命名**: PascalCase（クラス、メソッド、publicプロパティ）、camelCase（ローカル変数、privateフィールド）
+- **Pet系 → Character系へ寄せる（命名方針・2026/7/3）**: 新規コードやリネーム時は `Pet～` より `Character～` 系の名前を優先する（SaveData は既に `characterId`）。ただし一括全置換はせず、触った箇所ごとに段階的に寄せる。
 - **データアクセス層の分離**: Repository パターンを採用（DB変更に備える）
 - **非同期処理**: async/await を優先、コルーチン最小化
 - **null安全**: 可能な限り nullチェック、`??` 演算子活用
@@ -142,6 +143,7 @@
 - 課金で信頼度上昇を加速可能（デイリーキャップなし）
 - キャラ解放: **メインキャラLv.100カンスト → 2体目無料解放**（課金即解放は廃止）
 - 累計ptテーブル: Lv10=800pt / Lv50=45,000pt / Lv100=296,000pt（詳細はrequirements.md §4）
+- **実装（2026/7/3）**: Lv計算・残pt・進捗バーは `TrustFormula.cs`（`Assets/Scripts/Pet/`）に集約し Care/Main 共通。§4の節目を必ず通す PCHIP 単調補間で Lv1〜100 の累計ptテーブルを生成・参照する。旧しきい値（各画面に散在していた 100/400/1400・0/100/500/1500 等）は廃止。Lv100 カンスト時は「Lv.100 カンスト達成！」表示。
 
 ### 7. Unity MCP 接続設定（確定済み）
 - Transport: **HTTP モード**（stdio は使わない）
@@ -222,7 +224,7 @@ Tutorial.unity 起動
 - Tutorial 内のパネルを削除する際に呼び出し元ボタンも一緒に消す
 
 #### 関連ファイル
-- `HomeManager.cs`: 起動振り分けロジック
+- `HomeManager.cs`: 起動振り分けロジック（Start() での振り分けのみに簡素化済み。旧 UpdateUI・出会って◯日・誕生日演出・キャラ別背景は廃止。共通背景は Scene に直接配置）
 - `OnboardingManager.cs`: Tutorialフロー管理
 - `SceneLoader.cs`: `GoToStart()` / `GoToTutorial()`
 - `SaveData.cs`: `onboardingCompleted` フラグ
@@ -233,11 +235,11 @@ Tutorial.unity 起動
 ```
 ヘッダー左: ユーザー名・キャラクター名・出会って◯日・信頼度レベル・あと◯ptで次のLv
 ヘッダー右: 無償コイン・有償コイン残高・広告なしボタン
-中央: キャラクター名・コンディション表示5段階（絶好調✨/元気いっぱい！/ふつう/しょんぼり/元気ない...）・3Dキャラ
+中央: キャラクター名・キャラアイコン画像（Resources のキャラ別アイコン。3D化は後日）・コンディション表示5段階テキスト（絶好調✨/元気いっぱい！/ふつう/しょんぼり/元気ない...）
 メインボタン: 「お世話する」（Care画面へ）/ 「会話する」（Chat画面へ）
-下部ナビ（5つ）: コレクション・ガチャ・ショップ・お知らせ・クエスト
+下部ナビ（7つ）: コレクション・ショップ・クエスト・もようがえ（RoomEdit）・ひろば（SNS）・お知らせ・ガチャ（お知らせ・ガチャは右側に配置）
 ```
-※ガチャは素材未準備のため後回し  
+※ガチャは画面遷移を有効化済み（Gachaシーン）。排出内容・演出は素材準備後に別途実装  
 ※クエストはデイリークエスト機能（Issue #167相当）
 
 #### Care画面（Care.unity）- お世話専用
@@ -291,6 +293,9 @@ Main → Chat（会話する）
 Main → Shop（ショップ）
 Main → MyCollection（コレクション）
 Main → Quest（クエスト）
+Main → Gacha（ガチャ）
+Main → RoomEdit（もようがえ）
+Main → SNS（ひろば）※画面枠のみ・中身はv1.1検討
 Care → Main（戻る）
 ```
 
@@ -386,6 +391,11 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 - 具体的なモデル名・単価は未確定。2026/7/23 のタスク10着手時に OpenAI 公式の models / pricing を確認して確定し、一括で整合させる。
 - **それまで本ファイル内の Gemini 前提の記述（技術スタックのAI欄・Q&A等）は意図的に据え置き。** 会話まわりの実装前に必ず requirements.md §9 の方針メモを参照すること。
 
+### 起動・DDOL・GameContext まわりの技術メモ（2026/7/3 確定）
+- **Manager は root 直下に配置する**。`DontDestroyOnLoad` はルート GameObject にのみ有効で、子オブジェクトに付けると警告が出て永続化されない。Main.unity では SaveManager / GameData / QuestManager / LoadingManager を空GameObjectの子から root 直下へ移動して解消済み（コード・Singleton は不変、配置のみ）。
+- **GameContext の guid 参照に注意**。`Assets/Scripts/Core/GameContext.cs`（guid `8a4be5ae197824b3c882d93ad336673d`・namespace `Game.Core`）。`PetStatus` を内部生成する（SerializeField は持たない）。Home.unity が旧 guid を参照して Missing Script になっていたのを現行 guid に修正済み。
+- **Script Execution Order**: `SaveManager(-200) → GameContext(-100) → デフォルト(0)`。GameContext.Awake が SaveManager.Data に依存するため、この順序は必須（設定済み）。
+
 ---
 
 ## §15. Care画面実装状況（2026/5/8 確定）
@@ -416,6 +426,15 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 - **症状**: 日本語ファイル名（濁点・半濁点含む）で `Resources.Load` が失敗する
 - **原因**: macOS HFS+ は NFD（文字分解形）でファイル名を保存するが、C# 文字列は NFC
 - **対策**: `imageName.Normalize(System.Text.NormalizationForm.FormD)` を必ず適用してからロード
+
+#### キャラアイコンの Resources 読み込み規約（2026/7/3 確定）
+- **パス**: `Assets/Resources/CharacterIcon/CharIcon_{キャラID}01`（末尾 `01`）を `Resources.Load<Sprite>` で動的ロード。
+- **キャラIDは小文字**（`poko`/`eru`/`koko`/`paru`/`piyoko`）。ファイル名がキャラIDと一致するため変換不要。
+- **Sprite Mode=Single 必須**（Multiple だと `Resources.Load<Sprite>` が null）。必ず Resources 配下に置く。
+- ロード失敗時は当該 Image を非表示にする（`enabled = false`）。
+- 将来の課金キャラ追加時も、同規約でファイルを追加すればコード変更不要。
+- キャラID対応: える=黒猫 / ぱる=白猫 / ここ=うさぎ / ぽこ=トイプードル / ぴよこ=ひよこ（仮画像）。
+- 使用箇所: Main画面（`MainUIManager.SetPetInfo`）・プロフィール詳細（`ProfileDetailPanel`）。旧 `PetIcon/PetIcon_{id}` 方式は廃止。
 
 #### SelectBadge の表示タイミング
 - `ShowPanel()` で `gameObject.SetActive(true)` → `OnSelectOyatu("niboshi")` の順に呼ぶ
@@ -795,3 +814,4 @@ A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討し
 | 2026/5/17 | サブスクリプション比較表更新（チケット/日: 寄り添い15枚・仲良し35枚・運命無制限）・チケット設計確定（1日16枚・チュートリアル18枚）・クエスト報酬確定（パズルステージ1〜5）・あそぶコスト変更（20🪙→10🪙）・無償おやつ全て10🪙統一・ショップタブ7構成確定（§17追加） |
 | 2026/5/18 | サブスクリプション比較表最終確定（コイン固定ボーナスに変更・チケット無料16枚・性格記憶に無料プラン追加・感情レポート運命3日に1回・朝あいさつ通知全プランに追加・月1限定セリフ廃止・運命限定特典4項目追加）・シャンプー最終確定（名称変更・清潔回復+60・演出列追加・レインボーせっけん全性格+1に変更）・プロフィールショップ仕様確定（セット9種・§18追加） |
 | 2026/6/17 | 信頼度Lv.100カンスト制確定（指数曲線・Lv100特典=等身大ぬいぐるみ500体・無課金5年設計・重要設計判断§6追加）・キャラ解放条件変更（Lv.100カンスト→次キャラ解放・課金即解放廃止）・チケット無課金5枚/日に変更（ログインのみ）・サブスクチケット差更新（寄り添い+5=10枚・仲良し+15=20枚）・有償コイン単価10倍・全有償アイテム価格10倍（おやつ・シャンプー・プロフィールセット）・サブスク月額♡付与10倍（3,000/7,000/15,000♡）・無償コイン収入見直し（§17更新）・パズル設計確定（スライドパズル・1日1回・ステージ別報酬・ステージ4ランダム報酬確率テーブル） |
+| 2026/7/3 | タスク4「Main/Care UI崩れ調整」＋土台修正をドキュメント反映：信頼度Lv計算を `TrustFormula.cs` に集約（PCHIP単調補間・Lv100カンスト表示・旧しきい値廃止／§6）・キャラアイコンをCharacterIcon方式に変更（`Resources.Load`・`CharIcon_{id}01`・Sprite Mode=Single）＋Mainコンディションはテキストのみ化（アイコン画像/気分ゲージ廃止／§13・§15）・HOME画面を起動振り分け専用のシンプル構成に更新（誕生日演出/キャラ別背景/出会って◯日/時間帯背景を廃止・共通背景Scene直配置・HomeManager簡素化／§12関連ファイル）・MainボタンにRoomEdit(もようがえ)/SNS(ひろば)/Gacha遷移を追加しRanking廃止・下部ナビ7つに更新（§13）・命名方針（Pet系→Character系へ段階移行）＋起動/DDOL/GameContext技術メモを追記（Manager root直下配置・GameContext guid注意・Script Execution Order SaveManager-200→GameContext-100） |
