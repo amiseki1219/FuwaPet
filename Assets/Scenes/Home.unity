@@ -489,7 +489,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 797479144}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1484eb17415ce4460b49b97b5f74592c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a4be5ae197824b3c882d93ad336673d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Core.GameContext
 --- !u!4 &797479146
