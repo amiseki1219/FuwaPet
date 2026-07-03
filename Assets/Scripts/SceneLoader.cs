@@ -38,8 +38,10 @@ public class SceneLoader : MonoBehaviour
     public void GoToShop() => LoadScene("Shop");
     public void GoToCoinPurchase() => LoadScene("CoinPurchase");
     public void GoToChat() => LoadScene("Chat");
-    public void GoToRanking() => LoadScene("Ranking");
     public void GoToMyCollection() => LoadScene("MyCollection");
+    public void GoToRoomEdit() => LoadScene("RoomEdit");
+    public void GoToSNS()      => LoadScene("SNS");
+    public void GoToGacha()    => LoadScene("Gacha");
 
     public static void LoadHome()
     {

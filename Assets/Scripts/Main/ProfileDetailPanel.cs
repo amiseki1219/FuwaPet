@@ -59,10 +59,10 @@ public class ProfileDetailPanel : MonoBehaviour
         }
 
         // --- 3. ペットアイコン（成功したコードを維持！） ---
-        string petId = data.selectedCharacterId;
-        if (!string.IsNullOrEmpty(petId) && characterIcon != null)
+        string characterId = data.selectedCharacterId;
+        if (!string.IsNullOrEmpty(characterId) && characterIcon != null)
         {
-            Sprite petSprite = Resources.Load<Sprite>("PetIcon/PetIcon_" + petId);
+            Sprite petSprite = Resources.Load<Sprite>("CharacterIcon/CharIcon_" + characterId + "01");
             if (petSprite != null)
             {
                 characterIcon.enabled = true;

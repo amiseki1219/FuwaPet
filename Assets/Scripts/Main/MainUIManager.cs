@@ -16,27 +16,17 @@ public class MainUIManager : MonoBehaviour
     [Header("キャラクター情報")]
     [SerializeField] private TextMeshProUGUI petNameText;
     [SerializeField] private TextMeshProUGUI conditionText;
-    [SerializeField] private Image conditionIconImage;
+    [SerializeField] private Image charImage;
     [SerializeField] private TextMeshProUGUI daysTogetherText;
 
     [Header("信頼度")]
-    [SerializeField] private Image trustCircleImage;
+    [SerializeField] private Slider trustSlider;
     [SerializeField] private TextMeshProUGUI trustLevelText;
-    [SerializeField] private TextMeshProUGUI nextLevelText; // あと◯ptで次のLv
-
-    [Header("コンディションゲージ Fill Area")]
-    [SerializeField] private RectTransform moodFillArea;
+    [SerializeField] private TextMeshProUGUI trustNoticeText; // あと◯ptで次のLv
 
     [Header("所持金")]
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI lunaStoneText;
-
-    [Header("コンディションアイコン")]
-    [SerializeField] private Sprite iconSuperGood;
-    [SerializeField] private Sprite iconGood;
-    [SerializeField] private Sprite iconNormal;
-    [SerializeField] private Sprite iconBad;
-    [SerializeField] private Sprite iconSuperBad;
 
     [Header("やることパネル")]
     [SerializeField] private GameObject questPanel;
@@ -110,7 +100,6 @@ public class MainUIManager : MonoBehaviour
         SetUserInfo();
         SetPetInfo();
         SetWallet();
-        SetConditionBar();
         SetTrustCircle();
     }
 
@@ -175,8 +164,26 @@ public class MainUIManager : MonoBehaviour
                     "eru"  => "える",
                     "koko" => "ここ",
                     "paru" => "ぱる",
+                    "piyoko" => "ぴよこ",
                     _ => _save.petName ?? ""
                 };
+            }
+        }
+
+        // キャラアイコンを設定
+        string iconCharId = !string.IsNullOrEmpty(_save.selectedCharacterId) ? _save.selectedCharacterId : _save.characterId;
+        Sprite charIcon = string.IsNullOrEmpty(iconCharId) ? null : Resources.Load<Sprite>("CharacterIcon/CharIcon_" + iconCharId + "01");
+        if (charImage != null)
+        {
+            if (charIcon != null)
+            {
+                charImage.sprite = charIcon;
+                charImage.enabled = true;
+                Debug.Log("[MainUIManager] キャラアイコン設定: " + iconCharId);
+            }
+            else
+            {
+                charImage.enabled = false;
             }
         }
 
@@ -199,17 +206,14 @@ public class MainUIManager : MonoBehaviour
     {
         float avg = (_status.Hunger + _status.Clean + _status.Energy) / 3f;
         string text;
-        Sprite icon;
 
-        if (avg >= 80f)      { text = "絶好調！";     icon = iconSuperGood; }
-        else if (avg >= 60f) { text = "元気いっぱい！"; icon = iconGood; }
-        else if (avg >= 40f) { text = "ふつう";       icon = iconNormal; }
-        else if (avg >= 20f) { text = "しょんぼり";   icon = iconBad; }
-        else                 { text = "元気ない...";  icon = iconSuperBad; }
+        if (avg >= 80f)      text = "絶好調！";
+        else if (avg >= 60f) text = "元気いっぱい！";
+        else if (avg >= 40f) text = "ふつう";
+        else if (avg >= 20f) text = "しょんぼり";
+        else                 text = "元気ない...";
 
         if (conditionText != null) conditionText.text = text;
-        if (conditionIconImage != null && icon != null)
-            conditionIconImage.sprite = icon;
     }
 
     // ─── 信頼度円形ゲージ ────────────────────────
@@ -217,40 +221,29 @@ public class MainUIManager : MonoBehaviour
     private void SetTrustCircle()
     {
         int trust = _save.trust;
-        int level = PetStatus.GetTrustLevel(trust);
-        float fill = PetStatus.GetTrustFillAmount(trust);
-
-        if (trustCircleImage != null)
-            trustCircleImage.fillAmount = fill;
+        int level = TrustFormula.GetLevel(trust);
+        bool isMax = TrustFormula.IsMaxLevel(trust);
+        int remaining = TrustFormula.GetPtsToNextLevel(trust);
 
         if (trustLevelText != null)
-            trustLevelText.text = $"{level}";
+            trustLevelText.text = $"Lv {level}";
 
-        if (nextLevelText != null)
-            nextLevelText.text = $"次のLvまであと{GetTrustPtsToNextLevel(trust)}pt";
-    }
+        if (isMax || remaining == 0)
+        {
+            if (trustSlider != null)
+                trustSlider.value = 1f;
 
-    private int GetTrustPtsToNextLevel(int trust)
-    {
-        if (trust < 100)  return 100 - trust;
-        if (trust < 400)  return 400 - trust;
-        if (trust < 1400) return 1400 - trust;
-        int level = PetStatus.GetTrustLevel(trust);
-        int nextThreshold = 1400 + (level - 3) * 2000;
-        return nextThreshold - trust;
-    }
+            if (trustNoticeText != null)
+                trustNoticeText.text = "Lv.100 カンスト達成！";
+        }
+        else
+        {
+            if (trustSlider != null)
+                trustSlider.value = TrustFormula.GetFillAmount(trust);
 
-    // ─── コンディションゲージ ─────────────────────
-
-    private void SetConditionBar()
-    {
-        if (moodFillArea == null) return;
-        float ratio = Mathf.Clamp01((_status.Hunger + _status.Clean + _status.Energy) / 3f / 100f);
-        // Fill Area は pivot=(0,0.5)・anchor=left(0,0.5)
-        // 最大幅 = 親の幅 - 左マージン(anchoredPosition.x)
-        var parentRect = moodFillArea.parent.GetComponent<RectTransform>();
-        float fullWidth = parentRect.rect.width - moodFillArea.anchoredPosition.x;
-        moodFillArea.sizeDelta = new Vector2(fullWidth * ratio, moodFillArea.sizeDelta.y);
+            if (trustNoticeText != null)
+                trustNoticeText.text = $"あと{remaining}ptで信頼度アップ！";
+        }
     }
 
     // ─── 所持金 ──────────────────────────────────
@@ -280,6 +273,9 @@ public class MainUIManager : MonoBehaviour
     public void OnBtnShop()       => GetSceneLoader()?.GoToShop();
     public void OnBtnSetting()    => GetSceneLoader()?.GoToSetting();
     public void OnBtnNotice()     => noticeManager?.ShowPanel();
+    public void OnBtnFurniture()  => GetSceneLoader()?.GoToRoomEdit();
+    public void OnBtnSNS()        => GetSceneLoader()?.GoToSNS();
+    public void OnBtnGacha()      => GetSceneLoader()?.GoToGacha();
 
     // ─── やることパネル ──────────────────────────
 
