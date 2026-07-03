@@ -22585,7 +22585,7 @@ GameObject:
   - component: {fileID: 1091936788}
   - component: {fileID: 1091936787}
   m_Layer: 5
-  m_Name: InputLevelText
+  m_Name: trustLevelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36557,9 +36557,9 @@ MonoBehaviour:
   conditionText: {fileID: 1509163264}
   conditionIconImage: {fileID: 1353912637}
   daysTogetherText: {fileID: 839351237}
-  trustCircleImage: {fileID: 0}
-  trustLevelText: {fileID: 0}
-  nextLevelText: {fileID: 0}
+  trustSlider: {fileID: 1673996354}
+  trustLevelText: {fileID: 1091936787}
+  trustNoticeText: {fileID: 948240847}
   moodFillArea: {fileID: 0}
   coinText: {fileID: 518164805}
   lunaStoneText: {fileID: 1018224418}

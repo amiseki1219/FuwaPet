@@ -20,9 +20,9 @@ public class MainUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI daysTogetherText;
 
     [Header("信頼度")]
-    [SerializeField] private Image trustCircleImage;
+    [SerializeField] private Slider trustSlider;
     [SerializeField] private TextMeshProUGUI trustLevelText;
-    [SerializeField] private TextMeshProUGUI nextLevelText; // あと◯ptで次のLv
+    [SerializeField] private TextMeshProUGUI trustNoticeText; // あと◯ptで次のLv
 
     [Header("コンディションゲージ Fill Area")]
     [SerializeField] private RectTransform moodFillArea;
@@ -217,27 +217,29 @@ public class MainUIManager : MonoBehaviour
     private void SetTrustCircle()
     {
         int trust = _save.trust;
-        int level = PetStatus.GetTrustLevel(trust);
-        float fill = PetStatus.GetTrustFillAmount(trust);
-
-        if (trustCircleImage != null)
-            trustCircleImage.fillAmount = fill;
+        int level = TrustFormula.GetLevel(trust);
+        bool isMax = TrustFormula.IsMaxLevel(trust);
+        int remaining = TrustFormula.GetPtsToNextLevel(trust);
 
         if (trustLevelText != null)
-            trustLevelText.text = $"{level}";
+            trustLevelText.text = $"Lv {level}";
 
-        if (nextLevelText != null)
-            nextLevelText.text = $"次のLvまであと{GetTrustPtsToNextLevel(trust)}pt";
-    }
+        if (isMax || remaining == 0)
+        {
+            if (trustSlider != null)
+                trustSlider.value = 1f;
 
-    private int GetTrustPtsToNextLevel(int trust)
-    {
-        if (trust < 100)  return 100 - trust;
-        if (trust < 400)  return 400 - trust;
-        if (trust < 1400) return 1400 - trust;
-        int level = PetStatus.GetTrustLevel(trust);
-        int nextThreshold = 1400 + (level - 3) * 2000;
-        return nextThreshold - trust;
+            if (trustNoticeText != null)
+                trustNoticeText.text = "Lv.100 カンスト達成！";
+        }
+        else
+        {
+            if (trustSlider != null)
+                trustSlider.value = TrustFormula.GetFillAmount(trust);
+
+            if (trustNoticeText != null)
+                trustNoticeText.text = $"あと{remaining}ptで信頼度アップ！";
+        }
     }
 
     // ─── コンディションゲージ ─────────────────────
