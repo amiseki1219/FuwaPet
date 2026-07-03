@@ -234,7 +234,7 @@ Tutorial.unity 起動
 ```
 ヘッダー左: ユーザー名・キャラクター名・出会って◯日・信頼度レベル・あと◯ptで次のLv
 ヘッダー右: 無償コイン・有償コイン残高・広告なしボタン
-中央: キャラクター名・コンディション表示5段階（絶好調✨/元気いっぱい！/ふつう/しょんぼり/元気ない...）・3Dキャラ
+中央: キャラクター名・キャラアイコン画像（Resources のキャラ別アイコン。3D化は後日）・コンディション表示5段階テキスト（絶好調✨/元気いっぱい！/ふつう/しょんぼり/元気ない...）
 メインボタン: 「お世話する」（Care画面へ）/ 「会話する」（Chat画面へ）
 下部ナビ（5つ）: コレクション・ガチャ・ショップ・お知らせ・クエスト
 ```
@@ -417,6 +417,15 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 - **症状**: 日本語ファイル名（濁点・半濁点含む）で `Resources.Load` が失敗する
 - **原因**: macOS HFS+ は NFD（文字分解形）でファイル名を保存するが、C# 文字列は NFC
 - **対策**: `imageName.Normalize(System.Text.NormalizationForm.FormD)` を必ず適用してからロード
+
+#### キャラアイコンの Resources 読み込み規約（2026/7/3 確定）
+- **パス**: `Assets/Resources/CharacterIcon/CharIcon_{キャラID}01`（末尾 `01`）を `Resources.Load<Sprite>` で動的ロード。
+- **キャラIDは小文字**（`poko`/`eru`/`koko`/`paru`/`piyoko`）。ファイル名がキャラIDと一致するため変換不要。
+- **Sprite Mode=Single 必須**（Multiple だと `Resources.Load<Sprite>` が null）。必ず Resources 配下に置く。
+- ロード失敗時は当該 Image を非表示にする（`enabled = false`）。
+- 将来の課金キャラ追加時も、同規約でファイルを追加すればコード変更不要。
+- キャラID対応: える=黒猫 / ぱる=白猫 / ここ=うさぎ / ぽこ=トイプードル / ぴよこ=ひよこ（仮画像）。
+- 使用箇所: Main画面（`MainUIManager.SetPetInfo`）・プロフィール詳細（`ProfileDetailPanel`）。旧 `PetIcon/PetIcon_{id}` 方式は廃止。
 
 #### SelectBadge の表示タイミング
 - `ShowPanel()` で `gameObject.SetActive(true)` → `OnSelectOyatu("niboshi")` の順に呼ぶ
