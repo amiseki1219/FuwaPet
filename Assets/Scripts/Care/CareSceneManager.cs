@@ -165,6 +165,7 @@ public class CareSceneManager : MonoBehaviour
             "eru"  => "える",
             "koko" => "ここ",
             "paru" => "ぱる",
+            "piyoko" => "ぴよこ",
             _      => _save.petName ?? ""
         };
     }
