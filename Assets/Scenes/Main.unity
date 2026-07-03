@@ -24420,7 +24420,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1981582853}
         m_TargetAssemblyTypeName: MainUIManager, Assembly-CSharp
-        m_MethodName: OnBtnNotice
+        m_MethodName: OnBtnSNS
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -25440,13 +25440,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1981582848}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1981582853}
+        m_TargetAssemblyTypeName: MainUIManager, Assembly-CSharp
+        m_MethodName: OnBtnFurniture
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -30547,13 +30547,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1981582848}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1981582853}
+        m_TargetAssemblyTypeName: MainUIManager, Assembly-CSharp
+        m_MethodName: OnBtnGacha
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -36555,19 +36555,13 @@ MonoBehaviour:
   iconFrameRawImage: {fileID: 2006968216}
   petNameText: {fileID: 87651049}
   conditionText: {fileID: 1509163264}
-  conditionIconImage: {fileID: 1353912637}
+  charImage: {fileID: 1353912637}
   daysTogetherText: {fileID: 839351237}
   trustSlider: {fileID: 1673996354}
   trustLevelText: {fileID: 1091936787}
   trustNoticeText: {fileID: 948240847}
-  moodFillArea: {fileID: 0}
   coinText: {fileID: 518164805}
   lunaStoneText: {fileID: 1018224418}
-  iconSuperGood: {fileID: -8048315224525979183, guid: ee5f63211f8f84e54b2345cadfe31541, type: 3}
-  iconGood: {fileID: -8798896653061569490, guid: 09df5cadc10a54144a2939541859fb8c, type: 3}
-  iconNormal: {fileID: 5951385647113188835, guid: e6ea0cb8edc794aee973fa8a846abd42, type: 3}
-  iconBad: {fileID: -8349402225909005177, guid: d603e5e5d52b546648b0365d5504dff5, type: 3}
-  iconSuperBad: {fileID: 5557710831929344508, guid: c1bd7fb7339514c6bad5171f5d4c003f, type: 3}
   questPanel: {fileID: 40112830}
   tutorialQuestPanel: {fileID: 1199995042}
   dataTransferPanel: {fileID: 40112830}

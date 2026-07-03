@@ -273,6 +273,9 @@ public class MainUIManager : MonoBehaviour
     public void OnBtnShop()       => GetSceneLoader()?.GoToShop();
     public void OnBtnSetting()    => GetSceneLoader()?.GoToSetting();
     public void OnBtnNotice()     => noticeManager?.ShowPanel();
+    public void OnBtnFurniture()  => GetSceneLoader()?.GoToRoomEdit();
+    public void OnBtnSNS()        => GetSceneLoader()?.GoToSNS();
+    public void OnBtnGacha()      => GetSceneLoader()?.GoToGacha();
 
     // ─── やることパネル ──────────────────────────
 
