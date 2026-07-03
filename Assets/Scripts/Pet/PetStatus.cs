@@ -62,22 +62,5 @@ namespace Game.Core
 
             Debug.Log($"[PetStatus] TimeDecay適用 Hunger:{Hunger} Clean:{Clean} Energy:{Energy} Mood:{Mood}");
         }
-
-        // ─── 信頼度レベル計算 ────────────────────────
-        public static int GetTrustLevel(int trust)
-        {
-            if (trust < 100)  return 1;
-            if (trust < 400)  return 2;
-            if (trust < 1400) return 3;
-            return 4 + (trust - 1400) / 2000;
-        }
-
-        public static float GetTrustFillAmount(int trust)
-        {
-            if (trust < 100)  return trust / 100f;
-            if (trust < 400)  return (trust - 100) / 300f;
-            if (trust < 1400) return (trust - 400) / 1000f;
-            return ((trust - 1400) % 2000) / 2000f;
-        }
     }
 }
