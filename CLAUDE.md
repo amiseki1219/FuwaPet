@@ -192,9 +192,11 @@
   - 素材: `Assets/Art/UI/Loading/`
   - スクリプト: `Assets/Scripts/UI/Loading/`
 
-### 12. 起動フローとTutorialフローの保護（2026/5/2 確定）
+### 12. 起動/Tutorialフローの動作確認（2026/5/2 確定 → 2026/7/3 作り直し中）
 
-#### 起動フロー（絶対に変えない）
+> 2026/7/3〜 チュートリアルを作り直し中。内部フロー（Step順・扉演出・各パネルの並び）は変更してよい。壊してはいけないのは「起動振り分け」「オンボ完了フラグ」まわりの“結果”だけ。下の動作確認リストが通ればOK。
+
+#### 起動フロー（この結果を維持する）
 ```
 アプリ起動 → Home.unity（Index 0）
   - onboardingCompleted == false（初回/アカウント削除後）
@@ -203,25 +205,25 @@
       → Home画面表示 → MainBtn → Main.unity
 ```
 
-#### Tutorialフロー（絶対に変えない）
+#### Tutorialフロー（作り直し中・2026/7/3〜）
 ```
 Tutorial.unity 起動
-  → Step1: TermsOfUsePanel
-      同意ボタン → Next() → StoryPanel
-      同意しない → DisAgreePanel
-  → Step2: StoryPanel
-      FinalStory の TapButton → PlayDoorAnimation() → 動画再生 → Next()
-  → Step3: CharacterPanelCard
-  → Step4: ProfileSelectionPanelCard
-      StartButton → CompleteOnboarding() → onboardingCompleted=true → Main
+  → Terms（AI利用規約）: 同意 → 次へ／同意しない → DisAgreePanel
+  → 出会いStory（intro → finalStory）
+      ※扉演出＝動画フローは廃止。finalStory tap → 直接次へ
+  → キャラ選択（5キャラ対応予定）
+  → 命名（ニックネーム）
+  → ユーザー情報（名前/誕生日・アイコン）
+  → 確認「一緒に暮らそう」→ CompleteOnboarding() → onboardingCompleted=true → Main
 ```
 
-#### 絶対にやってはいけないこと
-- `HomeManager.cs` の振り分けロジックを削除する
-- `PlayDoorAnimation()` の呼び出し元（StoryPanel の FinalStory TapButton）を変更する
-- `CompleteOnboarding()` の呼び出し元（StartButton）を変更する
-- `onboardingCompleted` をリセットせずにアカウント削除する
-- Tutorial 内のパネルを削除する際に呼び出し元ボタンも一緒に消す
+※上の並び順・各パネルは作り直しで変わりうる。UIを作りながら調整する。
+
+#### 作り直し後に動作確認すること（この4つが通ればOK）
+- アプリ起動 → 新規/アカウント削除後は Tutorial が出る
+- チュートリアル完走 → onboardingCompleted=true → Main に着く
+- 2回目以降の起動 → Home → Main
+- アカウント削除 → onboardingCompleted が false に戻る
 
 #### 関連ファイル
 - `HomeManager.cs`: 起動振り分けロジック（Start() での振り分けのみに簡素化済み。旧 UpdateUI・出会って◯日・誕生日演出・キャラ別背景は廃止。共通背景は Scene に直接配置）
