@@ -8,6 +8,7 @@ public class ConfirmPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private TextMeshProUGUI charNameText;
     [SerializeField] private TextMeshProUGUI birthdayText;
+    [SerializeField] private OnboardingManager onboardingManager;
 
     private void OnEnable()
     {
@@ -54,7 +55,8 @@ public class ConfirmPanel : MonoBehaviour
 
     public void OnStartClicked()
     {
-        FindAnyObjectByType<OnboardingManager>()?.CompleteOnboarding();
+        if (onboardingManager != null) { onboardingManager.CompleteOnboarding(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 
     public void OnBackClicked()

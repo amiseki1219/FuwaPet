@@ -12,17 +12,20 @@ public class OnboardingManager : MonoBehaviour
     [SerializeField] private GameObject homePanel;
     [SerializeField] private GameObject termsOfUsePanel;
     [SerializeField] private GameObject disAgreePanel;
-    [SerializeField] private GameObject storyPanel;
+    [SerializeField] private GameObject firstmeetPanel;
     [SerializeField] private GameObject characterPanelCard;
-    [SerializeField] private GameObject profileSelectionPanelCard;
+    [SerializeField] private GameObject characterNameInputPanel;
+    [SerializeField] private GameObject userInfomationPanel;
+    [SerializeField] private GameObject confirmPanel;
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本フィールドも削除予定・2026/7/6）
     [Header("Door Animation")]
     [SerializeField] private GameObject videoPanel;
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private RawImage videoRawImage;
     [SerializeField] private CanvasGroup fadeCanvasGroup;
 
-    private OnboardingStep currentStep = OnboardingStep.HomePanel;
+    private OnboardingStep currentStep = OnboardingStep.Home;
 
     private void Start()
     {
@@ -37,41 +40,93 @@ public class OnboardingManager : MonoBehaviour
     // --- ステップ制御 ---
     public void Next()
     {
-        if (currentStep < OnboardingStep.ProfileSelectionPanelCard)
+        if (currentStep < OnboardingStep.Confirm)
         {
+            var prevStep = currentStep;
             currentStep++;
+            Debug.Log($"[Onboarding] Next() 呼び出し: {prevStep}({(int)prevStep}) → {currentStep}({(int)currentStep})");
             UpdateView();
         }
         else
         {
+            Debug.Log("[Onboarding] 最終ステップ到達 → CompleteOnboarding() を呼びます");
             CompleteOnboarding();
         }
     }
 
     public void GoBack()
     {
-        if (currentStep > OnboardingStep.HomePanel)
+        if (currentStep > OnboardingStep.Home)
         {
+            var prevStep = currentStep;
             currentStep--;
+            Debug.Log($"[Onboarding] GoBack() 呼び出し: {prevStep} → {currentStep}");
             UpdateView();
         }
     }
 
     private void UpdateView()
     {
-        if (homePanel != null)
-            homePanel.SetActive(currentStep == OnboardingStep.HomePanel);
-        if (termsOfUsePanel != null)
-            termsOfUsePanel.SetActive(currentStep == OnboardingStep.TermsOfUsePanel);
-        if (storyPanel != null)
-            storyPanel.SetActive(currentStep == OnboardingStep.StoryPanel);
-        if (characterPanelCard != null)
-            characterPanelCard.SetActive(currentStep == OnboardingStep.CharacterPanelCard);
-        if (profileSelectionPanelCard != null)
-            profileSelectionPanelCard.SetActive(currentStep == OnboardingStep.ProfileSelectionPanelCard);
+        Debug.Log($"[Onboarding] UpdateView: currentStep = {currentStep}({(int)currentStep})");
 
-        // DisAgreePanel は TermsOfUsePanel 以外では必ず非表示
-        if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUsePanel)
+        if (homePanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Home;
+            Debug.Log($"[Onboarding] homePanel.SetActive({active})");
+            homePanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] homePanel が null（未結線）です");
+
+        if (termsOfUsePanel != null)
+        {
+            bool active = currentStep == OnboardingStep.TermsOfUse;
+            Debug.Log($"[Onboarding] termsOfUsePanel.SetActive({active})");
+            termsOfUsePanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] termsOfUsePanel が null（未結線）です");
+
+        if (firstmeetPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Firstmeet;
+            Debug.Log($"[Onboarding] firstmeetPanel.SetActive({active})");
+            firstmeetPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] firstmeetPanel が null（未結線）です");
+
+        if (characterPanelCard != null)
+        {
+            bool active = currentStep == OnboardingStep.CharacterCard;
+            Debug.Log($"[Onboarding] characterPanelCard.SetActive({active})");
+            characterPanelCard.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] characterPanelCard が null（未結線）です");
+
+        if (characterNameInputPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.CharacterNameInput;
+            Debug.Log($"[Onboarding] characterNameInputPanel.SetActive({active})");
+            characterNameInputPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] characterNameInputPanel が null（未結線）です");
+
+        if (userInfomationPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.UserInfomation;
+            Debug.Log($"[Onboarding] userInfomationPanel.SetActive({active})");
+            userInfomationPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] userInfomationPanel が null（未結線）です");
+
+        if (confirmPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Confirm;
+            Debug.Log($"[Onboarding] confirmPanel.SetActive({active})");
+            confirmPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] confirmPanel が null（未結線）です");
+
+        // DisAgreePanel は TermsOfUse 以外では必ず非表示
+        if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUse)
             disAgreePanel.SetActive(false);
     }
 
@@ -92,6 +147,7 @@ public class OnboardingManager : MonoBehaviour
     }
 
     // --- 扉アニメーション ---
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     public void PlayDoorAnimation()
     {
         Debug.Log($"<color=yellow>【OnboardingManager】PlayDoorAnimation() videoPanel={videoPanel != null}, videoPlayer={videoPlayer != null}, clip={videoPlayer?.clip != null}, rawImage={videoRawImage != null}</color>");
@@ -107,6 +163,7 @@ public class OnboardingManager : MonoBehaviour
         }
     }
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     private IEnumerator PlayVideoCoroutine()
     {
         // 1. VideoPlayer をアクティブにして準備
@@ -212,6 +269,7 @@ public class OnboardingManager : MonoBehaviour
         }
     }
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     private IEnumerator FadeTransition()
     {
         if (fadeCanvasGroup == null) { Next(); yield break; }
@@ -250,11 +308,13 @@ public class OnboardingManager : MonoBehaviour
     // --- 完了 ---
     public void CompleteOnboarding()
     {
+        Debug.Log("[Onboarding] CompleteOnboarding() 開始");
         if (SaveManager.Instance != null)
         {
             SaveManager.Instance.Data.onboardingCompleted = true;
             SaveManager.Instance.Save();
         }
+        Debug.Log("[Onboarding] onboardingCompleted=true 保存完了、Main をロードします");
         if (LoadingManager.Instance != null)
             LoadingManager.Instance.LoadSceneWithLoading("Main");
         else

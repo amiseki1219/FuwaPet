@@ -5,6 +5,7 @@ using Game.Core;
 public class CharaNicknamePanel : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nicknameInput;
+    [SerializeField] private OnboardingManager onboardingManager;
 
     public void OnDecideClicked()
     {
@@ -16,7 +17,8 @@ public class CharaNicknamePanel : MonoBehaviour
             Debug.Log($"<color=lime>【CharaNicknamePanel】保存後petNickname={SaveManager.Instance.Data.petNickname}</color>");
         }
 
-        FindAnyObjectByType<ProfileSelectionPanelManager>()?.ShowConfirmCard();
+        if (onboardingManager != null) { onboardingManager.Next(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 
     public void OnSkipClicked()
@@ -27,6 +29,7 @@ public class CharaNicknamePanel : MonoBehaviour
             SaveManager.Instance.Save();
         }
 
-        FindAnyObjectByType<ProfileSelectionPanelManager>()?.ShowConfirmCard();
+        if (onboardingManager != null) { onboardingManager.Next(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 }
