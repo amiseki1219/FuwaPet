@@ -1080,9 +1080,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1365936398}
-        m_TargetAssemblyTypeName: OnboardingManager, Assembly-CSharp
-        m_MethodName: Next
+      - m_Target: {fileID: 271526027}
+        m_TargetAssemblyTypeName: CharacterPanelCardManager, Assembly-CSharp
+        m_MethodName: OnDecideClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1615,7 +1615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &271526023
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1692,16 +1692,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd3d172a1ff64ef4967b0c13bea18be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterPanelCardManager
-  characterPanels:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  characterIds:
-  - poko
-  - eru
-  - koko
-  - paru
+  mainCharacterImage: {fileID: 98666709}
+  miniCharacterImage: {fileID: 941098098}
+  characterNameText: {fileID: 1465361547}
+  characterDescriptionText: {fileID: 118120329}
+  dots:
+  - {fileID: 1311696476}
+  - {fileID: 1861850374}
+  - {fileID: 1759486024}
+  - {fileID: 670846223}
+  - {fileID: 1606412556}
   onboardingManager: {fileID: 1365936398}
 --- !u!1 &292754906
 GameObject:
@@ -3463,7 +3463,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 506950263}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 271526027}
+        m_TargetAssemblyTypeName: CharacterPanelCardManager, Assembly-CSharp
+        m_MethodName: OnNextClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &506950263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6744,13 +6756,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1365936394}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 271526027}
+        m_TargetAssemblyTypeName: CharacterPanelCardManager, Assembly-CSharp
+        m_MethodName: OnPrevClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
