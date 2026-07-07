@@ -27,6 +27,11 @@ public class OnboardingManager : MonoBehaviour
 
     private OnboardingStep currentStep = OnboardingStep.Home;
 
+    // パネル切替直後のタップ貫通防止用の入力ロック
+    private bool inputLocked = false;
+    private const float InputLockSeconds = 0.15f; // 切替後この時間だけ Next()/CompleteOnboarding() を無視
+    private Coroutine inputLockCoroutine;
+
     private void Start()
     {
         if (SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted)
@@ -40,6 +45,12 @@ public class OnboardingManager : MonoBehaviour
     // --- ステップ制御 ---
     public void Next()
     {
+        if (inputLocked)
+        {
+            Debug.Log("[Onboarding] 入力ロック中のため無視（貫通防止）");
+            return;
+        }
+
         if (currentStep < OnboardingStep.Confirm)
         {
             var prevStep = currentStep;
@@ -128,6 +139,26 @@ public class OnboardingManager : MonoBehaviour
         // DisAgreePanel は TermsOfUse 以外では必ず非表示
         if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUse)
             disAgreePanel.SetActive(false);
+
+        // パネル切替直後の貫通タップを弾くため、短時間だけ入力をロック
+        LockInputBriefly();
+    }
+
+    // 切替直後に InputLockSeconds だけ inputLocked を立て、その間の Next()/CompleteOnboarding() を無視する
+    private void LockInputBriefly()
+    {
+        if (inputLockCoroutine != null) StopCoroutine(inputLockCoroutine);
+        inputLockCoroutine = StartCoroutine(InputLockCoroutine());
+    }
+
+    private IEnumerator InputLockCoroutine()
+    {
+        inputLocked = true;
+        Debug.Log($"[Onboarding] 入力ロック開始（{InputLockSeconds}秒・貫通防止）");
+        yield return new WaitForSeconds(InputLockSeconds);
+        inputLocked = false;
+        Debug.Log("[Onboarding] 入力ロック解除");
+        inputLockCoroutine = null;
     }
 
     // --- AI同意しない場合 ---
@@ -308,6 +339,12 @@ public class OnboardingManager : MonoBehaviour
     // --- 完了 ---
     public void CompleteOnboarding()
     {
+        if (inputLocked)
+        {
+            Debug.Log("[Onboarding] 入力ロック中のため無視（貫通防止）");
+            return;
+        }
+
         Debug.Log("[Onboarding] CompleteOnboarding() 開始");
         if (SaveManager.Instance != null)
         {

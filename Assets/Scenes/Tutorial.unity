@@ -7604,7 +7604,7 @@ MonoBehaviour:
   userNameText: {fileID: 0}
   charNameText: {fileID: 1369149247}
   birthdayText: {fileID: 0}
-  onboardingManager: {fileID: 0}
+  onboardingManager: {fileID: 1365936398}
 --- !u!1 &1139250679
 GameObject:
   m_ObjectHideFlags: 0
