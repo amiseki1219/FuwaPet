@@ -7,6 +7,7 @@ public class SaveData
     // --- オーナー情報 ---
     public string userName;
     public string ownerBirthday;
+    public string ownerBirthYear = "";   // 西暦4桁 例:"2000"
     public string playerId;
 
     // --- プロフィール・レベル ---
