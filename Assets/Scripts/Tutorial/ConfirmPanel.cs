@@ -5,9 +5,7 @@ using System.Collections.Generic;
 
 public class ConfirmPanel : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private TextMeshProUGUI charNameText;
-    [SerializeField] private TextMeshProUGUI birthdayText;
     [SerializeField] private OnboardingManager onboardingManager;
 
     private void OnEnable()
@@ -51,17 +49,10 @@ public class ConfirmPanel : MonoBehaviour
         Debug.Log($"<color=yellow>【ConfirmPanel】userName={data.userName}</color>");
         Debug.Log($"<color=yellow>【ConfirmPanel】birthday={data.ownerBirthday}</color>");
 
-        // userNameText / birthdayText は今回未使用。未結線(null)なら安全にスキップ
-        if (userNameText != null)
-            userNameText.text = data.userName;
-
         if (charNameText != null)
             charNameText.text = greeting;
         else
             Debug.LogWarning("[Confirm] charNameText が未結線のため挨拶文の表示をスキップ");
-
-        if (birthdayText != null)
-            birthdayText.text = data.ownerBirthday;
     }
 
     public void OnStartClicked()
