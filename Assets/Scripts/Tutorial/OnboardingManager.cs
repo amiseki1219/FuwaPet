@@ -12,17 +12,28 @@ public class OnboardingManager : MonoBehaviour
     [SerializeField] private GameObject homePanel;
     [SerializeField] private GameObject termsOfUsePanel;
     [SerializeField] private GameObject disAgreePanel;
-    [SerializeField] private GameObject storyPanel;
+    [SerializeField] private GameObject firstmeetPanel;
     [SerializeField] private GameObject characterPanelCard;
-    [SerializeField] private GameObject profileSelectionPanelCard;
+    [SerializeField] private GameObject characterNameInputPanel;
+    [SerializeField] private GameObject userInfomationPanel;
+    [SerializeField] private GameObject confirmPanel;
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本フィールドも削除予定・2026/7/6）
     [Header("Door Animation")]
     [SerializeField] private GameObject videoPanel;
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private RawImage videoRawImage;
     [SerializeField] private CanvasGroup fadeCanvasGroup;
 
-    private OnboardingStep currentStep = OnboardingStep.HomePanel;
+    private OnboardingStep currentStep = OnboardingStep.Home;
+
+    // パネル切替直後のタップ貫通防止用の入力ロック
+    private bool inputLocked = false;
+    private const float InputLockSeconds = 0.15f; // 切替後この時間だけ Next()/CompleteOnboarding() を無視
+    private Coroutine inputLockCoroutine;
+
+    // Firstmeet→CharacterCard 遷移時だけ挟む Loading 演出の中央待ち（Show約0.5＋中央0.65＋Hide約0.35＝合計約1.5秒）
+    private const float loadingMiddleWait = 0.65f;
 
     private void Start()
     {
@@ -37,42 +48,163 @@ public class OnboardingManager : MonoBehaviour
     // --- ステップ制御 ---
     public void Next()
     {
-        if (currentStep < OnboardingStep.ProfileSelectionPanelCard)
+        if (inputLocked)
         {
+            Debug.Log("[Onboarding] 入力ロック中のため無視（貫通防止）");
+            return;
+        }
+
+        // Firstmeet→CharacterCard の遷移のときだけ、Loading 演出を約1.5秒挟む
+        if (currentStep == OnboardingStep.Firstmeet)
+        {
+            StartCoroutine(FirstmeetToCharacterCardWithLoading());
+            return;
+        }
+
+        if (currentStep < OnboardingStep.Confirm)
+        {
+            var prevStep = currentStep;
             currentStep++;
+            Debug.Log($"[Onboarding] Next() 呼び出し: {prevStep}({(int)prevStep}) → {currentStep}({(int)currentStep})");
             UpdateView();
         }
         else
         {
+            Debug.Log("[Onboarding] 最終ステップ到達 → CompleteOnboarding() を呼びます");
             CompleteOnboarding();
         }
     }
 
     public void GoBack()
     {
-        if (currentStep > OnboardingStep.HomePanel)
+        if (currentStep > OnboardingStep.Home)
         {
+            var prevStep = currentStep;
             currentStep--;
+            Debug.Log($"[Onboarding] GoBack() 呼び出し: {prevStep} → {currentStep}");
             UpdateView();
         }
     }
 
     private void UpdateView()
     {
-        if (homePanel != null)
-            homePanel.SetActive(currentStep == OnboardingStep.HomePanel);
-        if (termsOfUsePanel != null)
-            termsOfUsePanel.SetActive(currentStep == OnboardingStep.TermsOfUsePanel);
-        if (storyPanel != null)
-            storyPanel.SetActive(currentStep == OnboardingStep.StoryPanel);
-        if (characterPanelCard != null)
-            characterPanelCard.SetActive(currentStep == OnboardingStep.CharacterPanelCard);
-        if (profileSelectionPanelCard != null)
-            profileSelectionPanelCard.SetActive(currentStep == OnboardingStep.ProfileSelectionPanelCard);
+        Debug.Log($"[Onboarding] UpdateView: currentStep = {currentStep}({(int)currentStep})");
 
-        // DisAgreePanel は TermsOfUsePanel 以外では必ず非表示
-        if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUsePanel)
+        if (homePanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Home;
+            Debug.Log($"[Onboarding] homePanel.SetActive({active})");
+            homePanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] homePanel が null（未結線）です");
+
+        if (termsOfUsePanel != null)
+        {
+            bool active = currentStep == OnboardingStep.TermsOfUse;
+            Debug.Log($"[Onboarding] termsOfUsePanel.SetActive({active})");
+            termsOfUsePanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] termsOfUsePanel が null（未結線）です");
+
+        if (firstmeetPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Firstmeet;
+            Debug.Log($"[Onboarding] firstmeetPanel.SetActive({active})");
+            firstmeetPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] firstmeetPanel が null（未結線）です");
+
+        if (characterPanelCard != null)
+        {
+            bool active = currentStep == OnboardingStep.CharacterCard;
+            Debug.Log($"[Onboarding] characterPanelCard.SetActive({active})");
+            characterPanelCard.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] characterPanelCard が null（未結線）です");
+
+        if (characterNameInputPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.CharacterNameInput;
+            Debug.Log($"[Onboarding] characterNameInputPanel.SetActive({active})");
+            characterNameInputPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] characterNameInputPanel が null（未結線）です");
+
+        if (userInfomationPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.UserInfomation;
+            Debug.Log($"[Onboarding] userInfomationPanel.SetActive({active})");
+            userInfomationPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] userInfomationPanel が null（未結線）です");
+
+        if (confirmPanel != null)
+        {
+            bool active = currentStep == OnboardingStep.Confirm;
+            Debug.Log($"[Onboarding] confirmPanel.SetActive({active})");
+            confirmPanel.SetActive(active);
+        }
+        else Debug.LogWarning("[Onboarding] confirmPanel が null（未結線）です");
+
+        // DisAgreePanel は TermsOfUse 以外では必ず非表示
+        if (disAgreePanel != null && currentStep != OnboardingStep.TermsOfUse)
             disAgreePanel.SetActive(false);
+
+        // パネル切替直後の貫通タップを弾くため、短時間だけ入力をロック
+        LockInputBriefly();
+    }
+
+    // 切替直後に InputLockSeconds だけ inputLocked を立て、その間の Next()/CompleteOnboarding() を無視する
+    private void LockInputBriefly()
+    {
+        if (inputLockCoroutine != null) StopCoroutine(inputLockCoroutine);
+        inputLockCoroutine = StartCoroutine(InputLockCoroutine());
+    }
+
+    private IEnumerator InputLockCoroutine()
+    {
+        inputLocked = true;
+        Debug.Log($"[Onboarding] 入力ロック開始（{InputLockSeconds}秒・貫通防止）");
+        yield return new WaitForSeconds(InputLockSeconds);
+        inputLocked = false;
+        Debug.Log("[Onboarding] 入力ロック解除");
+        inputLockCoroutine = null;
+    }
+
+    // Firstmeet→CharacterCard の遷移だけ Loading を挟む（Show→中央待ち→パネル切替→Hide）
+    private IEnumerator FirstmeetToCharacterCardWithLoading()
+    {
+        Debug.Log("[Onboarding] Firstmeet→CharacterCard: Loading演出を挟みます");
+
+        // 演出中はずっと入力ロック（連打で多重 Next() が走らないように）。
+        // 短時間ロック用コルーチンが動いていれば止めて、こちらで手動ロックを保持する。
+        if (inputLockCoroutine != null) { StopCoroutine(inputLockCoroutine); inputLockCoroutine = null; }
+        inputLocked = true;
+
+        // a. Loading 表示（約0.5秒）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.ShowAsync();
+        Debug.Log("[Onboarding] Loading表示完了 → 中央待ち");
+
+        // b. 中央の待ち
+        yield return new WaitForSeconds(loadingMiddleWait);
+        Debug.Log("[Onboarding] 中央待ち終わり → パネル切替");
+
+        // c. Loading表示中の裏でキャラ選択パネルへ切替
+        currentStep = OnboardingStep.CharacterCard;
+        UpdateView();
+        // UpdateView 末尾の LockInputBriefly() が 0.15秒ロックを張るが、Hide 完了までロックを保ちたいので
+        // それを止めて手動ロックを維持する。
+        if (inputLockCoroutine != null) { StopCoroutine(inputLockCoroutine); inputLockCoroutine = null; }
+        inputLocked = true;
+
+        // d. Loading 非表示（約0.35秒）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.HideAsync();
+        Debug.Log("[Onboarding] Loading非表示完了");
+
+        // 演出完了 → 入力ロック解除
+        inputLocked = false;
     }
 
     // --- AI同意しない場合 ---
@@ -92,6 +224,7 @@ public class OnboardingManager : MonoBehaviour
     }
 
     // --- 扉アニメーション ---
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     public void PlayDoorAnimation()
     {
         Debug.Log($"<color=yellow>【OnboardingManager】PlayDoorAnimation() videoPanel={videoPanel != null}, videoPlayer={videoPlayer != null}, clip={videoPlayer?.clip != null}, rawImage={videoRawImage != null}</color>");
@@ -107,6 +240,7 @@ public class OnboardingManager : MonoBehaviour
         }
     }
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     private IEnumerator PlayVideoCoroutine()
     {
         // 1. VideoPlayer をアクティブにして準備
@@ -212,6 +346,7 @@ public class OnboardingManager : MonoBehaviour
         }
     }
 
+    // 未使用（動画廃止・新フローでは呼ばれない。StoryPanelManager.cs 削除時に本メソッドも削除予定・2026/7/6）
     private IEnumerator FadeTransition()
     {
         if (fadeCanvasGroup == null) { Next(); yield break; }
@@ -250,11 +385,19 @@ public class OnboardingManager : MonoBehaviour
     // --- 完了 ---
     public void CompleteOnboarding()
     {
+        if (inputLocked)
+        {
+            Debug.Log("[Onboarding] 入力ロック中のため無視（貫通防止）");
+            return;
+        }
+
+        Debug.Log("[Onboarding] CompleteOnboarding() 開始");
         if (SaveManager.Instance != null)
         {
             SaveManager.Instance.Data.onboardingCompleted = true;
             SaveManager.Instance.Save();
         }
+        Debug.Log("[Onboarding] onboardingCompleted=true 保存完了、Main をロードします");
         if (LoadingManager.Instance != null)
             LoadingManager.Instance.LoadSceneWithLoading("Main");
         else

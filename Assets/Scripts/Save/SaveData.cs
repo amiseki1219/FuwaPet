@@ -7,11 +7,12 @@ public class SaveData
     // --- オーナー情報 ---
     public string userName;
     public string ownerBirthday;
+    public string ownerBirthYear = "";   // 西暦4桁 例:"2000"
     public string playerId;
 
     // --- プロフィール・レベル ---
     public string profileImagePath;
-    public string iconId;
+    public string iconId = "DefaultIcon";  // デフォルトアイコン（未設定でも常に DefaultIcon が入る）
     public string selectedFrameId;
     public string selectedPetFrameId;
     public int playerLevel;
@@ -128,7 +129,7 @@ public class SaveData
         playerId = System.Guid.NewGuid().ToString("D").ToUpper();
 
         // リストの初期化
-        ownedIcons = new List<string> { "Icon1", "Icon2" };
+        ownedIcons = new List<string> { "DefaultIcon" };
         ownedFrames = new List<string> { "DefaultFrame" };
         ownedBackgrounds = new List<string> { "DefaultBG" };
         words = new List<WordData>();

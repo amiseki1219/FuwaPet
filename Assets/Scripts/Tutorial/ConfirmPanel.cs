@@ -5,9 +5,8 @@ using System.Collections.Generic;
 
 public class ConfirmPanel : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private TextMeshProUGUI charNameText;
-    [SerializeField] private TextMeshProUGUI birthdayText;
+    [SerializeField] private OnboardingManager onboardingManager;
 
     private void OnEnable()
     {
@@ -24,10 +23,14 @@ public class ConfirmPanel : MonoBehaviour
             {"poko", "ぽこ"},
             {"eru", "える"},
             {"koko", "ここ"},
-            {"paru", "ぱる"}
+            {"paru", "ぱる"},
+            {"piyoko", "ぴよこ"}
         };
 
-        string charId = data.selectedCharacterId;
+        // selectedCharacterId 優先・空なら characterId にフォールバック（Main と揃える）
+        string charId = !string.IsNullOrEmpty(data.selectedCharacterId)
+            ? data.selectedCharacterId
+            : data.characterId;
         string defaultCharName = charNameMap.ContainsKey(charId) ? charNameMap[charId] : charId;
         string nickname = data.petNickname;
         Debug.Log($"<color=cyan>【ConfirmPanel】selectedCharacterId={charId}</color>");
@@ -38,27 +41,29 @@ public class ConfirmPanel : MonoBehaviour
             : nickname;
         Debug.Log($"<color=lime>【ConfirmPanel】表示するキャラ名={displayName}</color>");
 
+        // 挨拶文（キャラ名だけの上書きではなく文章全体を組み立てる）
+        string greeting = $"今日から{displayName}との毎日がはじまるよ！";
+        Debug.Log($"[Confirm] 挨拶文: {greeting}");
+
         // SaveData 全体の確認
         Debug.Log($"<color=yellow>【ConfirmPanel】userName={data.userName}</color>");
         Debug.Log($"<color=yellow>【ConfirmPanel】birthday={data.ownerBirthday}</color>");
 
-        if (userNameText != null)
-            userNameText.text = data.userName;
-
         if (charNameText != null)
-            charNameText.text = displayName;
-
-        if (birthdayText != null)
-            birthdayText.text = data.ownerBirthday;
+            charNameText.text = greeting;
+        else
+            Debug.LogWarning("[Confirm] charNameText が未結線のため挨拶文の表示をスキップ");
     }
 
     public void OnStartClicked()
     {
-        FindAnyObjectByType<OnboardingManager>()?.CompleteOnboarding();
+        if (onboardingManager != null) { onboardingManager.CompleteOnboarding(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 
     public void OnBackClicked()
     {
-        FindAnyObjectByType<ProfileSelectionPanelManager>()?.ShowCharacterInput();
+        if (onboardingManager != null) { onboardingManager.GoBack(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 }
