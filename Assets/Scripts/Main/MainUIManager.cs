@@ -126,7 +126,7 @@ public class MainUIManager : MonoBehaviour
             if (!string.IsNullOrEmpty(iconId))
                 iconTex = Resources.Load<Texture2D>("Icon/" + iconId);
             if (iconTex == null)
-                iconTex = Resources.Load<Texture2D>("Icon/Icon1 1");
+                iconTex = Resources.Load<Texture2D>("Icon/DefaultIcon");
             Debug.Log($"アイコンTexture: {iconTex}");
             if (iconTex != null)
                 iconRawImage.texture = iconTex;
