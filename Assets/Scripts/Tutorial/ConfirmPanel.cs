@@ -63,6 +63,7 @@ public class ConfirmPanel : MonoBehaviour
 
     public void OnBackClicked()
     {
-        FindAnyObjectByType<ProfileSelectionPanelManager>()?.ShowCharacterInput();
+        if (onboardingManager != null) { onboardingManager.GoBack(); }
+        else { Debug.LogWarning("OnboardingManager が未設定です。"); }
     }
 }
