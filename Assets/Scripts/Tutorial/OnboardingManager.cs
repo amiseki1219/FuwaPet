@@ -32,6 +32,9 @@ public class OnboardingManager : MonoBehaviour
     private const float InputLockSeconds = 0.15f; // 切替後この時間だけ Next()/CompleteOnboarding() を無視
     private Coroutine inputLockCoroutine;
 
+    // Firstmeet→CharacterCard 遷移時だけ挟む Loading 演出の中央待ち（Show約0.5＋中央0.65＋Hide約0.35＝合計約1.5秒）
+    private const float loadingMiddleWait = 0.65f;
+
     private void Start()
     {
         if (SaveManager.Instance != null && SaveManager.Instance.Data.onboardingCompleted)
@@ -48,6 +51,13 @@ public class OnboardingManager : MonoBehaviour
         if (inputLocked)
         {
             Debug.Log("[Onboarding] 入力ロック中のため無視（貫通防止）");
+            return;
+        }
+
+        // Firstmeet→CharacterCard の遷移のときだけ、Loading 演出を約1.5秒挟む
+        if (currentStep == OnboardingStep.Firstmeet)
+        {
+            StartCoroutine(FirstmeetToCharacterCardWithLoading());
             return;
         }
 
@@ -159,6 +169,42 @@ public class OnboardingManager : MonoBehaviour
         inputLocked = false;
         Debug.Log("[Onboarding] 入力ロック解除");
         inputLockCoroutine = null;
+    }
+
+    // Firstmeet→CharacterCard の遷移だけ Loading を挟む（Show→中央待ち→パネル切替→Hide）
+    private IEnumerator FirstmeetToCharacterCardWithLoading()
+    {
+        Debug.Log("[Onboarding] Firstmeet→CharacterCard: Loading演出を挟みます");
+
+        // 演出中はずっと入力ロック（連打で多重 Next() が走らないように）。
+        // 短時間ロック用コルーチンが動いていれば止めて、こちらで手動ロックを保持する。
+        if (inputLockCoroutine != null) { StopCoroutine(inputLockCoroutine); inputLockCoroutine = null; }
+        inputLocked = true;
+
+        // a. Loading 表示（約0.5秒）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.ShowAsync();
+        Debug.Log("[Onboarding] Loading表示完了 → 中央待ち");
+
+        // b. 中央の待ち
+        yield return new WaitForSeconds(loadingMiddleWait);
+        Debug.Log("[Onboarding] 中央待ち終わり → パネル切替");
+
+        // c. Loading表示中の裏でキャラ選択パネルへ切替
+        currentStep = OnboardingStep.CharacterCard;
+        UpdateView();
+        // UpdateView 末尾の LockInputBriefly() が 0.15秒ロックを張るが、Hide 完了までロックを保ちたいので
+        // それを止めて手動ロックを維持する。
+        if (inputLockCoroutine != null) { StopCoroutine(inputLockCoroutine); inputLockCoroutine = null; }
+        inputLocked = true;
+
+        // d. Loading 非表示（約0.35秒）
+        if (LoadingManager.Instance != null)
+            yield return LoadingManager.Instance.HideAsync();
+        Debug.Log("[Onboarding] Loading非表示完了");
+
+        // 演出完了 → 入力ロック解除
+        inputLocked = false;
     }
 
     // --- AI同意しない場合 ---
