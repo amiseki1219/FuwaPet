@@ -6718,6 +6718,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272004922}
   m_CullTransparentMesh: 1
+--- !u!1 &280267387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 280267389}
+  - component: {fileID: 280267388}
+  m_Layer: 0
+  m_Name: CharacterDisplaySystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &280267388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280267387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b918e53f0b948e9aa0ef9cc0103e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterStaticDisplayController
+  legacyPokoDisplayRoot: {fileID: 2080217972}
+  characterDisplayAnchor: {fileID: 308808369}
+  eruStaticPrefab: {fileID: 8291071476266270237, guid: ff92daaf964554b77ae573eeaa01b928, type: 3}
+  kokoStaticPrefab: {fileID: 4623386401894055609, guid: 8ef7a2d059f344a91a26309cff7b97e2, type: 3}
+  paruStaticPrefab: {fileID: 5124735812672317952, guid: 8ed6c2a740c6445519ff04ffd8e5134c, type: 3}
+  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: 43190a534bf0a4e93b217e1f27726a33, type: 3}
+--- !u!4 &280267389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280267387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01, y: -1.32, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &290601147
 GameObject:
   m_ObjectHideFlags: 0
@@ -7002,6 +7052,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300635714}
   m_CullTransparentMesh: 1
+--- !u!1 &308808368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308808369}
+  m_Layer: 8
+  m_Name: CharacterDisplayAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &308808369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308808368}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1365923930}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &334026430
 GameObject:
   m_ObjectHideFlags: 0
@@ -10939,9 +11020,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2112867677}
   - {fileID: 1396321625}
-  - {fileID: 1883271892}
+  - {fileID: 2080217973}
+  - {fileID: 308808369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1378076274
@@ -10976,6 +11057,7 @@ MonoBehaviour:
   Data:
     userName: 
     ownerBirthday: 
+    ownerBirthYear: 
     playerId: 713BF153-CC57-40B7-BC73-C42D5DC4DACA
     profileImagePath: 
     iconId: 
@@ -13570,7 +13652,7 @@ Transform:
   m_LocalScale: {x: 9.355855, y: 2.5000002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1365923930}
+  m_Father: {fileID: 2080217973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1883271893
 SpriteRenderer:
@@ -15117,6 +15199,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2057844915}
   m_CullTransparentMesh: 1
+--- !u!1 &2080217972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2080217973}
+  m_Layer: 8
+  m_Name: PokoVisualRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2080217973
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080217972}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2112867677}
+  - {fileID: 1883271892}
+  m_Father: {fileID: 1365923930}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2104533709
 GameObject:
   m_ObjectHideFlags: 0
@@ -15260,7 +15375,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1365923930}
+    m_TransformParent: {fileID: 2080217973}
     m_Modifications:
     - target: {fileID: 6003249480620703540, guid: d84fdbb0295264b3684eb45317537c7f, type: 3}
       propertyPath: m_LocalScale.x
@@ -15562,3 +15677,4 @@ SceneRoots:
   - {fileID: 1806339440}
   - {fileID: 38974769}
   - {fileID: 103921827}
+  - {fileID: 280267389}
