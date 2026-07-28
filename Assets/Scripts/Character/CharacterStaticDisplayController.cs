@@ -10,6 +10,7 @@ public class CharacterStaticDisplayController : MonoBehaviour
 
     [Header("Static Character表示")]
     [SerializeField] private Transform characterDisplayAnchor;
+    [SerializeField] private PetoWalk petoWalk;
     [SerializeField] private GameObject eruStaticPrefab;
     [SerializeField] private GameObject kokoStaticPrefab;
     [SerializeField] private GameObject paruStaticPrefab;
@@ -41,6 +42,29 @@ public class CharacterStaticDisplayController : MonoBehaviour
             spawnedCharacter.transform.localRotation = Quaternion.identity;
             spawnedCharacter.transform.localScale = Vector3.one;
 
+            if (petoWalk != null)
+            {
+                CharacterAnimationController animationController =
+                    spawnedCharacter.GetComponent<CharacterAnimationController>();
+                if (animationController == null)
+                {
+                    FailRuntimeCharacterRegistration(
+                        characterId,
+                        "PrefabルートにCharacterAnimationControllerがありません");
+                    return;
+                }
+
+                if (!petoWalk.RegisterRuntimeCharacter(
+                        spawnedCharacter.transform,
+                        animationController))
+                {
+                    FailRuntimeCharacterRegistration(
+                        characterId,
+                        "PetoWalkへの実行時キャラ登録に失敗しました");
+                    return;
+                }
+            }
+
             legacyPokoDisplayRoot.SetActive(false);
             Debug.Log($"<color=#00E5FF>[決定]</color> [CharacterDisplay] characterId={characterId} Static Prefabを表示しました");
         }
@@ -55,6 +79,20 @@ public class CharacterStaticDisplayController : MonoBehaviour
             Debug.LogWarning($"[CharacterDisplay] characterId={characterId} の生成に失敗しました。pokoへフォールバックします。理由: {exception.Message}");
             ShowLegacyPoko("Static Prefabの生成失敗");
         }
+    }
+
+    private void FailRuntimeCharacterRegistration(string characterId, string reason)
+    {
+        if (spawnedCharacter != null)
+        {
+            spawnedCharacter.SetActive(false);
+            Destroy(spawnedCharacter);
+            spawnedCharacter = null;
+        }
+
+        Debug.LogWarning(
+            $"[Character] characterId={characterId}: {reason}。pokoへフォールバックします");
+        ShowLegacyPoko("実行時キャラ登録失敗");
     }
 
     private string ResolveCharacterId()

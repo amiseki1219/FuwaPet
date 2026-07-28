@@ -51,12 +51,15 @@ public class PetoWalk : MonoBehaviour
     private float    _idleTimer;
     private float    _walkStartTimer;
     private Animator _animator;
+    private Transform _runtimeMovementTarget;
+    private CharacterAnimationController _runtimeAnimationController;
+    private bool _hasRuntimeRegistration;
     private readonly List<Bounds> _obstacleBounds = new List<Bounds>();
 
     // ─── Unity ────────────────────────────────────────────
     private void Start()
     {
-        _fixedY = transform.position.y;
+        _fixedY = GetMovementTarget().position.y;
         CollectObstacleColliders();
         _animator = GetComponentInChildren<Animator>();
         EnterIdleWaiting();
@@ -64,6 +67,7 @@ public class PetoWalk : MonoBehaviour
 
     private void Update()
     {
+        HandleRuntimeCharacterLoss();
         if (!HasActiveZone()) return;
 
         switch (CurrentState)
@@ -73,6 +77,21 @@ public class PetoWalk : MonoBehaviour
             case State.Turn:        UpdateTurn();        break;
             case State.Walk:        UpdateWalk();        break;
         }
+    }
+
+    public bool RegisterRuntimeCharacter(
+        Transform movementTarget,
+        CharacterAnimationController animationController)
+    {
+        if (movementTarget == null || animationController == null)
+            return false;
+
+        _runtimeMovementTarget = movementTarget;
+        _runtimeAnimationController = animationController;
+        _hasRuntimeRegistration = true;
+        _fixedY = movementTarget.position.y;
+        animationController.SetWalking(CurrentState == State.Walk);
+        return true;
     }
 
     private bool HasActiveZone()
@@ -129,17 +148,21 @@ public class PetoWalk : MonoBehaviour
 
     private void UpdateTurn()
     {
-        Vector3 moveDir = _targetPoint - transform.position;
+        Transform movementTarget = GetMovementTarget();
+        Transform rotationTarget = GetRotationTarget();
+        Vector3 moveDir = _targetPoint - movementTarget.position;
         moveDir.y = 0f;
         if (moveDir.sqrMagnitude < 0.001f) { EnterIdleWaiting(); return; }
 
-        float targetAngle  = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + meshFacingYOffset;
-        float currentAngle = visualRoot != null ? visualRoot.localEulerAngles.y : transform.eulerAngles.y;
+        float targetAngle  = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + GetFacingYOffset();
+        float currentAngle = rotationTarget != null
+            ? rotationTarget.localEulerAngles.y
+            : movementTarget.eulerAngles.y;
 
         // 位置を動かさずその場で向きを変える
         float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, turnSpeed * Time.deltaTime);
-        if (visualRoot != null)
-            visualRoot.localRotation = Quaternion.Euler(0f, newAngle, 0f);
+        if (rotationTarget != null)
+            rotationTarget.localRotation = Quaternion.Euler(0f, newAngle, 0f);
 
         // 回転後の角度差で判定
         float angleDiff = Mathf.Abs(Mathf.DeltaAngle(newAngle, targetAngle));
@@ -164,7 +187,8 @@ public class PetoWalk : MonoBehaviour
             return;
         }
 
-        Vector3 pos    = transform.position;
+        Transform movementTarget = GetMovementTarget();
+        Vector3 pos    = movementTarget.position;
         float   distXZ = new Vector2(pos.x - _targetPoint.x, pos.z - _targetPoint.z).magnitude;
 
         if (distXZ <= arrivalDistance)
@@ -180,11 +204,11 @@ public class PetoWalk : MonoBehaviour
 
         if (moveDir.sqrMagnitude > 0.001f)
         {
-            Vector3 newPos = pos + moveDir.normalized * moveSpeed * Time.deltaTime;
+            Vector3 newPos = pos + moveDir.normalized * GetMoveSpeed() * Time.deltaTime;
             newPos.y = _fixedY;
-            transform.position = newPos;
+            movementTarget.position = newPos;
 
-            float targetAngle = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + meshFacingYOffset;
+            float targetAngle = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg + GetFacingYOffset();
             ApplyVisualRotation(targetAngle);
         }
         // Animator speed は EnterWalk で 1f に設定済み。歩行中は変更しない。
@@ -193,21 +217,72 @@ public class PetoWalk : MonoBehaviour
     // ─── ヘルパー ──────────────────────────────────────────
     private void ApplyVisualRotation(float targetAngle)
     {
-        if (visualRoot == null) return;
-        float currentAngle = visualRoot.localEulerAngles.y;
+        Transform rotationTarget = GetRotationTarget();
+        if (rotationTarget == null) return;
+        float currentAngle = rotationTarget.localEulerAngles.y;
         float newAngle     = Mathf.LerpAngle(currentAngle, targetAngle, rotationSpeed * Time.deltaTime);
-        visualRoot.localRotation = Quaternion.Euler(0f, newAngle, 0f);
+        rotationTarget.localRotation = Quaternion.Euler(0f, newAngle, 0f);
     }
 
     private void SetAnimatorSpeed(float speed)
     {
-        if (_animator != null) _animator.speed = speed;
+        if (!HasRuntimeCharacter() && _animator != null)
+            _animator.speed = speed;
     }
 
     private void SetAnimatorIsWalking(bool isWalking)
     {
-        if (_animator != null && !string.IsNullOrEmpty(walkingParamName))
+        if (HasRuntimeCharacter())
+        {
+            _runtimeAnimationController.SetWalking(isWalking);
+        }
+        else if (_animator != null && !string.IsNullOrEmpty(walkingParamName))
+        {
             _animator.SetBool(walkingParamName, isWalking);
+        }
+    }
+
+    private bool HasRuntimeCharacter()
+    {
+        return _hasRuntimeRegistration &&
+               _runtimeMovementTarget != null &&
+               _runtimeAnimationController != null;
+    }
+
+    private void HandleRuntimeCharacterLoss()
+    {
+        if (!_hasRuntimeRegistration || HasRuntimeCharacter())
+            return;
+
+        _runtimeMovementTarget = null;
+        _runtimeAnimationController = null;
+        _hasRuntimeRegistration = false;
+        _fixedY = transform.position.y;
+        EnterIdleWaiting();
+    }
+
+    private Transform GetMovementTarget()
+    {
+        return HasRuntimeCharacter() ? _runtimeMovementTarget : transform;
+    }
+
+    private Transform GetRotationTarget()
+    {
+        return HasRuntimeCharacter() ? _runtimeMovementTarget : visualRoot;
+    }
+
+    private float GetFacingYOffset()
+    {
+        return HasRuntimeCharacter()
+            ? _runtimeAnimationController.FacingYOffset
+            : meshFacingYOffset;
+    }
+
+    private float GetMoveSpeed()
+    {
+        if (HasRuntimeCharacter() && _runtimeAnimationController.MoveSpeed > 0f)
+            return _runtimeAnimationController.MoveSpeed;
+        return moveSpeed;
     }
 
     private Vector3 PickNextTarget()
@@ -218,7 +293,7 @@ public class PetoWalk : MonoBehaviour
             foreach (var z in walkZones)
                 if (z != null && z.gameObject.activeInHierarchy) active.Add(z);
 
-        if (active.Count == 0) return transform.position;
+        if (active.Count == 0) return GetMovementTarget().position;
 
         // ランダムにゾーン選択 → 障害物を避けたランダム座標を生成
         WalkZone zone = active[Random.Range(0, active.Count)];
