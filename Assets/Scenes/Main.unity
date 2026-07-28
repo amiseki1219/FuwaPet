@@ -10264,12 +10264,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b918e53f0b948e9aa0ef9cc0103e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStaticDisplayController
-  legacyPokoDisplayRoot: {fileID: 1664290874}
+  legacyPokoDisplayRoot: {fileID: 1045672381}
   characterDisplayAnchor: {fileID: 63045320}
+  petoWalk: {fileID: 1664290875}
   eruStaticPrefab: {fileID: 8291071476266270237, guid: ff92daaf964554b77ae573eeaa01b928, type: 3}
-  kokoStaticPrefab: {fileID: 4623386401894055609, guid: 8ef7a2d059f344a91a26309cff7b97e2, type: 3}
+  kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
   paruStaticPrefab: {fileID: 5124735812672317952, guid: 8ed6c2a740c6445519ff04ffd8e5134c, type: 3}
-  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: 43190a534bf0a4e93b217e1f27726a33, type: 3}
+  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
 --- !u!1 &342560476
 GameObject:
   m_ObjectHideFlags: 0
@@ -20188,7 +20189,7 @@ Transform:
   m_GameObject: {fileID: 957865513}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70705783, y: -0.008320677, z: 0.00832068, w: 0.70705783}
-  m_LocalPosition: {x: -0.3235268, y: 0.0000043176115, z: 0.68}
+  m_LocalPosition: {x: -0.3235268, y: -0.024, z: 0.68}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
