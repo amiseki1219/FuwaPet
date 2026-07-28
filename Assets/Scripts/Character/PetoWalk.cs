@@ -204,7 +204,7 @@ public class PetoWalk : MonoBehaviour
 
         if (moveDir.sqrMagnitude > 0.001f)
         {
-            Vector3 newPos = pos + moveDir.normalized * moveSpeed * Time.deltaTime;
+            Vector3 newPos = pos + moveDir.normalized * GetMoveSpeed() * Time.deltaTime;
             newPos.y = _fixedY;
             movementTarget.position = newPos;
 
@@ -276,6 +276,13 @@ public class PetoWalk : MonoBehaviour
         return HasRuntimeCharacter()
             ? _runtimeAnimationController.FacingYOffset
             : meshFacingYOffset;
+    }
+
+    private float GetMoveSpeed()
+    {
+        if (HasRuntimeCharacter() && _runtimeAnimationController.MoveSpeed > 0f)
+            return _runtimeAnimationController.MoveSpeed;
+        return moveSpeed;
     }
 
     private Vector3 PickNextTarget()
