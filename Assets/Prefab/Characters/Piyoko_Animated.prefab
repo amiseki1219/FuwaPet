@@ -48,6 +48,7 @@ MonoBehaviour:
   animator: {fileID: 5419845912132168690}
   walkingParameterName: IsWalking
   facingYOffset: 0
+  moveSpeed: 0
 --- !u!1001 &4372648188369641483
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78,7 +79,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2412172022445986179, guid: 770a640a758ed40118645eb4c885aa59, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7
+      value: 0.747
       objectReference: {fileID: 0}
     - target: {fileID: 2412172022445986179, guid: 770a640a758ed40118645eb4c885aa59, type: 3}
       propertyPath: m_LocalPosition.z

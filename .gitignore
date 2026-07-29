@@ -140,3 +140,18 @@ Assets/Fonts/*_SDF.asset
 Assets/Fonts/*_SDF*.asset
 Assets/Fonts/japanese_characters.txt
 
+# ── Poko の FBX を救済 ──────────────────────────────
+# 既存ルール *.fbx の除外解除が **/Models/*.fbx 限定のため、
+# Models フォルダに入っていない Poko の FBX が追跡されていなかった。
+!Assets/Art/3D/Characters/**/*.fbx
+!Assets/Art/3D/Characters/**/*.FBX
+
+# テスト用FBXは本体も追跡不要（上の救済ルールの例外）
+Assets/Art/3D/Characters/Poko/Action/PokoChan_v2_EatTest.fbx
+
+# ── Blender 作業用バックアップ（履歴に残す必要なし）──
+SourceArt/Blender/**/*backup*.blend
+SourceArt/Blender/**/*.backup.blend
+SourceArt/Blender/**/*_recovered.blend
+SourceArt/Blender/**/*_discarded_*.blend
+
