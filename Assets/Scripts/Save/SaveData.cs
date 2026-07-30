@@ -111,6 +111,13 @@ public class SaveData
     public string lastPlayDate = "";
     public long lastSleepTicks = 0; // ねんね8時間クールダウン用
 
+    // --- ステータスの時間経過用（ISO 8601 ラウンドトリップ形式。空文字なら未記録） ---
+    // ※ 上の lastBathDate / lastPlayDate は1日の回数制限用で別物。混同しないこと。
+    public string statusLastFedAt   = "";
+    public string statusLastBathAt  = "";
+    public string statusLastPlayAt  = "";
+    public string statusLastDecayAt = "";
+
     // --- プロフィール変更日（2週間ロック用） ---
     public string lastNameChangeDate     = "";
     public string lastCharNameChangeDate = "";

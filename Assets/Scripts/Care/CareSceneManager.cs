@@ -380,6 +380,7 @@ public class CareSceneManager : MonoBehaviour
         _save.playCountToday++;
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
+        _status.OnPlayed();
         _status.AddTrust(3);
         GameContext.Instance?.SavePetStatus();
         energyPopup?.Show("+30");
