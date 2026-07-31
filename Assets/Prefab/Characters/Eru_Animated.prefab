@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1160235528304355475}
   - component: {fileID: 4322106645723824051}
   - component: {fileID: 3939212070900141120}
+  - component: {fileID: 6189027120923630775}
   m_Layer: 0
   m_Name: Eru_Animated
   m_TagString: Untagged
@@ -72,6 +73,29 @@ MonoBehaviour:
   defaultExpressionKey: Normal
   baseMapPropertyName: _BaseMap
   tempDuration: 2.5
+--- !u!114 &6189027120923630775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8305201213943918563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8788670511dcf44dc9069f0e231dc8a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterBlinkController
+  faceController: {fileID: 3939212070900141120}
+  closeEyeL: {fileID: 2800000, guid: b41ae12b56afd47ec96ee10d22abfd31, type: 3}
+  closeEyeR: {fileID: 2800000, guid: 6b628f7ac95c745398bdb9bc322add6c, type: 3}
+  minBlinkInterval: 3
+  maxBlinkInterval: 6
+  blinkDuration: 0.12
+  enableBlink: 1
+  skipBlinkExpressionKeys:
+  - Shy
+  - Close
+  - Relaxed
 --- !u!1001 &5347151512755726510
 PrefabInstance:
   m_ObjectHideFlags: 0

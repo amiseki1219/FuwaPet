@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6013714615402368497}
   - component: {fileID: 1121241586733353422}
+  - component: {fileID: 7693436966532713319}
+  - component: {fileID: 6527533192221087599}
   m_Layer: 0
   m_Name: Paru_Animated
   m_TagString: Untagged
@@ -49,6 +51,51 @@ MonoBehaviour:
   walkingParameterName: IsWalking
   facingYOffset: 0
   moveSpeed: 0.124
+--- !u!114 &7693436966532713319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475391032555259115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b872faf338a9c4b37a9337b60aecdecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterFaceController
+  eyeLRenderer: {fileID: 4922527877354059140}
+  eyeRRenderer: {fileID: 2253649405723791865}
+  mouthRenderer: {fileID: 3697341707147032521}
+  cheekL: {fileID: 4130027947497755176}
+  cheekR: {fileID: 1664181162843376168}
+  cheekAlwaysVisible: 1
+  database: {fileID: 11400000, guid: 8d8f5fe3ccc754fc99a572707cbe3eb8, type: 2}
+  defaultExpressionKey: Normal
+  baseMapPropertyName: _BaseMap
+  tempDuration: 2.5
+--- !u!114 &6527533192221087599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475391032555259115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8788670511dcf44dc9069f0e231dc8a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterBlinkController
+  faceController: {fileID: 7693436966532713319}
+  closeEyeL: {fileID: 2800000, guid: 79c9a531b365e421cb710f0c54a1dd79, type: 3}
+  closeEyeR: {fileID: 2800000, guid: 99392f8b307004d32b11509491f7b818, type: 3}
+  minBlinkInterval: 3
+  maxBlinkInterval: 6
+  blinkDuration: 0.12
+  enableBlink: 1
+  skipBlinkExpressionKeys:
+  - Shy
+  - Close
+  - Relaxed
 --- !u!1001 &4048395310795514652
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -128,7 +175,15 @@ PrefabInstance:
     - target: {fileID: -8452876364440247526, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 144860c9ed3c74bad8313dfaed5376fc, type: 2}
+      objectReference: {fileID: 2100000, guid: 2456c45b668e24b2c9c09bda841027e9, type: 2}
+    - target: {fileID: -8403344563188607787, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 30bee2751ed404528963e100b95149c3, type: 2}
+    - target: {fileID: -6383755558842977563, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 30bee2751ed404528963e100b95149c3, type: 2}
     - target: {fileID: -5845042428482656499, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -136,7 +191,7 @@ PrefabInstance:
     - target: {fileID: -5845042428482656499, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 144860c9ed3c74bad8313dfaed5376fc, type: 2}
+      objectReference: {fileID: 2100000, guid: 2456c45b668e24b2c9c09bda841027e9, type: 2}
     - target: {fileID: 919132149155446097, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
       propertyPath: m_Name
       value: Paru_Character_v02
@@ -145,14 +200,43 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: bf1590d3cc0f44e6c87d79bd1d798ccd, type: 2}
+    - target: {fileID: 8970782415697450648, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 30bee2751ed404528963e100b95149c3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+--- !u!1 &1664181162843376168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5821305048222668492, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+  m_PrefabInstance: {fileID: 4048395310795514652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2253649405723791865 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6383755558842977563, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+  m_PrefabInstance: {fileID: 4048395310795514652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3697341707147032521 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -8403344563188607787, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+  m_PrefabInstance: {fileID: 4048395310795514652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4130027947497755176 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -9115843524848717516, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+  m_PrefabInstance: {fileID: 4048395310795514652}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4585917213314090231 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
+  m_PrefabInstance: {fileID: 4048395310795514652}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &4922527877354059140 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8970782415697450648, guid: 8e6b9cf7917554367b3dc43e8c1c0de8, type: 3}
   m_PrefabInstance: {fileID: 4048395310795514652}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &7585292933483617933 stripped
