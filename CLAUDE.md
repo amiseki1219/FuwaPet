@@ -461,6 +461,35 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 - #176 寝室シーン（Sleep.unity）枠組み作成（v1.0）・演出リッチ化（v1.1）
 - #177 遊ぶシーン（Play.unity）ミニゲーム実装（v1.1）
 
+#### ステータス・セーブまわり
+
+- **`BathWashManager.cs` が `save.clean` を直接書き換えている。** `PetStatus` を経由していないため、インメモリ値と乖離する。`GameContext` は `DontDestroyOnLoad` で生き続けるので、Bath の後に別画面で `SavePetStatus()` が走ると**お風呂で増やした清潔値が上書きで消える可能性がある**。あわせて `OnBath()` の呼び出しも未対応
+- **`SaveManager.UpdateDate()` と `IsNewDay()` の呼び出し元がゼロ。** `lastDate` は初回起動でセーブを新規作成したときにしか書かれないため、初回起動日で固定されたままになっている。放置日数の判定に影響する
+- **`OnApplicationPause` / `OnApplicationFocus` が未実装。** バックグラウンドから復帰しても `ApplyTimeDecay()` も表情の再評価も走らない。プロセスが生きている間は Main のまま再開するため、数時間空けても画面が止まったままになる
+
+#### キャラクター表示
+
+- **Care と Bath が `*_Static.prefab`（v01モデル）を参照している。** v01 には `Eye_left` / `Eye_right` / `Mouth` が存在しないため表情を結線できない。Main は `*_Animated.prefab`（v02）を参照済み。**Care / Bath の参照を `*_Animated.prefab` へ変えるのが早い**（表情コンポーネントをPrefab側に付けておけば3画面すべてで効く）
+- v01 モデルは v02 への移植完了後に削除予定
+
+#### モデル・素材の不具合
+
+- **ぴよこ: `Piyoko_Character_v02.fbx` に `Piyoko_Happy_v01` クリップが存在しない**（Blenderにはアクションがある）。かわりに `metarig|Piyoko_Walk_v01` という重複クリップが入っている
+- **ぴよこ: ほおが `Cheek_right.001` と `Cheek_right.002` で、左右とも "right" という名前。** ワールド座標で `.001` が左（X=+0.724）、`.002` が右（X=−0.717）。`Cheek_left` / `Cheek_right` へリネームが必要
+- ぴよこ: `Mouht_upper` は綴り誤り（Mouth → Mouht）。`Mouth_lower_New` も `_New` を外したい
+- ぴよこ: くちばしメッシュが `Beak_Upper` / `Head` の両方にウェイト1.0で乗っており、正規化されて**実効50%**になっている。ボーンを30°回してもくちばしは約15°しか動かない。既存の Happy / Eat のくちばしはこの前提で作られているため、ウェイトを直すと2クリップの打ち直しが必要
+- **ぱる: 目テクスチャ10枚の背景アルファが0でなく26**（全面に薄いグレーの膜）。`ParuSadlMouth` も8。書き出し直しが必要
+- ここ: `KokoSadEye_left` が120×123、`_right` が120×124 でサイズ不一致。他は120×120
+- ここ / ぴよこ: `Nomal` の目が L/R で**同一ファイル**（絵が左右非対称なのにハイライトが両目とも同じ側）。一方 Angry / Sad は正しい鏡像なので、同キャラ内で規則が混在している
+- **える: 黒い体に黒い顔でコントラストが不足している。** 目の中央輝度8.3、口0.0（0〜255）。マテリアルやシェーダーでは解決できず、絵に明るい部分を足す必要がある。ここ・ぴよこも暗いため同じ問題が出る見込み
+- 顔テクスチャのファイル名に `Nomal`（`Normal` の誤記）と、余分な `l`（`AngrylMouth` `SadlMouth` `SmilelMouth` 等）が残っている。計19ファイル。まだ何からも参照されていないうちにリネームすると安い
+
+#### くちばし（ぴよこ）
+
+- くちばしの角度は未設定。`Beak_Upper` / `Beak_Lower` はボーン駆動で、**既存4クリップすべてが打鍵済み**（Idle・Walk は閉じたまま、Happy・Eat は開閉あり）。Animator が毎フレーム書き込むため、スクリプトから角度を指定しても上書きされる
+- 対応方針: **Animator に「くちばし専用レイヤー」を追加し、Avatar Mask で `Beak_Upper` / `Beak_Lower` だけを対象にする**。表情ごとに1フレームのポーズクリップを Override で再生し、Eat / Happy を優先したいときは `SetLayerWeight(layer, 0)` で切る。Generic リグなので Avatar Mask は Transform タブでボーンを個別指定する。Optimize Game Objects が OFF なのでこの方式が機能する
+- ポーズクリップは Unity 側で `.anim` を直接作るのを推奨（FBX再書き出しの罠を避けられる）
+
 ---
 
 ## §16. お風呂シーン・シャンプー選択仕様（2026/5/12 確定）
@@ -609,6 +638,240 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 
 ※各セットはアイコン画像+フレームのセット販売  
 ※個別単品販売は行わない
+
+---
+
+## §19. キャラクター表情システム（2026/7/30 実装）
+
+### 設計判断
+
+表情の適用方式が2系統あったため、**ScriptableObject方式を正とし、Poko の既存実装とは併存させて段階移行する**方針を採った。
+
+| 実装 | 状態 |
+|---|---|
+| `FaceController.cs` | Poko専用。Main と Care で稼働中。**今回は触らない** |
+| `PokoFaceController.cs` + `FaceExpressionDatabase` | 未使用のまま存置 |
+| **`CharacterFaceController.cs`（新規）** | **5キャラ共通。これを正とする** |
+| **`CharacterBlinkController.cs`（新規）** | 5キャラ共通のまばたき |
+
+`PokoBlinkController` は参照型が `FaceController` のため流用できず、新規に `CharacterBlinkController` を作成した。Poko の移行は最後に行う。
+
+### 表情キー（9種）
+
+`Normal` / `Happy` / `Sad` / `Angry` / `Shy` / `Fun` / `Surprised` / `Close` / `Relaxed`
+
+`SlightHappy` は呼び出し元がゼロのため新キャラでは使わない。DBに無いキーは `Normal` にフォールバックする。
+
+### 状態からの表情判定（優先度順）
+
+`FaceController.EvaluateExpression` を移植したもの。閾値は変更していない。
+
+1. 最終接触から4日以上 → `Angry`
+2. ちょうど3日 → `Sad`
+3. `PetStatus` が null → `Normal`
+4. 4パラ平均 ≥ 70 → `Happy`
+5. 元気≥30 かつ おなか≥30 かつ 気分≥60 → `Fun`
+6. おなか<30 または 元気<30 または 平均<30 → `Sad`
+7. それ以外 → `Normal`
+
+### キャラ別 目・口の割り当て
+
+ファイル名の綴りは実物に合わせている（`Nomal` は誤記のまま運用中）。
+
+**える**（ほお なし）
+
+| キー | 目 | 口 |
+|---|---|---|
+| Normal | Nomal | Nomal |
+| Happy | Smile | Nomal |
+| Sad | Sad | Sad |
+| Angry | Angry | Angry |
+| Shy | Nomal | Smile |
+| Fun | Smile | Nomal |
+| Surprised | Surprised | Surprised |
+| Close | Close | Nomal |
+| Relaxed | Close | Smile |
+
+**ぱる**（ほお 常時ON）
+
+| キー | 目 | 口 |
+|---|---|---|
+| Normal | Nomal | Nomal |
+| Happy | Smile | Nomal |
+| Sad | Sad | Sad |
+| Angry | Angry | Angry |
+| Shy | Close | Nomal |
+| Fun | Smile | Smile |
+| Surprised | Nomal | Surprised |
+| Close | Close | Nomal |
+| Relaxed | Close | Smile |
+
+**ここ**（ほお 常時ON）
+
+| キー | 目 | 口 |
+|---|---|---|
+| Normal | Nomal | Nomal |
+| Happy | Smile | Nomal |
+| Sad | Sad | Sad |
+| Angry | Angry | **Sad**（Angry口が無いため） |
+| Shy | Close | Nomal |
+| Fun | Smile | Smile |
+| Surprised | Nomal | Surprised |
+| Close | Close | Nomal |
+| Relaxed | Close | Smile |
+
+**ぴよこ**（ほお 常時ON / 口なし・くちばしで調整）
+
+| キー | 目 |
+|---|---|
+| Normal / Surprised | Nomal |
+| Happy / Fun | Smile |
+| Sad | Sad |
+| Angry | Angry |
+| Shy / Close / Relaxed | Close |
+
+### 顔テクスチャの命名と配置
+
+```
+Assets/Art/3D/Characters/{Char}/FaceTextures/
+    Eye/L/{Char}{Expr}Eye_left.png
+    Eye/R/{Char}{Expr}Eye_right.png
+    Mouth/{Char}{Expr}Mouth.png
+```
+
+- `{Char}` は `Eru` `Paru` `Koko` `Piyoko`（先頭大文字）
+- ほおは全キャラ共通で `Assets/Art/3D/Characters/_Shared/Textures/Cheek.png` を使う。キャラ別のPNGは不要
+- Poko は旧構造（目にキャラ名なし・口は `Poko{Expr}_Mouth`）。**GUID断絶を避けるためリネームしない**
+- テクスチャは `Resources.Load` を使わず、ScriptableObject に直接ぶら下げる。**ファイル名はコードに登場しない**
+
+#### インポート設定（Poko と同一）
+
+```
+Texture Type          : Sprite（Sprite Mode = Multiple）
+Alpha Is Transparency : ON
+Generate Mip Maps     : OFF
+Max Size              : 2048 / Compression: Normal Quality
+```
+
+### 顔パーツのマテリアルは Transparent 必須
+
+**これを守らないと目と口の周りに黒い四角と虹色のノイズが出る。** 実際に発生した。
+
+Opaque マテリアルだとアルファが無視され、PNGの透明部分に入っている未定義のRGB値がそのまま描画されるため。
+
+```
+シェーダー      : URP Lit（Poko の顔マテリアルと同じ）
+Surface Type    : Transparent（_Surface: 1）
+Blending Mode   : Alpha
+Render Queue    : 3000 / ZWrite off
+```
+
+最も確実な作り方は `Mat_Poko_Eye_L.mat` を複製することである。ただし**複製元の Base Map に Poko のテクスチャが残るため、必ず None にする**。残しておくと結線ミス時に「それらしい目」が出てしまい、不具合に気づけない（実際にこれで原因特定が遅れた）。
+
+`MaterialPropertyBlock` は Renderer 単位で効くので、**1枚のマテリアルを Eye_left / Eye_right / Mouth で共有してよい**。えるは `Mat_Eru_Face` 1枚を3箇所に割り当てている。
+
+### 未実装の領域
+
+- **`RefreshExpression()` の呼び出し元が無い。** `Start` で1回評価するだけなので、同じ画面に留まったまま状態が変わっても表情は更新されない。画面遷移時は `LoadScene`（シングル）でシーンが作り直されるため自動的に再評価される
+- Care でお世話した直後に `TriggerCareAction()` を呼ぶ処理（**優先度高**。Care は遷移しないため呼ばないと顔が変わらない）
+- Bath で `Relaxed` を出す処理（Bathには表情を呼ぶコードが1行も無い）
+- Chat で `SetEmotionFromAI()` を呼ぶ処理（会話AI自体が未実装のため待ち）
+- `defaultExpressionKey` は SerializeField にあるが実質機能していない（`Start` で状態判定に上書きされ、フォールバック先も `Normal` 固定）
+
+### 動作確認時の注意
+
+**`GameContext` は Home と Care にしか無い。** Main.unity を直接再生すると `PetStatus` が取れず、表情は必ず `Normal` になる。状態判定を確認するときは **Home から再生すること**。`GameContext` は Home の root 直下にあり `DontDestroyOnLoad` が効くので、本番の起動フロー（必ず Home 経由）では正しく持ち越される。
+
+---
+
+## §20. ステータス時間経過の永続化（2026/7/30 修正）
+
+### 修正前の問題
+
+1. `PetStatus.LastFedTime / LastBathTime / LastPlayTime` が保存されておらず、起動ごとに「今」へリセットされていた。結果、時間経過による減少がほぼ機能していなかった
+2. `OnFed()` / `OnBath()` / `OnPlayed()` の呼び出し元が1つも無く、メモリ上でも更新されなかった
+3. `ApplyTimeDecay()` が減算後に基準時刻を進めないため、Main ⇄ Care を往復するたびに全経過時間ぶん重複して減算されていた
+
+### 修正後の設計：時刻の役割を2つに分ける
+
+| 用途 | フィールド | 更新タイミング |
+|---|---|---|
+| 減衰の会計 | `LastDecayAt` | `ApplyTimeDecay()` で減算した直後に必ず `now` へ進める |
+| 放置日数の判定（表情が参照） | `LastFedTime` / `LastBathTime` / `LastPlayTime` | お世話したときだけ |
+
+これを分けたことで、`ApplyTimeDecay()` を何度呼んでも減算量は「最後に減衰させた時刻からの実経過時間」に限定される。
+
+### SaveData に追加したフィールド
+
+```csharp
+public string statusLastFedAt   = "";
+public string statusLastBathAt  = "";
+public string statusLastPlayAt  = "";
+public string statusLastDecayAt = "";
+```
+
+- 形式は ISO 8601 ラウンドトリップ（`ToString("o")`）
+- **空文字・パース失敗のときは `DateTime.Now` を入れる。** 未記録のセーブを「大昔」と解釈すると、更新した瞬間に全パラメータが下限10まで落ちるため
+- 既存の `lastBathDate` / `lastPlayDate` は1日の回数制限用で**別物**。混同しないこと
+- 端末時計が巻き戻った場合は経過を0に丸め、パラメータが増えないようにしている
+
+### 変更していないもの
+
+減衰係数（おなか −5/h、清潔 −4/h、元気 −4/h）、下限10、コンディション表示のしきい値、課金バランスは**一切変更していない**。1回の復帰で減らせる量の上限も設けていない。満タン（100）からなら下限に張り付くまで約20時間かかるため、1日1回のお世話で成立する。
+
+### お世話時の時刻更新
+
+| ファイル | 追加した呼び出し |
+|---|---|
+| `OyatuManager.cs` | `status.OnFed()` |
+| `CareSceneManager.cs` の `OnBtnPlay()` | `_status.OnPlayed()` |
+
+`OnBath()` は未対応（下記「既知の不具合」参照）。
+
+---
+
+## §21. Blender からの FBX 書き出し設定（2026/7/30 確定）
+
+既存FBXと突き合わせて特定した設定。**既定値と異なる項目が2つあるため、これを外すとモデルが壊れる。**
+
+```python
+bpy.ops.export_scene.fbx(
+    filepath=...,
+    use_selection=False, use_visible=False,
+    object_types={'ARMATURE', 'MESH'},       # Camera を除外
+    add_leaf_bones=False,                    # 既定 True。リーフボーンを作らない
+    apply_scale_options='FBX_SCALE_UNITS',   # 既定 FBX_SCALE_NONE。★重要
+    mesh_smooth_type='FACE',                 # 既定 OFF
+    bake_anim=True,
+    bake_anim_use_all_actions=True,
+    bake_anim_use_nla_strips=True,
+    bake_anim_simplify_factor=0.0,           # 既定 1.0。★重要
+    apply_unit_scale=True, global_scale=1.0,
+    axis_forward='-Z', axis_up='Y',
+    use_mesh_modifiers=True, path_mode='AUTO',
+)
+```
+
+### 既定値のままにすると起きること
+
+- **`apply_scale_options` を既定（`FBX_SCALE_NONE`）にすると `UnitScaleFactor` が 1 になる。** Unity は `useFileScale: 1` なので File Scale が 0.01 と解釈され、**モデルが100分の1のサイズで入る**
+- **`bake_anim_simplify_factor` を既定（1.0）にするとアニメのキーが間引かれる。** しっぽの物理計算で作った動きは別物になる
+
+### 書き出し前に必ずやること
+
+1. `bpy.ops.wm.save_as_mainfile(copy=True)` でバックアップ
+2. **全アクションのデータパス検査。** `pose.bones["..."]` が参照するボーンが実在するか全アクションで確認する。1本でも解決できないデータパスがあると、そのアクションは**無言でスキップされる**（ぴよこで実際に `Piyoko_Happy_v01` が消えている）
+3. 書き出し対象に作業用オブジェクト（Camera 等）が混ざっていないか確認
+
+### 書き出し後の検証方法
+
+既存FBXと以下を突き合わせる。えるでは**ヘッダのタイムスタンプ32バイトを除いて完全一致**した。
+
+- ノード名の一覧と件数
+- AnimStack（テイク）の名前と件数
+- `UnitScaleFactor`
+- 頂点座標の min / max
+- `Smoothing` の出現数
 
 ---
 
@@ -823,3 +1086,4 @@ A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討し
 | 2026/6/17 | 信頼度Lv.100カンスト制確定（指数曲線・Lv100特典=等身大ぬいぐるみ500体・無課金5年設計・重要設計判断§6追加）・キャラ解放条件変更（Lv.100カンスト→次キャラ解放・課金即解放廃止）・チケット無課金5枚/日に変更（ログインのみ）・サブスクチケット差更新（寄り添い+5=10枚・仲良し+15=20枚）・有償コイン単価10倍・全有償アイテム価格10倍（おやつ・シャンプー・プロフィールセット）・サブスク月額♡付与10倍（3,000/7,000/15,000♡）・無償コイン収入見直し（§17更新）・パズル設計確定（スライドパズル・1日1回・ステージ別報酬・ステージ4ランダム報酬確率テーブル） |
 | 2026/7/3 | タスク4「Main/Care UI崩れ調整」＋土台修正をドキュメント反映：信頼度Lv計算を `TrustFormula.cs` に集約（PCHIP単調補間・Lv100カンスト表示・旧しきい値廃止／§6）・キャラアイコンをCharacterIcon方式に変更（`Resources.Load`・`CharIcon_{id}01`・Sprite Mode=Single）＋Mainコンディションはテキストのみ化（アイコン画像/気分ゲージ廃止／§13・§15）・HOME画面を起動振り分け専用のシンプル構成に更新（誕生日演出/キャラ別背景/出会って◯日/時間帯背景を廃止・共通背景Scene直配置・HomeManager簡素化／§12関連ファイル）・MainボタンにRoomEdit(もようがえ)/SNS(ひろば)/Gacha遷移を追加しRanking廃止・下部ナビ7つに更新（§13）・命名方針（Pet系→Character系へ段階移行）＋起動/DDOL/GameContext技術メモを追記（Manager root直下配置・GameContext guid注意・Script Execution Order SaveManager-200→GameContext-100） |
 | 2026/7/5 | v1.0スコープ変更を反映：SNS（ひろば）を「画面枠のみ・v1.1検討」→ v1.0で自由投稿を実装（モデレーション/通報/ブロック込み・§13）／フレンド機能を新規追加（v1.0＝申請・承認・一覧の「繋がる」まで、DM・訪問等はv1.1）／会話AIのOpenAIモデル確認日を7/23→7/28に更新（§16）。※タスク番号13〜21の追加・タスク1見積り(7日)・8/25作戦会議=バックエンド実装起点はスケジュール表で管理。 |
+| 2026/7/30 | キャラクター表情システムを実装（§19追加）：表情9種を確定・`CharacterFaceController` / `CharacterBlinkController` を新規追加し Poko の既存実装と併存させる段階移行方針・キャラ別の目/口割り当て・顔テクスチャの命名と配置・顔パーツのマテリアルは Transparent 必須という知見／requirements.md §5「表情連動」を9種の表情・AIラベル対応・合わせ技の判定条件・ほおのキャラ単位固定として具体化／ステータス時間経過を修正（§20追加）：最終お世話時刻を SaveData へ永続化・減衰の会計用に `LastDecayAt` を分離して二重適用を解消・未記録セーブは「今」扱い（減衰係数・下限10・課金バランスは不変）／Blender FBX 書き出し設定を確定（§21追加）：`apply_scale_options='FBX_SCALE_UNITS'` と `bake_anim_simplify_factor=0.0` が既定値と異なる点・書き出し前のアクション検査と書き出し後の検証手順／既知の不具合を棚卸し（Bath の `save.clean` 直接操作・`UpdateDate` 未使用・`OnApplicationPause` 未実装・Care/Bath が v01 参照・ぴよこの Happy クリップ欠落とほおの命名・ぱるの目テクスチャのアルファ・えるのコントラスト不足） |
