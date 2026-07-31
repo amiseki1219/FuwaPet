@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 36dbbb8bc4256481b992ae0eccf43db0
+guid: b08a38c2943f74d03a4728686977a1c0
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -129,10 +129,10 @@ TextureImporter:
       name: ParuNomalEye_right_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 120
-        height: 120
+        x: 37
+        y: 18
+        width: 73
+        height: 84
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
