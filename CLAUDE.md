@@ -1,4 +1,4 @@
-# [CLAUDE.md](http://CLAUDE.md)
+# CLAUDE.md
 
 このファイルは Claude Code がこのプロジェクトで作業する際のガイドです。
 
@@ -27,9 +27,9 @@
 
 | 項目         | URL                                                                                                                                                                      |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 利用規約       | [https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae](https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae)           |
-| プライバシーポリシー | [https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785](https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785) |
-| お問い合わせ     | [https://forms.gle/cw6MdGnq1Kibqbdr7](https://forms.gle/cw6MdGnq1Kibqbdr7)                                                                                               |
+| 利用規約       | https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae           |
+| プライバシーポリシー | https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785 |
+| お問い合わせ     | https://forms.gle/cw6MdGnq1Kibqbdr7                                                                                               |
 
 
 
@@ -42,7 +42,7 @@
 | リージョン      | ap-northeast-1                                                      |
 | IAMユーザー    | yurufu-dev                                                          |
 | Account ID | 491852264509                                                        |
-| 予算アラート     | $10/月（[amisato.n1219@gmail.com](mailto:amisato.n1219@gmail.com) 通知） |
+| 予算アラート     | $10/月（amisato.n1219@gmail.com 通知） |
 
 
 ---
@@ -662,22 +662,22 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 
 #### ステータス・セーブまわり
 
-- `BathWashManager.cs` **が** `save.clean` **を直接書き換えている。** `PetStatus` を経由していないため、インメモリ値と乖離する。`GameContext` は `DontDestroyOnLoad` で生き続けるので、Bath の後に別画面で `SavePetStatus()` が走ると**お風呂で増やした清潔値が上書きで消える可能性がある**。あわせて `OnBath()` の呼び出しも未対応
-- `SaveManager.UpdateDate()` **と** `IsNewDay()` **の呼び出し元がゼロ。** `lastDate` は初回起動でセーブを新規作成したときにしか書かれないため、初回起動日で固定されたままになっている。放置日数の判定に影響する
-- `OnApplicationPause` **/** `OnApplicationFocus` **が未実装。** バックグラウンドから復帰しても `ApplyTimeDecay()` も表情の再評価も走らない。プロセスが生きている間は Main のまま再開するため、数時間空けても画面が止まったままになる
+- **`BathWashManager.cs` が `save.clean` を直接書き換えている。** `PetStatus` を経由していないため、インメモリ値と乖離する。`GameContext` は `DontDestroyOnLoad` で生き続けるので、Bath の後に別画面で `SavePetStatus()` が走ると**お風呂で増やした清潔値が上書きで消える可能性がある**。あわせて `OnBath()` の呼び出しも未対応
+- **`SaveManager.UpdateDate()` と `IsNewDay()` の呼び出し元がゼロ。** `lastDate` は初回起動でセーブを新規作成したときにしか書かれないため、初回起動日で固定されたままになっている。放置日数の判定に影響する
+- **`OnApplicationPause` / `OnApplicationFocus` が未実装。** バックグラウンドから復帰しても `ApplyTimeDecay()` も表情の再評価も走らない。プロセスが生きている間は Main のまま再開するため、数時間空けても画面が止まったままになる
 
 
 
 #### キャラクター表示
 
-- **Care と Bath が** `*_Static.prefab`**（v01モデル）を参照している。** v01 には `Eye_left` / `Eye_right` / `Mouth` が存在しないため表情を結線できない。Main は `*_Animated.prefab`（v02）を参照済み。**Care / Bath の参照を** `*_Animated.prefab` **へ変えるのが早い**（表情コンポーネントをPrefab側に付けておけば3画面すべてで効く）
+- **Care と Bath が `*_Static.prefab`（v01モデル）を参照している。** v01 には `Eye_left` / `Eye_right` / `Mouth` が存在しないため表情を結線できない。Main は `*_Animated.prefab`（v02）を参照済み。**Care / Bath の参照を `*_Animated.prefab` へ変えるのが早い**（表情コンポーネントをPrefab側に付けておけば3画面すべてで効く）
 - v01 モデルは v02 への移植完了後に削除予定
 
 
 
 #### モデル・素材の不具合
 
-- **ぴよこ: ほおが** `Cheek_right.001` **と** `Cheek_right.002` **で、左右とも "right" という名前。** ワールド座標で `.001` が左（X=+0.724）、`.002` が右（X=−0.717）。`Cheek_left` / `Cheek_right` へリネームが必要
+- **ぴよこ: ほおが `Cheek_right.001` と `Cheek_right.002` で、左右とも "right" という名前。** ワールド座標で `.001` が左（X=+0.724）、`.002` が右（X=−0.717）。`Cheek_left` / `Cheek_right` へリネームが必要
 - ぴよこ: `Mouht_upper` は綴り誤り（Mouth → Mouht）。`Mouth_lower_New` も `_New` を外したい
 - ぴよこ: くちばしメッシュが `Beak_Upper` / `Head` の両方にウェイト1.0で乗っており、正規化されて**実効50%**になっている。ボーンを30°回してもくちばしは約15°しか動かない。既存の Happy / Eat のくちばしはこの前提で作られているため、ウェイトを直すと2クリップの打ち直しが必要
 - ここ: `KokoSadEye_left` が120×123、`_right` が120×124 でサイズ不一致。他は120×120
@@ -690,7 +690,7 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 #### くちばし（ぴよこ）
 
 - くちばしの角度は未設定。`Beak_Upper` / `Beak_Lower` はボーン駆動で、**既存4クリップすべてが打鍵済み**（Idle・Walk は閉じたまま、Happy・Eat は開閉あり）。Animator が毎フレーム書き込むため、スクリプトから角度を指定しても上書きされる
-- 対応方針: **Animator に「くちばし専用レイヤー」を追加し、Avatar Mask で** `Beak_Upper` **/** `Beak_Lower` **だけを対象にする**。表情ごとに1フレームのポーズクリップを Override で再生し、Eat / Happy を優先したいときは `SetLayerWeight(layer, 0)` で切る。Generic リグなので Avatar Mask は Transform タブでボーンを個別指定する。Optimize Game Objects が OFF なのでこの方式が機能する
+- 対応方針: **Animator に「くちばし専用レイヤー」を追加し、Avatar Mask で `Beak_Upper` / `Beak_Lower` だけを対象にする**。表情ごとに1フレームのポーズクリップを Override で再生し、Eat / Happy を優先したいときは `SetLayerWeight(layer, 0)` で切る。Generic リグなので Avatar Mask は Transform タブでボーンを個別指定する。Optimize Game Objects が OFF なのでこの方式が機能する
 - ポーズクリップは Unity 側で `.anim` を直接作るのを推奨（FBX再書き出しの罠を避けられる）
 
 ---
@@ -914,8 +914,8 @@ Care画面を開くたびに5パラの現在値から総合性格テキストを
 | -------------------------------------------------- | ----------------------------------- |
 | `FaceController.cs`                                | Poko専用。Main と Care で稼働中。**今回は触らない** |
 | `PokoFaceController.cs` + `FaceExpressionDatabase` | 未使用のまま存置                            |
-| `CharacterFaceController.cs`**（新規）**               | **5キャラ共通。これを正とする**                  |
-| `CharacterBlinkController.cs`**（新規）**              | 5キャラ共通のまばたき                         |
+| **`CharacterFaceController.cs`（新規）**               | **5キャラ共通。これを正とする**                  |
+| **`CharacterBlinkController.cs`（新規）**              | 5キャラ共通のまばたき                         |
 
 
 `PokoBlinkController` は参照型が `FaceController` のため流用できず、新規に `CharacterBlinkController` を作成した。Poko の移行は最後に行う。
@@ -1052,7 +1052,7 @@ Render Queue    : 3000 / ZWrite off
 
 ### 未実装の領域
 
-- `RefreshExpression()` **の呼び出し元が無い。** `Start` で1回評価するだけなので、同じ画面に留まったまま状態が変わっても表情は更新されない。画面遷移時は `LoadScene`（シングル）でシーンが作り直されるため自動的に再評価される
+- **`RefreshExpression()` の呼び出し元が無い。** `Start` で1回評価するだけなので、同じ画面に留まったまま状態が変わっても表情は更新されない。画面遷移時は `LoadScene`（シングル）でシーンが作り直されるため自動的に再評価される
 - Care でお世話した直後に `TriggerCareAction()` を呼ぶ処理（**優先度高**。Care は遷移しないため呼ばないと顔が変わらない）
 - Bath で `Relaxed` を出す処理（Bathには表情を呼ぶコードが1行も無い）
 - Chat で `SetEmotionFromAI()` を呼ぶ処理（会話AI自体が未実装のため待ち）
@@ -1062,7 +1062,7 @@ Render Queue    : 3000 / ZWrite off
 
 ### 動作確認時の注意
 
-`GameContext` **は Home と Care にしか無い。** Main.unity を直接再生すると `PetStatus` が取れず、表情は必ず `Normal` になる。状態判定を確認するときは **Home から再生すること**。`GameContext` は Home の root 直下にあり `DontDestroyOnLoad` が効くので、本番の起動フロー（必ず Home 経由）では正しく持ち越される。
+**`GameContext` は Home と Care にしか無い。** Main.unity を直接再生すると `PetStatus` が取れず、表情は必ず `Normal` になる。状態判定を確認するときは **Home から再生すること**。`GameContext` は Home の root 直下にあり `DontDestroyOnLoad` が効くので、本番の起動フロー（必ず Home 経由）では正しく持ち越される。
 
 ---
 
@@ -1101,7 +1101,7 @@ public string statusLastDecayAt = "";
 ```
 
 - 形式は ISO 8601 ラウンドトリップ（`ToString("o")`）
-- **空文字・パース失敗のときは** `DateTime.Now` **を入れる。** 未記録のセーブを「大昔」と解釈すると、更新した瞬間に全パラメータが下限10まで落ちるため
+- **空文字・パース失敗のときは `DateTime.Now` を入れる。** 未記録のセーブを「大昔」と解釈すると、更新した瞬間に全パラメータが下限10まで落ちるため
 - 既存の `lastBathDate` / `lastPlayDate` は1日の回数制限用で**別物**。混同しないこと
 - 端末時計が巻き戻った場合は経過を0に丸め、パラメータが増えないようにしている
 
@@ -1128,7 +1128,7 @@ public string statusLastDecayAt = "";
 
 ## §21. Blender からの FBX 書き出し設定（2026/7/30 確定）
 
-既存FBXと突き合わせて特定した設定。**v02 の4体は2系統に分かれており、**`apply_scale_options` **と** `mesh_smooth_type` **の2項目だけがキャラごとに違う。** それ以外の引数は4体共通。
+既存FBXと突き合わせて特定した設定。**v02 の4体は2系統に分かれており、`apply_scale_options` と `mesh_smooth_type` の2項目だけがキャラごとに違う。** それ以外の引数は4体共通。
 
 #### 4体共通の引数
 
@@ -1177,8 +1177,8 @@ bpy.ops.export_scene.fbx(
 
 ### 既定値のままにすると起きること
 
-- `apply_scale_options` **を既定（**`FBX_SCALE_NONE`**）にしても、モデルのサイズは変わらない。** Blender は `FBX_SCALE_NONE` のとき ×100 を `UnitScaleFactor` ではなくオブジェクトの `Lcl Scaling` に入れて書き出す（`Piyoko_Character_v02.fbx` / `Koko_Character_v02.fbx` のノードに `Lcl Scaling = 100,100,100` が実在。`Eru_Character_v02.fbx` には無い）。これが Unity 側の File Scale 0.01 と打ち消し合うため、正味は Blender 1単位 = Unity 1単位となり、`'FBX_SCALE_UNITS'` と同じ結果になる
-- `bake_anim_simplify_factor` **を既定（1.0）にするとアニメのキーが間引かれる。** しっぽの物理計算で作った動きは別物になる
+- **`apply_scale_options` を既定（`FBX_SCALE_NONE`）にしても、モデルのサイズは変わらない。** Blender は `FBX_SCALE_NONE` のとき ×100 を `UnitScaleFactor` ではなくオブジェクトの `Lcl Scaling` に入れて書き出す（`Piyoko_Character_v02.fbx` / `Koko_Character_v02.fbx` のノードに `Lcl Scaling = 100,100,100` が実在。`Eru_Character_v02.fbx` には無い）。これが Unity 側の File Scale 0.01 と打ち消し合うため、正味は Blender 1単位 = Unity 1単位となり、`'FBX_SCALE_UNITS'` と同じ結果になる
+- **`bake_anim_simplify_factor` を既定（1.0）にするとアニメのキーが間引かれる。** しっぽの物理計算で作った動きは別物になる
 
 
 
@@ -1467,6 +1467,6 @@ A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討し
 | 2026/7/3  | タスク4「Main/Care UI崩れ調整」＋土台修正をドキュメント反映：信頼度Lv計算を `TrustFormula.cs` に集約（PCHIP単調補間・Lv100カンスト表示・旧しきい値廃止／§6）・キャラアイコンをCharacterIcon方式に変更（`Resources.Load`・`CharIcon_{id}01`・Sprite Mode=Single）＋Mainコンディションはテキストのみ化（アイコン画像/気分ゲージ廃止／§13・§15）・HOME画面を起動振り分け専用のシンプル構成に更新（誕生日演出/キャラ別背景/出会って◯日/時間帯背景を廃止・共通背景Scene直配置・HomeManager簡素化／§12関連ファイル）・MainボタンにRoomEdit(もようがえ)/SNS(ひろば)/Gacha遷移を追加しRanking廃止・下部ナビ7つに更新（§13）・命名方針（Pet系→Character系へ段階移行）＋起動/DDOL/GameContext技術メモを追記（Manager root直下配置・GameContext guid注意・Script Execution Order SaveManager-200→GameContext-100）                                                                                                       |
 | 2026/7/5  | v1.0スコープ変更を反映：SNS（ひろば）を「画面枠のみ・v1.1検討」→ v1.0で自由投稿を実装（モデレーション/通報/ブロック込み・§13）／フレンド機能を新規追加（v1.0＝申請・承認・一覧の「繋がる」まで、DM・訪問等はv1.1）／会話AIのOpenAIモデル確認日を7/23→7/28に更新（§16）。※タスク番号13〜21の追加・タスク1見積り(7日)・8/25作戦会議=バックエンド実装起点はスケジュール表で管理。                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | 2026/7/30 | キャラクター表情システムを実装（§19追加）：表情9種を確定・`CharacterFaceController` / `CharacterBlinkController` を新規追加し Poko の既存実装と併存させる段階移行方針・キャラ別の目/口割り当て・顔テクスチャの命名と配置・顔パーツのマテリアルは Transparent 必須という知見／requirements.md §5「表情連動」を9種の表情・AIラベル対応・合わせ技の判定条件・ほおのキャラ単位固定として具体化／ステータス時間経過を修正（§20追加）：最終お世話時刻を SaveData へ永続化・減衰の会計用に `LastDecayAt` を分離して二重適用を解消・未記録セーブは「今」扱い（減衰係数・下限10・課金バランスは不変）／Blender FBX 書き出し設定を確定（§21追加）：`apply_scale_options='FBX_SCALE_UNITS'` と `bake_anim_simplify_factor=0.0` が既定値と異なる点・書き出し前のアクション検査と書き出し後の検証手順／既知の不具合を棚卸し（Bath の `save.clean` 直接操作・`UpdateDate` 未使用・`OnApplicationPause` 未実装・Care/Bath が v01 参照・ぴよこの Happy クリップ欠落とほおの命名・ぱるの目テクスチャのアルファ・えるのコントラスト不足） |
-| 2026/7/31 | 実測に基づき [CLAUDE.md](http://CLAUDE.md) の記述を訂正：§21のFBX書き出し設定をキャラ別の実測値に整理（える/ぱる=FBX_SCALE_UNITS+FACE、ここ/ぴよこ=FBX_SCALE_NONE+OFF。どちらもサイズは同じになる理由をLcl Scalingで説明）・「FBX_SCALE_NONEだと100分の1で入る」は誤りのため削除・「ぴよこのHappyクリップがFBXに無い」は誤診だったため2箇所とも削除・ほおテクスチャのファイル名を Cheek_Pink.png / Mat_Cheek.mat に更新・ぱるの目テクスチャのアルファ不具合は解消済みのため削除                                                                                                                                                                                                                                                                                                                                             |
+| 2026/7/31 | 実測に基づき CLAUDE.md の記述を訂正：§21のFBX書き出し設定をキャラ別の実測値に整理（える/ぱる=FBX_SCALE_UNITS+FACE、ここ/ぴよこ=FBX_SCALE_NONE+OFF。どちらもサイズは同じになる理由をLcl Scalingで説明）・「FBX_SCALE_NONEだと100分の1で入る」は誤りのため削除・「ぴよこのHappyクリップがFBXに無い」は誤診だったため2箇所とも削除・ほおテクスチャのファイル名を Cheek_Pink.png / Mat_Cheek.mat に更新・ぱるの目テクスチャのアルファ不具合は解消済みのため削除                                                                                                                                                                                                                                                                                                                                             |
 
 
