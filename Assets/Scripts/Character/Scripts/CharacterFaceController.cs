@@ -67,6 +67,24 @@ public class CharacterFaceController : MonoBehaviour
         _baseMapId = Shader.PropertyToID(prop);
     }
 
+    // 4体の *_Animated.prefab に付いているため複数が同時に購読しうるが、
+    // 各インスタンスが自分の顔を更新するだけなので問題ない。
+    private void OnEnable()
+    {
+        GameContext.OnAppResumed += OnAppResumed;
+    }
+
+    private void OnDisable()
+    {
+        GameContext.OnAppResumed -= OnAppResumed;
+    }
+
+    // 復帰時。減衰と保存は GameContext が済ませているので、表情の再評価だけ。
+    private void OnAppResumed()
+    {
+        RefreshExpression();
+    }
+
     private void Start()
     {
         _status = GameContext.Instance?.PetStatus;

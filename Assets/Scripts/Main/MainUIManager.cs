@@ -50,11 +50,21 @@ public class MainUIManager : MonoBehaviour
     private void OnEnable()
     {
         GameData.OnWalletChanged += SetWallet;
+        GameContext.OnAppResumed += OnAppResumed;
     }
 
     private void OnDisable()
     {
         GameData.OnWalletChanged -= SetWallet;
+        GameContext.OnAppResumed -= OnAppResumed;
+    }
+
+    // 復帰時。減衰と保存は GameContext が済ませているので、Main は表示のやり直しと
+    // 日付が変わっていた場合のデイリークエストのリセットだけを行う。
+    private void OnAppResumed()
+    {
+        RefreshAll();
+        QuestManager.Instance?.CheckDailyReset();
     }
 
     private void Start()
