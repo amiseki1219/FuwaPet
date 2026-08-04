@@ -114,6 +114,7 @@ public class CareSceneManager : MonoBehaviour
         {
             BathWashManager.BathJustCompleted = false;
             ShowNotice("お風呂完了！清潔 +40 ✨");
+            ShowCleanPopup("+40");
             PlayBathCompleteEffect();
         }
     }
@@ -405,6 +406,7 @@ public class CareSceneManager : MonoBehaviour
         oyatuManager?.ShowPanel();
     }
 
+    public void ShowCleanPopup(string text)  => cleanPopup?.Show(text);
     public void ShowHungerPopup(string text) => hungerPopup?.Show(text);
     public void ShowEnergyPopup(string text) => energyPopup?.Show(text);
 
