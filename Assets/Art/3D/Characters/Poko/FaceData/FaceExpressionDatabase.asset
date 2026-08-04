@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228eaad1910d94587abc7fd79d3d315d, type: 3}
+  m_Name: FaceExpressionDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::FaceExpressionDatabase
+  expressions:
+  - expressionKey: Normal
+    leftEyeTexture: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouthTexture: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    showCheek: 0
+  - expressionKey: Fun
+    leftEyeTexture: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouthTexture: {fileID: 2800000, guid: f402c344ff2584ee5bfc52299c2c3ba5, type: 3}
+    showCheek: 0
+  - expressionKey: SlightHappy
+    leftEyeTexture: {fileID: 2800000, guid: bb130bf5bf89d4ecca703ffab5683db5, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 5f5d2422329944f6aa0ffd3d5f118b17, type: 3}
+    mouthTexture: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    showCheek: 0
+  - expressionKey: Happy
+    leftEyeTexture: {fileID: 2800000, guid: bb130bf5bf89d4ecca703ffab5683db5, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 5f5d2422329944f6aa0ffd3d5f118b17, type: 3}
+    mouthTexture: {fileID: 2800000, guid: f402c344ff2584ee5bfc52299c2c3ba5, type: 3}
+    showCheek: 1
+  - expressionKey: Sad
+    leftEyeTexture: {fileID: 2800000, guid: 7115feeb89b774be086fe752193edf14, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: b0270a4bc019b4e00b7e5cf9d15bd173, type: 3}
+    mouthTexture: {fileID: 2800000, guid: c8137413bfc8e471288cfcd0b04172ef, type: 3}
+    showCheek: 1
+  - expressionKey: Angry
+    leftEyeTexture: {fileID: 2800000, guid: 2d5e23733ea2646d3bc09a5be63474a0, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 87f5c16c4791946efb6266d8722e4067, type: 3}
+    mouthTexture: {fileID: 2800000, guid: 3dd5adca086e54006a7d08030f543a42, type: 3}
+    showCheek: 0
+  - expressionKey: Surprised
+    leftEyeTexture: {fileID: 2800000, guid: 099c278917ca1450a9b7c327d94c928b, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 62fafba08e9d349b5ae09199a8a55bf7, type: 3}
+    mouthTexture: {fileID: 2800000, guid: dcae421007e114e29a38d4a651a9cd4a, type: 3}
+    showCheek: 0
+  - expressionKey: Relaxed
+    leftEyeTexture: {fileID: 2800000, guid: 6515aeb4a02b64637a44310976227cb3, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: f6795362fbd1a4d229f84a22eb75d4f5, type: 3}
+    mouthTexture: {fileID: 2800000, guid: c18f03e02a82e41ccaf2b8eb9ec8e55e, type: 3}
+    showCheek: 1

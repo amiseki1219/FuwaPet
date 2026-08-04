@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228eaad1910d94587abc7fd79d3d315d, type: 3}
+  m_Name: PiyokoFaceExpressionDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::FaceExpressionDatabase
+  expressions:
+  - expressionKey: Normal
+    leftEyeTexture: {fileID: 2800000, guid: 6e071322d2e8143c1b149014ffcbaa1a, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 79b839122b963409f9653b3edf35f966, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Happy
+    leftEyeTexture: {fileID: 2800000, guid: 517e9c185195147d5ab15ba2dbbaf103, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 4b27c4e4fc6b5469fbe288bd0ba50fd5, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Sad
+    leftEyeTexture: {fileID: 2800000, guid: 402656ca6a3074a91a90cfdd2dbeb09d, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: b6a096b101f4d4fcaa179c7098aa1cb0, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Angry
+    leftEyeTexture: {fileID: 2800000, guid: bdf78ea37836343d893787e80a228c2b, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: a398472828b894b08a7e9e03840e6c9d, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Shy
+    leftEyeTexture: {fileID: 2800000, guid: 6eeccea6b3b70437a9942e292447cab2, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 3cdf68de458864ac797047ccb4451eaa, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Fun
+    leftEyeTexture: {fileID: 2800000, guid: 517e9c185195147d5ab15ba2dbbaf103, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 4b27c4e4fc6b5469fbe288bd0ba50fd5, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Surprised
+    leftEyeTexture: {fileID: 2800000, guid: 6e071322d2e8143c1b149014ffcbaa1a, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 79b839122b963409f9653b3edf35f966, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Close
+    leftEyeTexture: {fileID: 2800000, guid: 6eeccea6b3b70437a9942e292447cab2, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 3cdf68de458864ac797047ccb4451eaa, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
+  - expressionKey: Relaxed
+    leftEyeTexture: {fileID: 2800000, guid: 6eeccea6b3b70437a9942e292447cab2, type: 3}
+    rightEyeTexture: {fileID: 2800000, guid: 3cdf68de458864ac797047ccb4451eaa, type: 3}
+    mouthTexture: {fileID: 0}
+    showCheek: 0
