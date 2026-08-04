@@ -408,15 +408,14 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 save.personalityDiligence = Mathf.Clamp(save.personalityDiligence + 2, -100, 100);
                 break;
             case "rainbow":
-                int idx   = Random.Range(0, 5);
-                int delta = Random.value > 0.5f ? 2 : -2;
+                int idx = Random.Range(0, 5);
                 switch (idx)
                 {
-                    case 0: save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + delta, -100, 100); break;
-                    case 1: save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + delta, -100, 100); break;
-                    case 2: save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + delta, -100, 100); break;
-                    case 3: save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + delta, -100, 100); break;
-                    case 4: save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + delta, -100, 100); break;
+                    case 0: save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + 1, -100, 100); break;
+                    case 1: save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + 1, -100, 100); break;
+                    case 2: save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + 1, -100, 100); break;
+                    case 3: save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + 1, -100, 100); break;
+                    case 4: save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + 1, -100, 100); break;
                 }
                 break;
         }
