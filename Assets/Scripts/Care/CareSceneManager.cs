@@ -394,7 +394,7 @@ public class CareSceneManager : MonoBehaviour
     {
         ResetDailyCountIfNeeded();
         if (_save.playCountToday >= MaxPlayPerDay) { ShowNotice($"今日のあそぶは{MaxPlayPerDay}回までだよ！"); return; }
-        if (!GameData.Instance.UseCoin(20)) { ShowNotice("コインが足りないよ…！"); return; }
+        if (!GameData.Instance.UseCoin(10)) { ShowNotice("コインが足りないよ…！"); return; }
         _save.playCountToday++;
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
