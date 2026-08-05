@@ -24,6 +24,22 @@ namespace Game.Core
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            InitPetStatus();
+        }
+
+        /// <summary>
+        /// PetStatus を作り直して、いまの SaveData から読み直す。
+        /// アカウント削除のように SaveManager.Data が新品に差し替わったあと、
+        /// DontDestroyOnLoad で生き残っている PetStatus が古い値を持ち続けるのを防ぐ。
+        /// ここでは保存しない。DeleteData 直後はセーブファイルが無い状態を保つのが正しいため。
+        /// </summary>
+        public void ReloadFromSave()
+        {
+            InitPetStatus();
+        }
+
+        private void InitPetStatus()
+        {
             PetStatus = new PetStatus();
 
             // SaveManager.Awake()より後に実行されるよう Script Execution Order で保証すること

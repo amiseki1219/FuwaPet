@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Game.Core;
 
 public class SettingManager : MonoBehaviour
 {
@@ -561,6 +562,11 @@ public class SettingManager : MonoBehaviour
         if (settingPanel != null) settingPanel.SetActive(false);
 
         if (SaveManager.Instance != null) SaveManager.Instance.DeleteData();
+
+        // DeleteData() が Data を新品にした後に読み直す必要があるため、順序を入れ替えないこと。
+        // GameContext は DontDestroyOnLoad で生き残るので、作り直さないと
+        // 次の SavePetStatus() で古い値が新しい SaveData に書き戻される。
+        if (GameContext.Instance != null) GameContext.Instance.ReloadFromSave();
 
         SceneLoader.LoadHome();
     }
