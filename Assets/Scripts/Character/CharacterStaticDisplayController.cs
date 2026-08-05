@@ -5,6 +5,10 @@ public class CharacterStaticDisplayController : MonoBehaviour
 {
     private const string PokoId = "poko";
 
+    // キャラ専用キーライト（PokoKeyLight）の Culling Mask がこのレイヤーのみを対象にしている。
+    // 生成キャラをここに入れないと部屋のライトだけで照らされる。
+    private const string CharacterLayerName = "Character";
+
     [Header("既存Poko表示")]
     [SerializeField] private GameObject legacyPokoDisplayRoot;
 
@@ -57,6 +61,8 @@ public class CharacterStaticDisplayController : MonoBehaviour
                 : (animationController != null ? animationController.DisplayScale : 1f);
             spawnedCharacter.transform.localScale = Vector3.one * displayScale;
 
+            ApplyCharacterLayer(spawnedCharacter);
+
             if (petoWalk != null)
             {
                 if (animationController == null)
@@ -91,6 +97,35 @@ public class CharacterStaticDisplayController : MonoBehaviour
 
             Debug.LogWarning($"[CharacterDisplay] characterId={characterId} の生成に失敗しました。pokoへフォールバックします。理由: {exception.Message}");
             ShowLegacyPoko("Static Prefabの生成失敗");
+        }
+    }
+
+    /// <summary>
+    /// 生成したキャラとその全子孫を "Character" レイヤーへ移す。
+    /// Prefabは入れ子構造で子のレイヤーは実行時に展開されるため、ルートだけでは足りず再帰で設定する。
+    /// レイヤーが存在しない環境ではキャラを消さないよう、警告だけ出してレイヤー設定をスキップする。
+    /// </summary>
+    private void ApplyCharacterLayer(GameObject target)
+    {
+        if (target == null) return;
+
+        int characterLayer = LayerMask.NameToLayer(CharacterLayerName);
+        if (characterLayer < 0)
+        {
+            Debug.LogWarning($"[CharacterDisplay] レイヤー '{CharacterLayerName}' が存在しないためレイヤー設定をスキップします。キャラ専用ライトが当たらない可能性があります");
+            return;
+        }
+
+        SetLayerRecursively(target.transform, characterLayer);
+    }
+
+    private static void SetLayerRecursively(Transform target, int layer)
+    {
+        target.gameObject.layer = layer;
+
+        for (int i = 0; i < target.childCount; i++)
+        {
+            SetLayerRecursively(target.GetChild(i), layer);
         }
     }
 
