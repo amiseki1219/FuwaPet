@@ -50,7 +50,8 @@ MonoBehaviour:
   animator: {fileID: 5283628966393681282}
   walkingParameterName: IsWalking
   facingYOffset: 0
-  moveSpeed: 0.093
+  moveSpeed: 0.2
+  displayScale: 1
 --- !u!114 &-1500732013498181449
 MonoBehaviour:
   m_ObjectHideFlags: 0

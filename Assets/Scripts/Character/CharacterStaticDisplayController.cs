@@ -16,6 +16,12 @@ public class CharacterStaticDisplayController : MonoBehaviour
     [SerializeField] private GameObject paruStaticPrefab;
     [SerializeField] private GameObject piyokoStaticPrefab;
 
+    [Header("シーン内でのキャラ別スケール上書き（0以下ならPrefabのDisplay Scaleを使う）")]
+    [SerializeField] private float eruScaleOverride = 0f;
+    [SerializeField] private float kokoScaleOverride = 0f;
+    [SerializeField] private float paruScaleOverride = 0f;
+    [SerializeField] private float piyokoScaleOverride = 0f;
+
     private GameObject spawnedCharacter;
 
     private void Awake()
@@ -40,12 +46,19 @@ public class CharacterStaticDisplayController : MonoBehaviour
             spawnedCharacter = Instantiate(staticPrefab, characterDisplayAnchor, false);
             spawnedCharacter.transform.localPosition = Vector3.zero;
             spawnedCharacter.transform.localRotation = Quaternion.identity;
-            spawnedCharacter.transform.localScale = Vector3.one;
+
+            // Care / Bath では petoWalk が未設定のため、取得は petoWalk の有無に依存させない
+            CharacterAnimationController animationController =
+                spawnedCharacter.GetComponent<CharacterAnimationController>();
+            float scaleOverride = GetScaleOverride(characterId);
+            bool usesOverride = scaleOverride > 0f;
+            float displayScale = usesOverride
+                ? scaleOverride
+                : (animationController != null ? animationController.DisplayScale : 1f);
+            spawnedCharacter.transform.localScale = Vector3.one * displayScale;
 
             if (petoWalk != null)
             {
-                CharacterAnimationController animationController =
-                    spawnedCharacter.GetComponent<CharacterAnimationController>();
                 if (animationController == null)
                 {
                     FailRuntimeCharacterRegistration(
@@ -66,7 +79,7 @@ public class CharacterStaticDisplayController : MonoBehaviour
             }
 
             legacyPokoDisplayRoot.SetActive(false);
-            Debug.Log($"<color=#00E5FF>[決定]</color> [CharacterDisplay] characterId={characterId} Static Prefabを表示しました");
+            Debug.Log($"<color=#00E5FF>[決定]</color> [CharacterDisplay] characterId={characterId} Static Prefabを表示しました scale={displayScale}({(usesOverride ? "override" : "prefab")})");
         }
         catch (Exception exception)
         {
@@ -143,6 +156,23 @@ public class CharacterStaticDisplayController : MonoBehaviour
                 return piyokoStaticPrefab;
             default:
                 return null;
+        }
+    }
+
+    private float GetScaleOverride(string characterId)
+    {
+        switch (characterId)
+        {
+            case "eru":
+                return eruScaleOverride;
+            case "koko":
+                return kokoScaleOverride;
+            case "paru":
+                return paruScaleOverride;
+            case "piyoko":
+                return piyokoScaleOverride;
+            default:
+                return 0f;
         }
     }
 

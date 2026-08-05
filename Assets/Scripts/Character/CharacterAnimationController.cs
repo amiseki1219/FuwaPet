@@ -6,6 +6,7 @@ public class CharacterAnimationController : MonoBehaviour
     [SerializeField] private string walkingParameterName = "IsWalking";
     [SerializeField] private float facingYOffset;
     [SerializeField] private float moveSpeed = 0f; // 0以下は未設定（PetoWalk 側の値にフォールバック）
+    [SerializeField] private float displayScale = 1f; // 0以下は未設定（等倍にフォールバック）
 
     private Animator _validatedAnimator;
     private string _validatedParameterName;
@@ -14,6 +15,7 @@ public class CharacterAnimationController : MonoBehaviour
 
     public float FacingYOffset => facingYOffset;
     public float MoveSpeed => moveSpeed;
+    public float DisplayScale => displayScale > 0f ? displayScale : 1f;
 
     public void SetWalking(bool isWalking)
     {

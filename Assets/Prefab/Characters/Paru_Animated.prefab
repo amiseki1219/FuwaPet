@@ -51,6 +51,7 @@ MonoBehaviour:
   walkingParameterName: IsWalking
   facingYOffset: 0
   moveSpeed: 0.124
+  displayScale: 0.9
 --- !u!114 &7693436966532713319
 MonoBehaviour:
   m_ObjectHideFlags: 0

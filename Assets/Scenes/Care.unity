@@ -2732,6 +2732,10 @@ MonoBehaviour:
   kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
   paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
   piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
+  eruScaleOverride: 0.85
+  kokoScaleOverride: 0
+  paruScaleOverride: 0.85
+  piyokoScaleOverride: 0.7
 --- !u!4 &229219112
 Transform:
   m_ObjectHideFlags: 0
