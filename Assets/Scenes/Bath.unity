@@ -6749,10 +6749,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStaticDisplayController
   legacyPokoDisplayRoot: {fileID: 2080217972}
   characterDisplayAnchor: {fileID: 308808369}
-  eruStaticPrefab: {fileID: 8291071476266270237, guid: ff92daaf964554b77ae573eeaa01b928, type: 3}
-  kokoStaticPrefab: {fileID: 4623386401894055609, guid: 8ef7a2d059f344a91a26309cff7b97e2, type: 3}
-  paruStaticPrefab: {fileID: 5124735812672317952, guid: 8ed6c2a740c6445519ff04ffd8e5134c, type: 3}
-  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: 43190a534bf0a4e93b217e1f27726a33, type: 3}
+  petoWalk: {fileID: 0}
+  eruStaticPrefab: {fileID: 8305201213943918563, guid: 62436a087834c4872ba036ba18ebc685, type: 3}
+  kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
+  paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
+  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
 --- !u!4 &280267389
 Transform:
   m_ObjectHideFlags: 0
@@ -11131,6 +11132,10 @@ MonoBehaviour:
     playCountToday: 0
     lastPlayDate: 
     lastSleepTicks: 0
+    statusLastFedAt: 
+    statusLastBathAt: 
+    statusLastPlayAt: 
+    statusLastDecayAt: 
     lastNameChangeDate: 
     lastCharNameChangeDate: 
     lastBirthdayChangeDate: 

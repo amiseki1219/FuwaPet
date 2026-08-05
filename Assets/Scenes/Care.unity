@@ -2727,10 +2727,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStaticDisplayController
   legacyPokoDisplayRoot: {fileID: 1796477167}
   characterDisplayAnchor: {fileID: 1964486326}
-  eruStaticPrefab: {fileID: 8291071476266270237, guid: ff92daaf964554b77ae573eeaa01b928, type: 3}
-  kokoStaticPrefab: {fileID: 4623386401894055609, guid: 8ef7a2d059f344a91a26309cff7b97e2, type: 3}
-  paruStaticPrefab: {fileID: 5124735812672317952, guid: 8ed6c2a740c6445519ff04ffd8e5134c, type: 3}
-  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: 43190a534bf0a4e93b217e1f27726a33, type: 3}
+  petoWalk: {fileID: 0}
+  eruStaticPrefab: {fileID: 8305201213943918563, guid: 62436a087834c4872ba036ba18ebc685, type: 3}
+  kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
+  paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
+  piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
+  eruScaleOverride: 0.85
+  kokoScaleOverride: 0
+  paruScaleOverride: 0.85
+  piyokoScaleOverride: 0.7
 --- !u!4 &229219112
 Transform:
   m_ObjectHideFlags: 0
@@ -15577,6 +15582,10 @@ MonoBehaviour:
     playCountToday: 0
     lastPlayDate: 
     lastSleepTicks: 0
+    statusLastFedAt: 
+    statusLastBathAt: 
+    statusLastPlayAt: 
+    statusLastDecayAt: 
     lastNameChangeDate: 
     lastCharNameChangeDate: 
     lastBirthdayChangeDate: 
@@ -16721,13 +16730,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1964486325}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9745351, z: -0, w: 0.22423503}
-  m_LocalPosition: {x: -0.35, y: 0.040000036, z: -0.00288105}
+  m_LocalRotation: {x: 0, y: 0.2242367, z: 0, w: -0.9745347}
+  m_LocalPosition: {x: -0.52, y: 0.15, z: 2.5371}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 154.084, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 334.084, z: 0}
 --- !u!1 &1968563122
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1160235528304355475}
   - component: {fileID: 4322106645723824051}
+  - component: {fileID: 3939212070900141120}
+  - component: {fileID: 6189027120923630775}
   m_Layer: 0
   m_Name: Eru_Animated
   m_TagString: Untagged
@@ -49,6 +51,52 @@ MonoBehaviour:
   walkingParameterName: IsWalking
   facingYOffset: 0
   moveSpeed: 0.124
+  displayScale: 0.9
+--- !u!114 &3939212070900141120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8305201213943918563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b872faf338a9c4b37a9337b60aecdecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterFaceController
+  eyeLRenderer: {fileID: 3912074378225450550}
+  eyeRRenderer: {fileID: 7880382201181919819}
+  mouthRenderer: {fileID: 4707870595211181179}
+  cheekL: {fileID: 0}
+  cheekR: {fileID: 0}
+  cheekAlwaysVisible: 0
+  database: {fileID: 11400000, guid: b86aa8580a45e4620a35dcbffb66e83e, type: 2}
+  defaultExpressionKey: Normal
+  baseMapPropertyName: _BaseMap
+  tempDuration: 2.5
+--- !u!114 &6189027120923630775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8305201213943918563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8788670511dcf44dc9069f0e231dc8a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterBlinkController
+  faceController: {fileID: 3939212070900141120}
+  closeEyeL: {fileID: 2800000, guid: b41ae12b56afd47ec96ee10d22abfd31, type: 3}
+  closeEyeR: {fileID: 2800000, guid: 6b628f7ac95c745398bdb9bc322add6c, type: 3}
+  minBlinkInterval: 3
+  maxBlinkInterval: 6
+  blinkDuration: 0.12
+  enableBlink: 1
+  skipBlinkExpressionKeys:
+  - Shy
+  - Close
+  - Relaxed
 --- !u!1001 &5347151512755726510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -109,6 +157,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8403344563188607787, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8403344563188607787, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3bff3aa46a7134ba484fb4ee6e43ae18, type: 2}
+    - target: {fileID: -6383755558842977563, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6383755558842977563, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3bff3aa46a7134ba484fb4ee6e43ae18, type: 2}
     - target: {fileID: 919132149155446097, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
       propertyPath: m_Name
       value: Eru_Character_v02
@@ -117,6 +181,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 51f3199715d314a2fb58ad0600be18e6, type: 2}
+    - target: {fileID: 8970782415697450648, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970782415697450648, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3bff3aa46a7134ba484fb4ee6e43ae18, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -127,8 +199,23 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
   m_PrefabInstance: {fileID: 5347151512755726510}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &3912074378225450550 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8970782415697450648, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+  m_PrefabInstance: {fileID: 5347151512755726510}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &4707870595211181179 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -8403344563188607787, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+  m_PrefabInstance: {fileID: 5347151512755726510}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5602016713118977861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
+  m_PrefabInstance: {fileID: 5347151512755726510}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7880382201181919819 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6383755558842977563, guid: 4e87822b8b9004c55b772f63b466a60c, type: 3}
   m_PrefabInstance: {fileID: 5347151512755726510}
   m_PrefabAsset: {fileID: 0}

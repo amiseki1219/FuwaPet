@@ -218,6 +218,9 @@ public class OyatuManager : MonoBehaviour
             if (_selectedOyatu.energyAmount != 0) status.AddEnergy(_selectedOyatu.energyAmount);
         }
 
+        // 最後にごはんをあげた時刻を更新（放置日数の判定用）
+        status.OnFed();
+
         // 信頼度加算
         if (_selectedOyatu.trustAmount > 0)
             status.AddTrust(_selectedOyatu.trustAmount);

@@ -362,7 +362,21 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         var save = SaveManager.Instance?.Data;
         if (save == null) return;
 
-        save.clean = Mathf.Clamp(save.clean + 40f, 0f, 100f);
+        // 清潔値は PetStatus（GameContext が DontDestroyOnLoad で保持）を正とする。
+        // SaveData を直接書き換えるとメモリ上の値とずれ、後続の SavePetStatus() で上書きされて消える。
+        var ctx = Game.Core.GameContext.Instance;
+
+        if (ctx != null)
+        {
+            ctx.PetStatus.AddClean(40f);
+            ctx.PetStatus.OnBath();   // 最終入浴時刻（表情の放置日数判定が参照）
+        }
+        else
+        {
+            // Bath.unity には GameContext が無いため、単独再生時のみここに来る。
+            Debug.LogWarning("[OnComplete] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
+            save.clean = Mathf.Clamp(save.clean + 40f, 0f, 100f);
+        }
 
         ResetBathCountIfNewDay(save);
         save.bathCountToday++;
@@ -370,8 +384,13 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         ApplyPersonality(save);
 
-        Debug.Log($"[OnComplete] clean={save.clean} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
-        SaveManager.Instance.Save();
+        float cleanForLog = ctx != null ? ctx.PetStatus.Clean : save.clean;
+        Debug.Log($"[OnComplete] clean={cleanForLog} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
+
+        // 保存は1回だけ。SavePetStatus() が SaveToSave() → SaveManager.Save() まで行う。
+        if (ctx != null) ctx.SavePetStatus();
+        else             SaveManager.Instance.Save();
+
         BathJustCompleted = true;
         SceneManager.LoadScene("Care");
     }
@@ -389,15 +408,14 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 save.personalityDiligence = Mathf.Clamp(save.personalityDiligence + 2, -100, 100);
                 break;
             case "rainbow":
-                int idx   = Random.Range(0, 5);
-                int delta = Random.value > 0.5f ? 2 : -2;
+                int idx = Random.Range(0, 5);
                 switch (idx)
                 {
-                    case 0: save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + delta, -100, 100); break;
-                    case 1: save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + delta, -100, 100); break;
-                    case 2: save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + delta, -100, 100); break;
-                    case 3: save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + delta, -100, 100); break;
-                    case 4: save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + delta, -100, 100); break;
+                    case 0: save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + 1, -100, 100); break;
+                    case 1: save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + 1, -100, 100); break;
+                    case 2: save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + 1, -100, 100); break;
+                    case 3: save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + 1, -100, 100); break;
+                    case 4: save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + 1, -100, 100); break;
                 }
                 break;
         }

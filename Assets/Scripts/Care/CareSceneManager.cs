@@ -71,6 +71,22 @@ public class CareSceneManager : MonoBehaviour
     private Coroutine _typewriterCoroutine;
     private float _originalNoticeX;
 
+    private void OnEnable()
+    {
+        GameContext.OnAppResumed += OnAppResumed;
+    }
+
+    private void OnDisable()
+    {
+        GameContext.OnAppResumed -= OnAppResumed;
+    }
+
+    // 復帰時。減衰と保存は GameContext が済ませているので、Care は表示のやり直しだけ。
+    private void OnAppResumed()
+    {
+        RefreshAll();
+    }
+
     private void Start()
     {
         if (GameContext.Instance != null)
@@ -96,7 +112,8 @@ public class CareSceneManager : MonoBehaviour
             _save.petName = "テスト";
         }
 
-        // ApplyTimeDecay は MainUIManager.Start() で適用済みのため Care では呼ばない
+        // ApplyTimeDecay は起動時は MainUIManager.Start()、復帰時は GameContext が適用するため
+        // Care では呼ばない
         LoadCharacterInfo();
 
         if (noticePanelRect != null)
@@ -114,6 +131,7 @@ public class CareSceneManager : MonoBehaviour
         {
             BathWashManager.BathJustCompleted = false;
             ShowNotice("お風呂完了！清潔 +40 ✨");
+            ShowCleanPopup("+40");
             PlayBathCompleteEffect();
         }
     }
@@ -380,6 +398,7 @@ public class CareSceneManager : MonoBehaviour
         _save.playCountToday++;
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
+        _status.OnPlayed();
         _status.AddTrust(3);
         GameContext.Instance?.SavePetStatus();
         energyPopup?.Show("+30");
@@ -404,6 +423,7 @@ public class CareSceneManager : MonoBehaviour
         oyatuManager?.ShowPanel();
     }
 
+    public void ShowCleanPopup(string text)  => cleanPopup?.Show(text);
     public void ShowHungerPopup(string text) => hungerPopup?.Show(text);
     public void ShowEnergyPopup(string text) => energyPopup?.Show(text);
 

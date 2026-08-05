@@ -98,7 +98,15 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
-*.asset
+
+# フォントの SDF アセットは大きく、Assets/Fonts/README.md の手順で再生成できる
+/[Aa]ssets/Fonts/**/*SDF.asset
+
+# TextMesh Pro パッケージ付属のサンプル（パッケージから再インポートできる）
+/[Aa]ssets/TextMesh Pro/Examples & Extras/**/*.asset
+
+# Claude Code のローカル設定
+.claude/
 
 # IDE
 .vs/
