@@ -11,6 +11,8 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public static bool BathJustCompleted = false;
+    /// <summary>直前のお風呂で回復した清潔値。Care 画面の完了表示が参照する。</summary>
+    public static float BathJustCleanAmount = 0f;
     private class ShampooData
     {
         public string id;
@@ -395,6 +397,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         else             SaveManager.Instance.Save();
 
         BathJustCompleted = true;
+        BathJustCleanAmount = cleanAmount;
         SceneManager.LoadScene("Care");
     }
 

@@ -131,8 +131,9 @@ public class CareSceneManager : MonoBehaviour
         if (BathWashManager.BathJustCompleted)
         {
             BathWashManager.BathJustCompleted = false;
-            ShowNotice("お風呂完了！清潔 +40 ✨");
-            ShowCleanPopup("+40");
+            int cleanAmount = Mathf.RoundToInt(BathWashManager.BathJustCleanAmount);
+            ShowNotice($"お風呂完了！清潔 +{cleanAmount}");
+            ShowCleanPopup($"+{cleanAmount}");
             PlayBathCompleteEffect();
         }
     }
