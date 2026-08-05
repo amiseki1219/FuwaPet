@@ -366,16 +366,19 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         // SaveData を直接書き換えるとメモリ上の値とずれ、後続の SavePetStatus() で上書きされて消える。
         var ctx = Game.Core.GameContext.Instance;
 
+        // 2つの経路で同じ値を使うため、回復量は1回だけ求めて使い回す。
+        float cleanAmount = GetCleanAmount();
+
         if (ctx != null)
         {
-            ctx.PetStatus.AddClean(40f);
+            ctx.PetStatus.AddClean(cleanAmount);
             ctx.PetStatus.OnBath();   // 最終入浴時刻（表情の放置日数判定が参照）
         }
         else
         {
             // Bath.unity には GameContext が無いため、単独再生時のみここに来る。
             Debug.LogWarning("[OnComplete] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
-            save.clean = Mathf.Clamp(save.clean + 40f, 0f, 100f);
+            save.clean = Mathf.Clamp(save.clean + cleanAmount, 0f, 100f);
         }
 
         ResetBathCountIfNewDay(save);
@@ -385,7 +388,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         ApplyPersonality(save);
 
         float cleanForLog = ctx != null ? ctx.PetStatus.Clean : save.clean;
-        Debug.Log($"[OnComplete] clean={cleanForLog} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
+        Debug.Log($"[OnComplete] clean={cleanForLog} cleanAmount={cleanAmount} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
 
         // 保存は1回だけ。SavePetStatus() が SaveToSave() → SaveManager.Save() まで行う。
         if (ctx != null) ctx.SavePetStatus();
@@ -396,6 +399,20 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     }
 
     // ── プライベートヘルパー ──────────────────────────────────────────────────
+
+    // シャンプー別の清潔回復量（requirements.md §16）。未知のIDは せっけん と同じ +40 にフォールバックする。
+    private float GetCleanAmount()
+    {
+        switch (_shampooId)
+        {
+            case "ichigo":
+            case "hoshizora":
+            case "rainbow":
+                return 60f;
+            default:
+                return 40f;
+        }
+    }
 
     private void ApplyPersonality(SaveData save)
     {
