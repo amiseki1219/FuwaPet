@@ -61,6 +61,7 @@ public class CareSceneManager : MonoBehaviour
 
     private const int MaxNadePerDay = 10;
     private const int MaxPlayPerDay = 5;
+    private const int MaxBathPerDay = 2;
 
     private PetStatus _status;
     private SaveData _save;
@@ -374,6 +375,8 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnBath()
     {
+        ResetDailyCountIfNeeded();
+        if (_save.bathCountToday >= MaxBathPerDay) { ShowNotice($"今日のお風呂は{MaxBathPerDay}回までだよ！"); return; }
         GoToScene("Bath");
     }
 
