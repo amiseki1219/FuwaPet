@@ -2832,7 +2832,7 @@ MonoBehaviour:
   eruScaleOverride: 0.7
   kokoScaleOverride: 0.8
   paruScaleOverride: 0.7
-  piyokoScaleOverride: 0.6
+  piyokoScaleOverride: 0.7
   characterShadowPrefab: {fileID: 8579962163049176927, guid: af54c746fc3f8423cac1368ae34d1982, type: 3}
   shadowYOffset: 0.01
   shadowScale: 0.88
