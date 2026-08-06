@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Cheek
-    second: {fileID: 2100000, guid: 144860c9ed3c74bad8313dfaed5376fc, type: 2}
+    second: {fileID: 2100000, guid: 2456c45b668e24b2c9c09bda841027e9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
