@@ -4347,6 +4347,8 @@ Transform:
   - {fileID: 593251722}
   - {fileID: 118567211}
   - {fileID: 1023225152}
+  - {fileID: 625041859}
+  - {fileID: 1296682199}
   m_Father: {fileID: 1614005205}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &294117561
@@ -5105,7 +5107,7 @@ Light:
   m_Type: 2
   m_Color: {r: 1, g: 0.73316216, b: 0.48584908, a: 1}
   m_Intensity: 0.5
-  m_Range: 1
+  m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -10271,6 +10273,10 @@ MonoBehaviour:
   kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
   paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
   piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
+  eruScaleOverride: 0
+  kokoScaleOverride: 0
+  paruScaleOverride: 0
+  piyokoScaleOverride: 0
 --- !u!1 &342560476
 GameObject:
   m_ObjectHideFlags: 0
@@ -15024,6 +15030,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 613803898}
   m_CullTransparentMesh: 1
+--- !u!1 &625041858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 625041859}
+  - component: {fileID: 625041860}
+  m_Layer: 0
+  m_Name: CharacterRimLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &625041859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625041858}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.057914782, y: 0.79295665, z: -0.2355964, w: -0.55889183}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 285598063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &625041860
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625041858}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 1
+  m_Color: {r: 0.55, g: 0.68, b: 1, a: 1}
+  m_Intensity: 0.6
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!1 &630607468
 GameObject:
   m_ObjectHideFlags: 0
@@ -17341,7 +17444,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.88240767, b: 0.7216981, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.4
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -21456,8 +21559,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 1
-  m_Color: {r: 1, g: 0.86153376, b: 0.5707547, a: 1}
-  m_Intensity: 0.7
+  m_Color: {r: 1, g: 0.91, b: 0.8, a: 1}
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -26301,6 +26404,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1295391180}
   m_CullTransparentMesh: 1
+--- !u!1 &1296682198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1296682199}
+  - component: {fileID: 1296682200}
+  m_Layer: 0
+  m_Name: CharacterFillLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1296682199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296682198}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.019070229, y: 0.9555867, z: -0.09168665, w: 0.27943522}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 285598063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1296682200
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296682198}
+  m_Enabled: 1
+  serializedVersion: 12
+  m_Type: 1
+  m_Color: {r: 0.6, g: 0.7, b: 1, a: 1}
+  m_Intensity: 0.12
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize2D: {x: 0.5, y: 0.5}
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!1001 &1301924445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31001,14 +31201,17 @@ MonoBehaviour:
   fillLight: {fileID: 839275332}
   moonLight: {fileID: 593251721}
   bookShelfLight: {fileID: 328236742}
+  characterKeyLight: {fileID: 1023225154}
+  characterRimLight: {fileID: 625041860}
+  characterFillLight: {fileID: 1296682200}
   mainCamera: {fileID: 0}
   daySetting:
     windowTexture: {fileID: 2800000, guid: deb80b9a6efbd4c6ebb4f53ea835afe1, type: 3}
     ambientColor: {r: 0.72, g: 0.7, b: 0.66, a: 1}
-    ambientIntensity: 1
+    ambientIntensity: 0.85
     sunLightColor: {r: 1, g: 0.93135285, b: 0.7311321, a: 1}
     sunLightIntensity: 0.1
-    roomLightIntensity: 6
+    roomLightIntensity: 4.5
     roomLightColor: {r: 0.737, g: 0.659, b: 0.514, a: 1}
     fillLightIntensity: 0.7
     fillLightColor: {r: 0.965, g: 0.906, b: 0.776, a: 1}
@@ -31016,6 +31219,12 @@ MonoBehaviour:
     bookShelfLightEnabled: 0
     bookShelfLightColor: {r: 1, g: 0.733, b: 0.486, a: 1}
     bookShelfLightIntensity: 0.5
+    characterKeyColor: {r: 1, g: 0.97, b: 0.92, a: 1}
+    characterKeyIntensity: 0.65
+    characterRimColor: {r: 0.85, g: 0.92, b: 1, a: 1}
+    characterRimIntensity: 0.25
+    characterFillColor: {r: 0.9, g: 0.95, b: 1, a: 1}
+    characterFillIntensity: 0.15
   eveningSetting:
     windowTexture: {fileID: 2800000, guid: aa7af285fba0f44d99453bc8665e051b, type: 3}
     ambientColor: {r: 0.957, g: 0.933, b: 0.902, a: 1}
@@ -31030,20 +31239,32 @@ MonoBehaviour:
     bookShelfLightEnabled: 1
     bookShelfLightColor: {r: 1, g: 0.73316216, b: 0.48584908, a: 1}
     bookShelfLightIntensity: 0.5
+    characterKeyColor: {r: 1, g: 0.85, b: 0.68, a: 1}
+    characterKeyIntensity: 0.7
+    characterRimColor: {r: 1, g: 0.72, b: 0.5, a: 1}
+    characterRimIntensity: 0.45
+    characterFillColor: {r: 1, g: 0.9, b: 0.8, a: 1}
+    characterFillIntensity: 0.12
   nightSetting:
     windowTexture: {fileID: 2800000, guid: a34f3ea92859e473082710e0a0831bcb, type: 3}
-    ambientColor: {r: 0.02, g: 0.02, b: 0.03, a: 1}
-    ambientIntensity: 0.02
+    ambientColor: {r: 0.26, g: 0.28, b: 0.38, a: 1}
+    ambientIntensity: 1
     sunLightColor: {r: 0.2, g: 0.2, b: 0.4, a: 1}
     sunLightIntensity: 0
-    roomLightIntensity: 0.35
+    roomLightIntensity: 1.25
     roomLightColor: {r: 1, g: 0.8509804, b: 0.6, a: 1}
     fillLightIntensity: 0
     fillLightColor: {r: 1, g: 1, b: 1, a: 1}
     moonLightIntensity: 0.35
     bookShelfLightEnabled: 1
     bookShelfLightColor: {r: 1, g: 0.73316216, b: 0.48584908, a: 1}
-    bookShelfLightIntensity: 0.5
+    bookShelfLightIntensity: 1
+    characterKeyColor: {r: 1, g: 0.91, b: 0.8, a: 1}
+    characterKeyIntensity: 0.5
+    characterRimColor: {r: 0.55, g: 0.68, b: 1, a: 1}
+    characterRimIntensity: 0.6
+    characterFillColor: {r: 0.6, g: 0.7, b: 1, a: 1}
+    characterFillIntensity: 0.12
   forcedTimeOfDay: 0
 --- !u!23 &1542797089
 MeshRenderer:
@@ -31495,6 +31716,10 @@ MonoBehaviour:
     playCountToday: 0
     lastPlayDate: 
     lastSleepTicks: 0
+    statusLastFedAt: 
+    statusLastBathAt: 
+    statusLastPlayAt: 
+    statusLastDecayAt: 
     lastNameChangeDate: 
     lastCharNameChangeDate: 
     lastBirthdayChangeDate: 
