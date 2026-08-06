@@ -2830,7 +2830,7 @@ MonoBehaviour:
   paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
   piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
   eruScaleOverride: 0.7
-  kokoScaleOverride: 0.7
+  kokoScaleOverride: 0.8
   paruScaleOverride: 0.7
   piyokoScaleOverride: 0.6
 --- !u!4 &229219112
@@ -6074,7 +6074,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 70
+  field of view: 45
   orthographic: 0
   orthographic size: 3
   m_Depth: -1
@@ -6100,13 +6100,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625514839}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0048523583, y: 0.96918315, z: -0.020193879, w: 0.24546441}
-  m_LocalPosition: {x: -2.11, y: 1.485, z: 5.58}
+  m_LocalRotation: {x: 0.010552492, y: 0.9693723, z: -0.042323723, w: 0.24169172}
+  m_LocalPosition: {x: -3.2071, y: 1.8, z: 7.6796007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 2.38, y: 151.575, z: -0.029}
+  m_LocalEulerAnglesHint: {x: 5, y: 152, z: 0}
 --- !u!114 &625514843
 MonoBehaviour:
   m_ObjectHideFlags: 0
