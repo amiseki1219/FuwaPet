@@ -10277,6 +10277,9 @@ MonoBehaviour:
   kokoScaleOverride: 0
   paruScaleOverride: 0
   piyokoScaleOverride: 0
+  characterShadowPrefab: {fileID: 8579962163049176927, guid: af54c746fc3f8423cac1368ae34d1982, type: 3}
+  shadowYOffset: 0.01
+  shadowScale: 1
 --- !u!1 &342560476
 GameObject:
   m_ObjectHideFlags: 0
@@ -31265,7 +31268,7 @@ MonoBehaviour:
     characterRimIntensity: 0.6
     characterFillColor: {r: 0.6, g: 0.7, b: 1, a: 1}
     characterFillIntensity: 0.12
-  forcedTimeOfDay: 0
+  forcedTimeOfDay: 3
 --- !u!23 &1542797089
 MeshRenderer:
   m_ObjectHideFlags: 0

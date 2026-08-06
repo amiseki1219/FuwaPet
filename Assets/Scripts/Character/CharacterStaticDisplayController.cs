@@ -26,6 +26,11 @@ public class CharacterStaticDisplayController : MonoBehaviour
     [SerializeField] private float paruScaleOverride = 0f;
     [SerializeField] private float piyokoScaleOverride = 0f;
 
+    [Header("接地影（未設定なら影を付けない）")]
+    [SerializeField] private GameObject characterShadowPrefab;
+    [SerializeField] private float shadowYOffset = 0.01f;
+    [SerializeField] private float shadowScale = 1f;
+
     private GameObject spawnedCharacter;
 
     private void Awake()
@@ -62,6 +67,7 @@ public class CharacterStaticDisplayController : MonoBehaviour
             spawnedCharacter.transform.localScale = Vector3.one * displayScale;
 
             ApplyCharacterLayer(spawnedCharacter);
+            AttachShadow(spawnedCharacter);
 
             if (petoWalk != null)
             {
@@ -98,6 +104,24 @@ public class CharacterStaticDisplayController : MonoBehaviour
             Debug.LogWarning($"[CharacterDisplay] characterId={characterId} の生成に失敗しました。pokoへフォールバックします。理由: {exception.Message}");
             ShowLegacyPoko("Static Prefabの生成失敗");
         }
+    }
+
+    /// <summary>
+    /// 接地影を生成したキャラの子として付ける。
+    /// 親（生成キャラ）がPetoWalkの移動・回転対象なので、影は結線なしで自動的に追従する。
+    /// 影プレハブが未設定のシーン（Care / Bath）では何もしない。
+    /// 影はキャラの子なので表示スケールがそのまま乗る。
+    /// </summary>
+    private void AttachShadow(GameObject character)
+    {
+        if (characterShadowPrefab == null || character == null) return;
+
+        // localRotationはPrefabの向き（地面に寝かせた状態）をそのまま使うため上書きしない
+        GameObject shadow = Instantiate(characterShadowPrefab, character.transform, false);
+        shadow.transform.localPosition = new Vector3(0f, shadowYOffset, 0f);
+        shadow.transform.localScale = Vector3.one * shadowScale;
+
+        ApplyCharacterLayer(shadow);
     }
 
     /// <summary>
