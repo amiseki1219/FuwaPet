@@ -23,6 +23,14 @@ public class WindowViewController : MonoBehaviour
         public bool bookShelfLightEnabled = false;
         public Color bookShelfLightColor = new Color(1f, 0.733f, 0.486f);
         public float bookShelfLightIntensity = 0.5f;
+
+        [Header("CharacterLights")]
+        public Color characterKeyColor = Color.white;
+        public float characterKeyIntensity = 0.5f;
+        public Color characterRimColor = Color.white;
+        public float characterRimIntensity = 0.6f;
+        public Color characterFillColor = Color.white;
+        public float characterFillIntensity = 0.12f;
     }
 
     [SerializeField] private MeshRenderer viewPlaneRenderer;
@@ -31,6 +39,9 @@ public class WindowViewController : MonoBehaviour
     [SerializeField] private Light fillLight;
     [SerializeField] private Light moonLight;
     [SerializeField] private Light bookShelfLight;
+    [SerializeField] private Light characterKeyLight;
+    [SerializeField] private Light characterRimLight;
+    [SerializeField] private Light characterFillLight;
     [SerializeField] private Camera mainCamera;
 
     [SerializeField] private TimeOfDaySetting daySetting = new TimeOfDaySetting
@@ -182,6 +193,27 @@ public class WindowViewController : MonoBehaviour
                 bookShelfLight.color     = setting.bookShelfLightColor;
                 bookShelfLight.intensity = setting.bookShelfLightIntensity;
             }
+        }
+
+        if (characterKeyLight != null)
+        {
+            characterKeyLight.gameObject.SetActive(setting.characterKeyIntensity > 0f);
+            characterKeyLight.color     = setting.characterKeyColor;
+            characterKeyLight.intensity = setting.characterKeyIntensity;
+        }
+
+        if (characterRimLight != null)
+        {
+            characterRimLight.gameObject.SetActive(setting.characterRimIntensity > 0f);
+            characterRimLight.color     = setting.characterRimColor;
+            characterRimLight.intensity = setting.characterRimIntensity;
+        }
+
+        if (characterFillLight != null)
+        {
+            characterFillLight.gameObject.SetActive(setting.characterFillIntensity > 0f);
+            characterFillLight.color     = setting.characterFillColor;
+            characterFillLight.intensity = setting.characterFillIntensity;
         }
     }
 }
