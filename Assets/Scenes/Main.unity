@@ -31268,7 +31268,7 @@ MonoBehaviour:
     characterRimIntensity: 0.6
     characterFillColor: {r: 0.6, g: 0.7, b: 1, a: 1}
     characterFillIntensity: 0.12
-  forcedTimeOfDay: 3
+  forcedTimeOfDay: 0
 --- !u!23 &1542797089
 MeshRenderer:
   m_ObjectHideFlags: 0

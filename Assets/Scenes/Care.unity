@@ -18726,9 +18726,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2055412257}
     - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 625514841}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: forcedTimeOfDay
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: characterKeyLight
+      value: 
+      objectReference: {fileID: 523203465}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: characterRimLight
+      value: 
+      objectReference: {fileID: 151826510}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: characterFillLight
+      value: 
+      objectReference: {fileID: 565419284}
     - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: nightSetting.ambientColor.b
       value: 0.38
@@ -18746,8 +18762,100 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterKeyColor.b
+      value: 0.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterKeyColor.g
+      value: 0.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterRimColor.g
+      value: 0.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterRimColor.r
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterFillColor.g
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterFillColor.r
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: nightSetting.roomLightIntensity
       value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterKeyIntensity
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterRimIntensity
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterKeyColor.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterKeyColor.g
+      value: 0.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterRimColor.g
+      value: 0.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterRimColor.r
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: daySetting.characterFillIntensity
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterFillColor.g
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: nightSetting.characterFillColor.r
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterKeyColor.b
+      value: 0.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterKeyColor.g
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterRimColor.b
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterRimColor.g
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterFillColor.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterFillColor.g
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterKeyIntensity
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: eveningSetting.characterRimIntensity
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: nightSetting.bookShelfLightIntensity
