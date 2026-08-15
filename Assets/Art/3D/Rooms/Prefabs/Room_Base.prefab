@@ -2105,6 +2105,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Furniture_RoomShell_Default
       objectReference: {fileID: 0}
+    - target: {fileID: 8124236666092629895, guid: d9b99d79c52844574bd7d225d2bd7a8f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
