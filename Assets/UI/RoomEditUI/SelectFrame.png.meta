@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 01a3fb8a6b1dd4c82b506f7b776c5ac4
+guid: 152f0d02890ae47e7ab6d70b78da0966
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7744058539163611640
-    second: Thumb_RoomShell_Paru_0
-  - first:
-      213: -2584872400329886923
-    second: Thumb_RoomShell_Paru_1
+      213: 4026771170628485156
+    second: SelectFrame_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -129,45 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Thumb_Bed_Paru_0
+      name: SelectFrame_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 71
-        width: 1223
-        height: 1163
+        y: 0
+        width: 288
+        height: 366
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8f17daa263c687b60800000000000000
-      internalID: 7744058539163611640
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Thumb_RoomShell_Paru_1
-      rect:
-        serializedVersion: 2
-        x: 305
-        y: 1148
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 53330a44f30b02cd0800000000000000
-      internalID: -2584872400329886923
+      spriteID: 42048118b07f1e730800000000000000
+      internalID: 4026771170628485156
       vertices: []
       indices: 
       edges: []
@@ -176,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 8b8a45951e8c1445992b595a1b641530
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -186,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Thumb_Bed_Paru_0: 7744058539163611640
-      Thumb_RoomShell_Paru_1: -2584872400329886923
+      SelectFrame_0: 4026771170628485156
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

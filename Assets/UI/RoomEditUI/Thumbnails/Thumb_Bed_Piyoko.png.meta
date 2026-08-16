@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Thumb_RoomShell_Piyoko_0
+      name: Thumb_Bed_Piyoko_0
       rect:
         serializedVersion: 2
         x: 40
@@ -134,7 +134,7 @@ TextureImporter:
         width: 1201
         height: 1151
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: c75323cfc95ab4121b8b2d9e8b1b775b
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Thumb_RoomShell_Piyoko_0: 399275890886976974
+      Thumb_Bed_Piyoko_0: 399275890886976974
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

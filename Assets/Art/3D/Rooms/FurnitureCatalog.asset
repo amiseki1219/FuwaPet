@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64733e8ca0b824d9e9e5eeb1f9775eb3, type: 3}
+  m_Name: FurnitureCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::FurnitureCatalog
+  entries:
+  - category: 10
+    id: RoomShell_Default
+    displayName: "\u304D\u307B\u3093\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 8124236666092629895, guid: d9b99d79c52844574bd7d225d2bd7a8f, type: 3}
+    thumbnail: {fileID: 2289411159739461414, guid: 32ebee2dba92c4a40ab7660e00ae4e8f, type: 3}
+    ownedByDefault: 1
+  - category: 10
+    id: RoomShell_Poko
+    displayName: "\u3053\u3082\u308C\u3073\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 3921414081807936410, guid: 4e6b94ac699f40539e11e71ae68f09eb, type: 3}
+    thumbnail: {fileID: 3862650747711848614, guid: e4357998e143f43719a908a888b18e91, type: 3}
+    ownedByDefault: 1
+  - category: 10
+    id: RoomShell_Eru
+    displayName: "\u661F\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 3921414081807936415, guid: 04a108b7e18b429a86e959ef081e9ab7, type: 3}
+    thumbnail: {fileID: 7847973386822673894, guid: ec16a497e8af74472b6259fe2b41a199, type: 3}
+    ownedByDefault: 0
+  - category: 10
+    id: RoomShell_Koko
+    displayName: "\u304A\u306F\u306A\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 3921414081807936411, guid: f0061ea8b49c4481695558e5e6ead686, type: 3}
+    thumbnail: {fileID: 23424543869987572, guid: a2cb47325b804410ea360e4841c04fad, type: 3}
+    ownedByDefault: 0
+  - category: 10
+    id: RoomShell_Paru
+    displayName: "\u30EA\u30DC\u30F3\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 3921414081807936413, guid: 2f697f143e204d639f4969fda8c55760, type: 3}
+    thumbnail: {fileID: 7744058539163611640, guid: 8052c0cf75b864bc79e5a0fbd2613d6a, type: 3}
+    ownedByDefault: 0
+  - category: 10
+    id: RoomShell_Piyoko
+    displayName: "\u305F\u307E\u3054\u306E\u304A\u3078\u3084"
+    prefab: {fileID: 3921414081807936412, guid: fe4573f0471d4a7cb6658e5044c0c571, type: 3}
+    thumbnail: {fileID: 399275890886976974, guid: c0e357f3199b7466db0979b58d7cebeb, type: 3}
+    ownedByDefault: 0
+  - category: 0
+    id: Bed_Default
+    displayName: "\u304D\u307B\u3093\u306E\u30D9\u30C3\u30C9"
+    prefab: {fileID: 2334687244759717793, guid: 1834513eb2d9641e7b1851dba5a6a4cc, type: 3}
+    thumbnail: {fileID: 3236060542666781401, guid: 663f5eed767374aa69ac17684bdd8bdf, type: 3}
+    ownedByDefault: 1
+  - category: 0
+    id: Bed_Poko
+    displayName: "\u3053\u3082\u308C\u3073\u306E\u30D9\u30C3\u30C9"
+    prefab: {fileID: 0}
+    thumbnail: {fileID: 3862650747711848614, guid: 0120a3415c403462b98fc2ee8ec72ecd, type: 3}
+    ownedByDefault: 0
+  - category: 0
+    id: Bed_Eru
+    displayName: "\u661F\u306E\u3079\u3063\u3069"
+    prefab: {fileID: 0}
+    thumbnail: {fileID: -645891140695522035, guid: 88bc27836a4744a3289c1253cea4cf62, type: 3}
+    ownedByDefault: 0
+  - category: 0
+    id: Bed_Koko
+    displayName: "\u304A\u306F\u306A\u306E\u30D9\u30C3\u30C9"
+    prefab: {fileID: 0}
+    thumbnail: {fileID: -6963072821907401207, guid: 4b8515d931db04bf09d8e2ec0456c3dc, type: 3}
+    ownedByDefault: 0
+  - category: 0
+    id: Bed_Paru
+    displayName: "\u30EA\u30DC\u30F3\u306E\u3079\u3063\u3069"
+    prefab: {fileID: 0}
+    thumbnail: {fileID: 7744058539163611640, guid: 01a3fb8a6b1dd4c82b506f7b776c5ac4, type: 3}
+    ownedByDefault: 0
+  - category: 0
+    id: Bed_Piyoko
+    displayName: "\u305F\u307E\u3054\u306E\u3079\u3063\u3069"
+    prefab: {fileID: 0}
+    thumbnail: {fileID: 399275890886976974, guid: dfd334f825d39499c9f3aea3407ed10a, type: 3}
+    ownedByDefault: 0

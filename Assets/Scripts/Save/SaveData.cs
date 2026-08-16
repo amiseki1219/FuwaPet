@@ -45,6 +45,11 @@ public class SaveData
     // --- お知らせ既読管理 ---
     public List<string> readNoticeIds = new List<string>();
 
+    // --- お部屋の家具（もようがえ）---
+    // カテゴリID → アイテムID の対応。ここに無いカテゴリは既定の家具が使われる。
+    // ★数値ではなく文字列で持つ。並び順を変えても既存ユーザーの部屋が壊れないようにするため。
+    public List<FurnitureSelection> roomFurniture = new List<FurnitureSelection>();
+
     // --- バッジバージョン管理 ---
     public string lastShopVersion       = "";
     public string lastGachaVersion      = "";

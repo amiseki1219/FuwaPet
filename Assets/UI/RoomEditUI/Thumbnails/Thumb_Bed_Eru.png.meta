@@ -135,15 +135,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Thumb_RoomShell_Eru_0
+      name: Thumb_Bed_Eru_0
       rect:
         serializedVersion: 2
-        x: 802
-        y: 1197
-        width: 69
-        height: 21
+        x: 54
+        y: 0
+        width: 1200
+        height: 1200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -165,7 +165,7 @@ TextureImporter:
         width: 13
         height: 27
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -187,7 +187,7 @@ TextureImporter:
         width: 1208
         height: 1107
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -209,7 +209,7 @@ TextureImporter:
         width: 5
         height: 25
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -226,7 +226,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d3fa1c2aec8ac4d2889e33f7fc94f34c
     internalID: 0
     vertices: []
     indices: 
@@ -236,7 +236,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Thumb_RoomShell_Eru_0: -645891140695522035
+      Thumb_Bed_Eru_0: -645891140695522035
       Thumb_RoomShell_Eru_1: 7847973386822673894
       Thumb_RoomShell_Eru_2: 6551445531386583623
       Thumb_RoomShell_Eru_3: -8950133571761229940
