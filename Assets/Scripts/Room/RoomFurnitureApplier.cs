@@ -10,8 +10,18 @@ public class FurnitureSlotBinding
 {
     public FurnitureCategory category;
 
+    [Tooltip("同じカテゴリでスロットを複数持つときの番号。\n" +
+             "スロットが1つだけのカテゴリは 0 のままにする。\n" +
+             "例）かべかざり：かべA = 0 / かべB = 1")]
+    public int slotIndex = 0;
+
     [Tooltip("Room_Base の中の FurnitureSlot_〇〇 をドラッグする")]
     public Transform slot;
+
+    [Tooltip("その家具の下に敷いている接地影（FakeShadows の中の Shadow_〇〇）。\n" +
+             "「なし」を選んだときに自動で消すために使う。\n" +
+             "★影を用意していないカテゴリは空のままでよい（空なら何もしない）")]
+    public GameObject shadow;
 }
 
 /// <summary>
@@ -30,7 +40,8 @@ public class RoomFurnitureApplier : MonoBehaviour
     [Header("参照")]
     [SerializeField] private FurnitureCatalog catalog;
 
-    [Tooltip("11カテゴリぶんのスロットをここに登録する")]
+    [Tooltip("全カテゴリぶんのスロットをここに登録する。\n" +
+             "かべかざりのようにスロットが2つあるカテゴリは、行を2つ作って番号を 0 / 1 にする")]
     [SerializeField] private FurnitureSlotBinding[] slots = new FurnitureSlotBinding[0];
 
     [Header("デバッグ")]
@@ -39,15 +50,24 @@ public class RoomFurnitureApplier : MonoBehaviour
     /// <summary>使っているカタログ。Loader などが参照する。</summary>
     public FurnitureCatalog Catalog => catalog;
 
-    // カテゴリからスロットを高速に引くための表。Awake で1回だけ作る
-    private Dictionary<FurnitureCategory, Transform> _slotMap;
+    // ★どの表も「カテゴリ」ではなく「SlotKey（カテゴリ＋番号）」で引く。
+    //   かべかざりのように1カテゴリに2スロットあるものを、同じ仕組みで扱うため。
+
+    // SlotKey からスロットを高速に引くための表。Awake で1回だけ作る
+    private Dictionary<SlotKey, Transform> _slotMap;
+
+    // SlotKey から接地影を引く表。影を登録していないスロットはここに入らない
+    private Dictionary<SlotKey, GameObject> _shadowMap;
+
+    // カテゴリごとのスロット番号一覧。UI が「かべA/かべB のタブを何個出すか」を決めるのに使う
+    private Dictionary<FurnitureCategory, List<int>> _indicesByCategory;
 
     // いま各スロットに入っているアイテムID。「もどす」やセーブで使う
-    private readonly Dictionary<FurnitureCategory, string> _currentIds
-        = new Dictionary<FurnitureCategory, string>();
+    private readonly Dictionary<SlotKey, string> _currentIds
+        = new Dictionary<SlotKey, string>();
 
     // 入室した瞬間の状態。「もどす」を押したらここへ戻す
-    private Dictionary<FurnitureCategory, string> _snapshot;
+    private Dictionary<SlotKey, string> _snapshot;
 
     private void Awake()
     {
@@ -56,7 +76,9 @@ public class RoomFurnitureApplier : MonoBehaviour
 
     private void BuildSlotMap()
     {
-        _slotMap = new Dictionary<FurnitureCategory, Transform>();
+        _slotMap = new Dictionary<SlotKey, Transform>();
+        _shadowMap = new Dictionary<SlotKey, GameObject>();
+        _indicesByCategory = new Dictionary<FurnitureCategory, List<int>>();
 
         if (slots == null) return;
 
@@ -64,21 +86,66 @@ public class RoomFurnitureApplier : MonoBehaviour
         {
             if (b == null || b.slot == null) continue;
 
-            // 同じカテゴリを2回登録していたら、後勝ちにせず警告して最初のを使う
-            if (_slotMap.ContainsKey(b.category))
+            if (b.slotIndex < 0)
             {
-                Debug.LogError($"[RoomEdit] カテゴリ {b.category} のスロットが複数登録されています", this);
+                Debug.LogError($"[RoomEdit] {b.category} のスロット番号が負の値です（{b.slotIndex}）", this);
                 continue;
             }
-            _slotMap[b.category] = b.slot;
+
+            var key = new SlotKey(b.category, b.slotIndex);
+
+            // 同じ番号を2回登録していたら、後勝ちにせず警告して最初のを使う。
+            // ★スロットを増やすとき「番号を 0 のままコピーした」が一番ありがちなミス
+            if (_slotMap.ContainsKey(key))
+            {
+                Debug.LogError($"[RoomEdit] {key} のスロットが複数登録されています。" +
+                               $"スロット番号（Slot Index）が重複していないか確認してください", this);
+                continue;
+            }
+            _slotMap[key] = b.slot;
+
+            // 影は任意。登録されているスロットだけ表に入れる
+            if (b.shadow != null) _shadowMap[key] = b.shadow;
+
+            if (!_indicesByCategory.TryGetValue(b.category, out var list))
+            {
+                list = new List<int>();
+                _indicesByCategory[b.category] = list;
+            }
+            list.Add(b.slotIndex);
         }
+
+        // 番号順に並べておく。UI のタブがこの順に出る
+        foreach (var kv in _indicesByCategory) kv.Value.Sort();
 
         // 登録漏れの検出。ここで気づけないと、実機で「そのカテゴリだけ反応しない」になる
         foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
         {
-            if (!_slotMap.ContainsKey(c))
+            if (!_indicesByCategory.ContainsKey(c))
                 Debug.LogWarning($"[RoomEdit] カテゴリ {c} のスロットが未登録です", this);
         }
+    }
+
+    /// <summary>
+    /// そのカテゴリに登録されているスロット番号の一覧（小さい順）。
+    /// 1つも無ければ空。UI が「タブを何個出すか」を決めるのに使う。
+    /// </summary>
+    public IReadOnlyList<int> GetSlotIndices(FurnitureCategory category)
+    {
+        if (_indicesByCategory == null) BuildSlotMap();
+        return _indicesByCategory.TryGetValue(category, out var list)
+            ? (IReadOnlyList<int>)list
+            : System.Array.Empty<int>();
+    }
+
+    /// <summary>そのカテゴリのスロット数。1ならタブを出さない、2以上なら出す。</summary>
+    public int GetSlotCount(FurnitureCategory category) => GetSlotIndices(category).Count;
+
+    /// <summary>登録されている全スロットのキー。セーブの読み込みなどで全なめするときに使う。</summary>
+    public List<SlotKey> GetAllSlotKeys()
+    {
+        if (_slotMap == null) BuildSlotMap();
+        return new List<SlotKey>(_slotMap.Keys);
     }
 
     // ─────────────────────────────────────────────
@@ -86,11 +153,14 @@ public class RoomFurnitureApplier : MonoBehaviour
     // ─────────────────────────────────────────────
 
     /// <summary>
-    /// 指定カテゴリのスロットに、指定IDの家具を入れる。
+    /// 指定スロットに、指定IDの家具を入れる。
     /// IDが見つからない場合はそのカテゴリの既定アイテムにフォールバックする（落とさない）。
+    ///
+    /// ★引数にカテゴリをそのまま渡せる（例: Apply(FurnitureCategory.Bed, id)）。
+    ///   その場合は自動で「0番のスロット」になる。スロットが1つしかないカテゴリは常にこれ。
     /// </summary>
     /// <returns>実際に何かを配置できたら true</returns>
-    public bool Apply(FurnitureCategory category, string itemId)
+    public bool Apply(SlotKey key, string itemId)
     {
         if (catalog == null)
         {
@@ -100,11 +170,13 @@ public class RoomFurnitureApplier : MonoBehaviour
 
         if (_slotMap == null) BuildSlotMap();
 
-        if (!_slotMap.TryGetValue(category, out var slot) || slot == null)
+        if (!_slotMap.TryGetValue(key, out var slot) || slot == null)
         {
-            Debug.LogError($"[RoomEdit] {category} のスロットが見つかりません", this);
+            Debug.LogError($"[RoomEdit] {key} のスロットが見つかりません", this);
             return false;
         }
+
+        var category = key.category;
 
         // ★セーブデータに未知のIDが入っていても落とさない。
         //   アイテムを整理した／IDを変えた場合にここへ来る。
@@ -123,9 +195,27 @@ public class RoomFurnitureApplier : MonoBehaviour
             return false;
         }
 
+        // ★「なし」を選んだ場合。スロットを空にして終わり。
+        //   フォールバックさせない（ここでフォールバックすると「外せない」ことになる）
+        if (entry.isEmptySlot)
+        {
+            ClearSlot(slot);
+            SetShadowVisible(key, false);   // ★家具が無いのに影だけ残らないようにする
+            _currentIds[key] = entry.id;
+
+            if (verboseLog) Debug.Log($"[RoomEdit] {key} ← なし（{entry.id}）", this);
+            return true;
+        }
+
         if (entry.prefab == null)
         {
-            Debug.LogError($"[RoomEdit] {entry.id} の Prefab が未設定です", this);
+            // ここに来る＝カタログの設定ミス。
+            //   ・その家具を出したいのに Prefab を入れ忘れている
+            //   ・「なし」の行なのに isEmptySlot にチェックを入れ忘れている
+            // どちらにせよ何も置けないので、スロットは今の状態のまま変えない。
+            Debug.LogError($"[RoomEdit] カタログの {entry.id}（{category}）に Prefab が入っていないので " +
+                           $"切り替えられません。Prefab を設定するか、" +
+                           $"「なし」の行なら isEmptySlot にチェックを入れてください", this);
             return false;
         }
 
@@ -138,19 +228,36 @@ public class RoomFurnitureApplier : MonoBehaviour
         var instance = Instantiate(entry.prefab, slot, false);
         instance.name = entry.prefab.name; // "(Clone)" を消して Hierarchy を読みやすくする
 
-        _currentIds[category] = entry.id;
+        SetShadowVisible(key, true);   // ★「なし」から戻したときに影も復活させる
+
+        _currentIds[key] = entry.id;
 
         if (verboseLog)
-            Debug.Log($"[RoomEdit] {category} ← {entry.id}", this);
+            Debug.Log($"[RoomEdit] {key} ← {entry.id}", this);
 
         return true;
     }
 
-    /// <summary>指定カテゴリを既定のアイテムに戻す。</summary>
-    public void ApplyDefault(FurnitureCategory category)
+    /// <summary>指定スロットを既定のアイテムに戻す。</summary>
+    public void ApplyDefault(SlotKey key)
     {
-        var def = catalog != null ? catalog.GetDefault(category) : null;
-        Apply(category, def != null ? def.id : null);
+        var def = catalog != null ? catalog.GetDefault(key.category) : null;
+        Apply(key, def != null ? def.id : null);
+    }
+
+    /// <summary>
+    /// そのスロットの接地影を出し入れする。
+    /// 影を登録していないスロットでは何もしない（登録は任意なので警告も出さない）。
+    /// </summary>
+    private void SetShadowVisible(SlotKey key, bool visible)
+    {
+        if (_shadowMap == null) return;
+        if (!_shadowMap.TryGetValue(key, out var shadow) || shadow == null) return;
+
+        // 既に同じ状態なら触らない（無駄な SetActive で警告が出るのを避ける）
+        if (shadow.activeSelf == visible) return;
+
+        shadow.SetActive(visible);
     }
 
     /// <summary>スロットの子を全部消す。</summary>
@@ -167,38 +274,41 @@ public class RoomFurnitureApplier : MonoBehaviour
     }
 
     /// <summary>
-    /// そのカテゴリのスロットを返す。未登録なら null。
+    /// そのスロットの Transform を返す。未登録なら null。
     /// 強調表示をスロットの位置に置くときなどに使う。
     /// </summary>
-    public Transform GetSlot(FurnitureCategory category)
+    public Transform GetSlot(SlotKey key)
     {
         if (_slotMap == null) BuildSlotMap();
-        return _slotMap.TryGetValue(category, out var t) ? t : null;
+        return _slotMap.TryGetValue(key, out var t) ? t : null;
     }
 
-    /// <summary>いまそのカテゴリに入っているアイテムID。未設定なら null。</summary>
-    public string GetCurrentId(FurnitureCategory category)
+    /// <summary>いまそのスロットに入っているアイテムID。未設定なら null。</summary>
+    public string GetCurrentId(SlotKey key)
     {
-        return _currentIds.TryGetValue(category, out var id) ? id : null;
+        return _currentIds.TryGetValue(key, out var id) ? id : null;
     }
 
-    /// <summary>いまの全カテゴリの状態を取り出す。セーブするときに使う。</summary>
-    public Dictionary<FurnitureCategory, string> GetCurrentAll()
+    /// <summary>いまの全スロットの状態を取り出す。セーブするときに使う。</summary>
+    public Dictionary<SlotKey, string> GetCurrentAll()
     {
-        return new Dictionary<FurnitureCategory, string>(_currentIds);
+        return new Dictionary<SlotKey, string>(_currentIds);
     }
 
     /// <summary>
-    /// 全カテゴリをまとめて適用する。セーブデータからの復元で使う。
-    /// data に無いカテゴリは既定アイテムになる。
+    /// 登録されている全スロットをまとめて適用する。セーブデータからの復元で使う。
+    /// data に無いスロットは既定アイテムになる。
+    ///
+    /// ★enum を総なめするのではなく「登録済みのスロット」だけを回す。
+    ///   スロットを結線していないカテゴリまで触ると、手置きの家具を消してしまうため。
     /// </summary>
-    public void ApplyAll(IDictionary<FurnitureCategory, string> data)
+    public void ApplyAll(IDictionary<SlotKey, string> data)
     {
-        foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
+        foreach (var key in GetAllSlotKeys())
         {
             string id = null;
-            data?.TryGetValue(c, out id);
-            Apply(c, id); // id が null でも既定にフォールバックする
+            data?.TryGetValue(key, out id);
+            Apply(key, id); // id が null でも既定にフォールバックする
         }
     }
 
@@ -209,7 +319,7 @@ public class RoomFurnitureApplier : MonoBehaviour
     /// <summary>入室時の状態を覚える。編集を始める前に1回呼ぶ。</summary>
     public void TakeSnapshot()
     {
-        _snapshot = new Dictionary<FurnitureCategory, string>(_currentIds);
+        _snapshot = new Dictionary<SlotKey, string>(_currentIds);
         if (verboseLog) Debug.Log($"[RoomEdit] 状態を記録しました（{_snapshot.Count}件）", this);
     }
 
@@ -242,12 +352,12 @@ public class RoomFurnitureApplier : MonoBehaviour
     // Inspector のコンポーネント名を右クリックすると出てくる
     // ─────────────────────────────────────────────
 #if UNITY_EDITOR
-    [ContextMenu("テスト: 全カテゴリを既定に戻す")]
+    [ContextMenu("テスト: 全スロットを既定に戻す")]
     private void TestApplyAllDefault()
     {
         BuildSlotMap();
-        foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
-            ApplyDefault(c);
+        foreach (var key in GetAllSlotKeys())
+            ApplyDefault(key);
     }
 
     [ContextMenu("テスト: お部屋を ここ に変える")]
@@ -270,8 +380,21 @@ public class RoomFurnitureApplier : MonoBehaviour
         BuildSlotMap();
         foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
         {
-            _slotMap.TryGetValue(c, out var t);
-            Debug.Log($"[RoomEdit] {c,-12} → {(t != null ? t.name : "★未登録")}", this);
+            var indices = GetSlotIndices(c);
+            if (indices.Count == 0)
+            {
+                Debug.LogWarning($"[RoomEdit] {c,-12} → ★未登録", this);
+                continue;
+            }
+
+            foreach (int i in indices)
+            {
+                var key = new SlotKey(c, i);
+                _slotMap.TryGetValue(key, out var t);
+                _shadowMap.TryGetValue(key, out var sh);
+                Debug.Log($"[RoomEdit] {key,-14} → {(t != null ? t.name : "★未登録")}" +
+                          $"　影: {(sh != null ? sh.name : "なし")}", this);
+            }
         }
     }
 #endif

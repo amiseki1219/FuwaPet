@@ -65,6 +65,20 @@ public class RoomEditController : MonoBehaviour
     [SerializeField] private Button returnButton;
     [SerializeField] private Button decideButton;
 
+    [Header("── スロット切り替え（かべA / かべB）──")]
+    [Tooltip("スロットが2つ以上あるカテゴリのときだけ出す親。\n" +
+             "スロットが1つしかないカテゴリでは自動で非表示になる。\n" +
+             "使わないなら空のままでよい")]
+    [SerializeField] private GameObject slotTabRoot;
+
+    [Tooltip("スロット番号の順に並べる。0番目 = かべA、1番目 = かべB。\n" +
+             "実際のスロット数より多く用意しておいてOK（余ったぶんは自動で隠れる）")]
+    [SerializeField] private Button[] slotTabButtons;
+
+    [Tooltip("選択中のタブに出す枠。slotTabButtons と同じ数・同じ順に入れる。\n" +
+             "枠の演出を使わないなら空のままでよい")]
+    [SerializeField] private GameObject[] slotTabSelectedMarks;
+
     [Tooltip("カテゴリ選択中だけ見せて、家具を編集している間は隠すもの。\n" +
              "「カテゴリーを選んでね」の見出しや、広告ゾーンなどを入れる")]
     [SerializeField] private GameObject[] hideWhileEditing;
@@ -97,12 +111,17 @@ public class RoomEditController : MonoBehaviour
     // ── 内部状態 ──
     private readonly List<ItemButtonView> _pool = new List<ItemButtonView>();
     private FurnitureCategory? _openedCategory;   // null = カテゴリ未選択（カード表示中）
+    private int _openedSlotIndex;                 // いま編集中のスロット番号（かべA=0 / かべB=1）
     private Vector3 _homeCamPos;                  // 入室時のカメラ位置
     private Quaternion _homeCamRot;               // 入室時のカメラ回転
     private Coroutine _camRoutine;
     private bool _inPreview;
     private Vector3 _charHomePos = Vector3.zero;   // キャラの定位置
     private Vector3 _charHomeScale = Vector3.one;  // キャラの元の大きさ
+
+    /// <summary>いま編集しているスロット。カテゴリ＋スロット番号のセット。</summary>
+    private SlotKey CurrentKey =>
+        new SlotKey(_openedCategory ?? FurnitureCategory.Bed, _openedSlotIndex);
 
     // ─────────────────────────────────────────────
     // 初期化
@@ -130,6 +149,7 @@ public class RoomEditController : MonoBehaviour
         }
 
         WireCategoryButtons();
+        WireSlotTabButtons();
 
         if (returnButton  != null) returnButton.onClick.AddListener(CloseItemList);
         if (decideButton  != null) decideButton.onClick.AddListener(OnDecide);
@@ -181,6 +201,28 @@ public class RoomEditController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// かべA / かべB のタブを押したときの処理をつなぐ。
+    /// タブの数はカテゴリごとに変わるので、ここでは全部つないでおき、
+    /// 表示するかどうかは OpenItemList のときに決める。
+    /// </summary>
+    private void WireSlotTabButtons()
+    {
+        if (slotTabButtons == null) return;
+
+        for (int i = 0; i < slotTabButtons.Length; i++)
+        {
+            if (slotTabButtons[i] == null) continue;
+
+            // ★ここもカテゴリボタンと同じ。ループ変数 i をそのままラムダに渡すと
+            //   全部のタブが最後の番号になる。ローカルにコピーしてから渡すこと
+            int index = i;
+            slotTabButtons[i].onClick.AddListener(() => SelectSlot(index));
+        }
+
+        if (slotTabRoot != null) slotTabRoot.SetActive(false);
+    }
+
     private void InitializeRoomFromCatalog()
     {
         if (applier == null || catalog == null) return;
@@ -188,15 +230,17 @@ public class RoomEditController : MonoBehaviour
         // セーブデータに保存された選択を読み込む。無ければ空
         var saved = RoomFurnitureSave.LoadAll();
 
-        foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
+        // ★enum を総なめするのではなく「Applier に結線されているスロット」を回す。
+        //   かべかざりのように1カテゴリに2スロットあるものも、これで両方復元される。
+        foreach (var key in applier.GetAllSlotKeys())
         {
             // まだカタログに1件も無いカテゴリは触らない（手置きの家具を残す）
-            if (catalog.GetByCategory(c).Count == 0) continue;
+            if (catalog.GetByCategory(key.category).Count == 0) continue;
 
-            saved.TryGetValue(c, out string id);
+            saved.TryGetValue(key, out string id);
 
             // id が null でも Applier が既定へフォールバックする
-            applier.Apply(c, id);
+            applier.Apply(key, id);
         }
     }
 
@@ -210,6 +254,7 @@ public class RoomEditController : MonoBehaviour
         if (catalog == null) return;
 
         _openedCategory = category;
+        _openedSlotIndex = 0;   // ★開いたときは必ず かべA から
 
         var entries = catalog.GetByCategory(category);
         if (entries.Count == 0)
@@ -218,7 +263,8 @@ public class RoomEditController : MonoBehaviour
             Debug.LogWarning($"[RoomEdit] {category} はカタログに1件も登録されていません", this);
         }
 
-        BuildItemButtons(entries, category);
+        BuildItemButtons(entries);
+        RefreshSlotTabs();
 
         if (categoryLabel != null) categoryLabel.text = ToDisplayName(category);
         SetCardVisible(false);
@@ -226,15 +272,63 @@ public class RoomEditController : MonoBehaviour
 
         MoveCameraTo(FindViewpoint(category));
         SetCharacterVisible(false);
-        MoveHighlightTo(category);
+        MoveHighlightTo(CurrentKey);
+    }
+
+    /// <summary>
+    /// かべA / かべB のタブを押したとき。
+    /// アイテム一覧はそのまま（同じプールを共有している）で、
+    /// 「いまどっちのスロットを編集しているか」だけを切り替える。
+    /// </summary>
+    private void SelectSlot(int index)
+    {
+        if (_openedCategory == null || applier == null) return;
+
+        // 用意されていない番号を押されても無視する（タブを多めに置いていても安全）
+        if (index < 0 || index >= applier.GetSlotCount(_openedCategory.Value)) return;
+
+        _openedSlotIndex = index;
+
+        RefreshSlotTabs();
+        RefreshItemSelection();          // 選択枠を、そのスロットの中身に合わせ直す
+        MoveHighlightTo(CurrentKey);
+    }
+
+    /// <summary>タブの出し入れと、選択中の枠を更新する。</summary>
+    private void RefreshSlotTabs()
+    {
+        int count = (_openedCategory != null && applier != null)
+            ? applier.GetSlotCount(_openedCategory.Value)
+            : 0;
+
+        // ★スロットが1つしかないカテゴリではタブそのものを出さない。
+        //   ベッドやソファの画面に「かべA/かべB」が出てしまうのを防ぐ
+        if (slotTabRoot != null) slotTabRoot.SetActive(count > 1);
+
+        if (slotTabButtons == null) return;
+
+        for (int i = 0; i < slotTabButtons.Length; i++)
+        {
+            if (slotTabButtons[i] != null)
+                slotTabButtons[i].gameObject.SetActive(count > 1 && i < count);
+
+            if (slotTabSelectedMarks != null
+                && i < slotTabSelectedMarks.Length
+                && slotTabSelectedMarks[i] != null)
+            {
+                slotTabSelectedMarks[i].SetActive(i == _openedSlotIndex);
+            }
+        }
     }
 
     /// <summary>「もどる」。カメラとキャラを戻して、カテゴリカードに帰る。</summary>
     public void CloseItemList()
     {
         _openedCategory = null;
+        _openedSlotIndex = 0;
 
         if (itemListPanel != null) itemListPanel.SetActive(false);
+        if (slotTabRoot != null) slotTabRoot.SetActive(false);
         ShowCategoryCard();
 
         MoveCameraHome();
@@ -265,7 +359,7 @@ public class RoomEditController : MonoBehaviour
     // ─────────────────────────────────────────────
     // アイテムボタンの生成（プールで使い回す）
     // ─────────────────────────────────────────────
-    private void BuildItemButtons(List<FurnitureEntry> entries, FurnitureCategory category)
+    private void BuildItemButtons(List<FurnitureEntry> entries)
     {
         if (itemButtonPrefab == null || itemListContent == null)
         {
@@ -273,7 +367,9 @@ public class RoomEditController : MonoBehaviour
             return;
         }
 
-        string currentId = applier != null ? applier.GetCurrentId(category) : null;
+        // ★一覧はカテゴリ単位で1つ。かべAとかべBは同じ一覧を共有する。
+        //   選択枠の位置だけが、いま見ているスロットによって変わる。
+        string currentId = applier != null ? applier.GetCurrentId(CurrentKey) : null;
 
         for (int i = 0; i < entries.Count; i++)
         {
@@ -309,52 +405,76 @@ public class RoomEditController : MonoBehaviour
     {
         if (_openedCategory == null || applier == null) return;
 
-        var category = _openedCategory.Value;
+        // ★いま選んでいるスロット（かべA か かべB）にだけ入れる
+        if (!applier.Apply(CurrentKey, itemId)) return;
 
-        if (!applier.Apply(category, itemId)) return;
+        RefreshItemSelection();
+    }
 
-        // 選択枠を付け替える。押されたもの以外は消す
+    /// <summary>選択枠を、いま見ているスロットの中身に合わせ直す。</summary>
+    private void RefreshItemSelection()
+    {
+        string currentId = applier != null ? applier.GetCurrentId(CurrentKey) : null;
+
         foreach (var v in _pool)
         {
             if (v != null && v.gameObject.activeSelf)
-                v.SetSelected(v.ItemId == itemId);
+                v.SetSelected(v.ItemId == currentId);
         }
+    }
+
+    /// <summary>
+    /// そのIDを持っているか。一覧のボタンから判定する。
+    /// 一覧に無いIDは判定できないので、通す（＝保存を止めない）。
+    /// </summary>
+    private bool IsOwned(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId)) return true;
+
+        foreach (var v in _pool)
+        {
+            if (v != null && v.gameObject.activeSelf && v.ItemId == itemId)
+                return v.IsOwned;
+        }
+        return true;
     }
 
     /// <summary>「けってい」。所持していないものが選ばれていたら保存させない。</summary>
     private void OnDecide()
     {
-        if (_openedCategory == null) { CloseItemList(); return; }
+        if (_openedCategory == null || applier == null) { CloseItemList(); return; }
 
         var category = _openedCategory.Value;
-        string currentId = applier != null ? applier.GetCurrentId(category) : null;
+        var indices = applier.GetSlotIndices(category);
 
-        // いま選ばれているアイテムのボタンを探して所持状態を見る
-        bool owned = true;
-        foreach (var v in _pool)
+        // ★このカテゴリのスロットを全部チェックする。
+        //   かべAだけ見ていると、かべBに未所持のものが入ったまま保存されてしまう
+        foreach (int i in indices)
         {
-            if (v != null && v.gameObject.activeSelf && v.ItemId == currentId)
-            {
-                owned = v.IsOwned;
-                break;
-            }
-        }
+            string id = applier.GetCurrentId(new SlotKey(category, i));
+            if (IsOwned(id)) continue;
 
-        if (!owned)
-        {
             // TODO: 所持データを入れたら、ここでアラートを出してショップへ誘導する
-            Debug.Log($"<color=#00E5FF>[決定]</color> [RoomEdit] {currentId} は未所持のため保存できません", this);
+            Debug.Log($"<color=#00E5FF>[決定]</color> [RoomEdit] {id} は未所持のため保存できません", this);
             return;
         }
 
-        // セーブデータへ書き込んでファイルに保存する。
+        // ★このカテゴリのスロットを全部まとめて保存する。
+        //   かべAを決定したのにかべBが保存されない、という取りこぼしを防ぐ
+        foreach (int i in indices)
+        {
+            var key = new SlotKey(category, i);
+            string id = applier.GetCurrentId(key);
+
+            RoomFurnitureSave.Set(key, id);
+            Debug.Log($"<color=#00E5FF>[決定]</color> [RoomEdit] {key} を {id} で保存しました", this);
+        }
+
+        // セーブデータをファイルに書き出す。
         // これで Main や Care を開いたときにも同じ家具が出る
-        RoomFurnitureSave.Set(category, currentId);
         RoomFurnitureSave.Commit();
 
-        Debug.Log($"<color=#00E5FF>[決定]</color> [RoomEdit] {category} を {currentId} で保存しました", this);
-
-        applier?.TakeSnapshot(); // ここまでを新しい「戻り先」にする
+        applier.TakeSnapshot(); // ここまでを新しい「戻り先」にする
         CloseItemList();
     }
 
@@ -442,11 +562,11 @@ public class RoomEditController : MonoBehaviour
     /// 強調表示を、いま編集しているスロットの位置へ移す。
     /// highlightObject が未設定なら何もしない（任意の演出）。
     /// </summary>
-    private void MoveHighlightTo(FurnitureCategory category)
+    private void MoveHighlightTo(SlotKey key)
     {
         if (highlightObject == null) return;
 
-        Transform slot = applier != null ? applier.GetSlot(category) : null;
+        Transform slot = applier != null ? applier.GetSlot(key) : null;
         if (slot == null)
         {
             highlightObject.SetActive(false);
@@ -500,6 +620,7 @@ public class RoomEditController : MonoBehaviour
             case FurnitureCategory.Decoration: return "装飾";
             case FurnitureCategory.Rug:        return "ラグマット";
             case FurnitureCategory.RoomShell:  return "おへや";
+            case FurnitureCategory.Decoration2: return "かべかざり";
             default: return c.ToString();
         }
     }

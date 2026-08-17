@@ -51,19 +51,21 @@ public class RoomFurnitureLoader : MonoBehaviour
         var saved = RoomFurnitureSave.LoadAll();
         int applied = 0;
 
-        foreach (FurnitureCategory c in System.Enum.GetValues(typeof(FurnitureCategory)))
+        // ★enum を総なめするのではなく「Applier に結線されているスロット」だけを回す。
+        //   かべかざりのように1カテゴリに2スロットあるものも、これで自然に両方処理される。
+        foreach (var key in _applier.GetAllSlotKeys())
         {
             // カタログに1件も無いカテゴリは触らない。
             // （まだ登録していない家具のスロットを空にしてしまわないため）
-            if (catalog.GetByCategory(c).Count == 0) continue;
+            if (catalog.GetByCategory(key.category).Count == 0) continue;
 
-            saved.TryGetValue(c, out string id);
+            saved.TryGetValue(key, out string id);
 
             // id が null でも Applier 側が既定へフォールバックしてくれる
-            if (_applier.Apply(c, id)) applied++;
+            if (_applier.Apply(key, id)) applied++;
         }
 
         if (verboseLog)
-            Debug.Log($"[RoomFurnitureLoader] セーブから {applied} カテゴリを反映しました", this);
+            Debug.Log($"[RoomFurnitureLoader] セーブから {applied} スロットを反映しました", this);
     }
 }

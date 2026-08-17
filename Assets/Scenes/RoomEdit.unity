@@ -6902,26 +6902,37 @@ MonoBehaviour:
   slots:
   - category: 0
     slot: {fileID: 1209635546}
+    shadow: {fileID: 16697328}
   - category: 1
     slot: {fileID: 1043589552}
+    shadow: {fileID: 1901464154}
   - category: 2
     slot: {fileID: 1006679987}
+    shadow: {fileID: 230218798}
   - category: 3
     slot: {fileID: 2044800301}
+    shadow: {fileID: 0}
   - category: 4
     slot: {fileID: 986768459}
+    shadow: {fileID: 0}
   - category: 5
     slot: {fileID: 532235931}
+    shadow: {fileID: 0}
   - category: 6
     slot: {fileID: 259839393}
+    shadow: {fileID: 990464538}
   - category: 7
     slot: {fileID: 1344857903}
+    shadow: {fileID: 0}
   - category: 8
     slot: {fileID: 313411153}
+    shadow: {fileID: 0}
   - category: 9
     slot: {fileID: 1689473887}
+    shadow: {fileID: 0}
   - category: 10
     slot: {fileID: 261746568}
+    shadow: {fileID: 0}
   verboseLog: 1
 --- !u!1001 &1581041797
 PrefabInstance:

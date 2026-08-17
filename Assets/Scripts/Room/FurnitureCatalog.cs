@@ -6,7 +6,11 @@ using UnityEngine;
 ///
 /// ★ここの名前は「セーブデータに文字列として保存される」ので、
 ///   一度リリースしたら変えないこと。変えると既存ユーザーの部屋が読めなくなる。
-///   （並び順を変えるのは安全。数値ではなく名前で保存するため）
+///
+/// ★★並び順は変えないこと。新しいカテゴリは必ず「末尾」に足す。
+///   セーブデータは文字列なので並べ替えても平気だが、
+///   .asset（カタログ）と .unity（シーン）の中では category が「数値」で保存されている。
+///   途中に挿入すると、既存の行が1つずつズレて全部別カテゴリになる。
 /// </summary>
 public enum FurnitureCategory
 {
@@ -21,6 +25,86 @@ public enum FurnitureCategory
     Decoration,   // 装飾
     Rug,          // ラグマット
     RoomShell,    // お部屋（部屋土台）
+    Decoration2,  // かべかざり（スロット2つ：かべA / かべB）
+
+    // ↑ 新しいカテゴリはここに足す（途中に入れない）
+}
+
+/// <summary>
+/// 「どのスロットか」を表すキー。カテゴリ ＋ スロット番号 のセット。
+///
+/// 【なぜ番号が要るか】
+///   かべかざりのように、同じカテゴリでスロットを複数持ちたいものがあるため。
+///     かべA = Decoration2 の 0番
+///     かべB = Decoration2 の 1番
+///   スロットが1つしかないカテゴリは、今までどおり全部 0番。
+///
+///   こうしておくと、アイテムの一覧は「Decoration2」ひとつで共有できる。
+///   かべA用・かべB用にカタログの行を2重に作らなくていいし、
+///   同じ時計をかべAとかべBの両方に飾ることもできる。
+///
+/// 【セーブデータに書くときの形】
+///   0番      → "Decoration2"      ← 今までのセーブと同じ形。だから旧データもそのまま読める
+///   1番以降  → "Decoration2#1"
+/// </summary>
+[System.Serializable]
+public struct SlotKey : System.IEquatable<SlotKey>
+{
+    public FurnitureCategory category;
+    public int index;
+
+    public SlotKey(FurnitureCategory category, int index = 0)
+    {
+        this.category = category;
+        this.index = index;
+    }
+
+    /// <summary>セーブデータに書く文字列。0番はカテゴリ名だけ（＝旧形式と同じ）。</summary>
+    public override string ToString()
+    {
+        return index == 0 ? category.ToString() : category + "#" + index;
+    }
+
+    /// <summary>
+    /// セーブデータの文字列を読み戻す。
+    /// 知らないカテゴリ名なら false を返す（呼び出し側で読み飛ばす）。
+    /// </summary>
+    public static bool TryParse(string s, out SlotKey key)
+    {
+        key = default;
+        if (string.IsNullOrEmpty(s)) return false;
+
+        string catPart = s;
+        int idx = 0;
+
+        int sharp = s.IndexOf('#');
+        if (sharp >= 0)
+        {
+            catPart = s.Substring(0, sharp);
+
+            // 番号が数字でなければ 0番として扱う。
+            // 「読めないから丸ごと捨てる」より、かべAとして復元するほうが被害が小さい
+            int.TryParse(s.Substring(sharp + 1), out idx);
+            if (idx < 0) idx = 0;
+        }
+
+        if (!System.Enum.TryParse(catPart, out FurnitureCategory cat)) return false;
+
+        key = new SlotKey(cat, idx);
+        return true;
+    }
+
+    // Dictionary のキーに使うので、比較まわりを自分で書いておく。
+    // 書かないと比較のたびに箱詰め（ボックス化）が起きて、地味にゴミが増える
+    public bool Equals(SlotKey other) => category == other.category && index == other.index;
+    public override bool Equals(object obj) => obj is SlotKey o && Equals(o);
+    public override int GetHashCode() => ((int)category * 397) ^ index;
+
+    /// <summary>
+    /// カテゴリをそのまま SlotKey として書けるようにする（＝0番の意味）。
+    /// これのおかげで、スロットが1つだけのカテゴリを扱う既存のコードを書き換えずに済む。
+    /// </summary>
+    public static implicit operator SlotKey(FurnitureCategory c) => new SlotKey(c, 0);
 }
 
 /// <summary>
@@ -40,8 +124,15 @@ public class FurnitureEntry
     [Tooltip("一覧に表示する名前。これは後から変えてOK（セーブには使われない）")]
     public string displayName;
 
-    [Tooltip("スロットに入れる Prefab。例: Furniture_RoomShell_Koko")]
+    [Tooltip("スロットに入れる Prefab。例: Furniture_RoomShell_Koko\n" +
+             "「なし」の行では空にする")]
     public GameObject prefab;
+
+    [Tooltip("この行は「なし」を表す。選ぶとスロットが空になる。\n" +
+             "★Prefab を空にするだけだと『設定し忘れ』と区別できないので、\n" +
+             "  意図的に空にする場合は必ずここにチェックを入れること。\n" +
+             "カタログにこの行を作らなければ、そのカテゴリでは「なし」を選べない")]
+    public bool isEmptySlot = false;
 
     [Tooltip("一覧ボタンに出すサムネイル画像。未設定でも動く（ボタンが無画像になるだけ）")]
     public Sprite thumbnail;
@@ -152,10 +243,18 @@ public class FurnitureCatalog : ScriptableObject
                 Debug.LogError($"[FurnitureCatalog] IDが重複しています: {e.id}", this);
             }
 
-            // Prefab 未設定
-            if (e.prefab == null)
+            // Prefab 未設定。「なし」の行は空が正しいので警告しない
+            if (e.prefab == null && !e.isEmptySlot)
             {
-                Debug.LogWarning($"[FurnitureCatalog] {e.id} の Prefab が未設定です", this);
+                Debug.LogWarning($"[FurnitureCatalog] {e.id} の Prefab が未設定です。" +
+                                 $"「なし」の行なら isEmptySlot にチェックを入れてください", this);
+            }
+
+            // 逆に、Prefab が入っているのに「なし」扱いになっているのも事故
+            if (e.prefab != null && e.isEmptySlot)
+            {
+                Debug.LogWarning($"[FurnitureCatalog] {e.id} は isEmptySlot なのに Prefab が入っています。" +
+                                 $"Prefab は無視されます", this);
             }
 
             // 命名規則から外れている（動作はするが、後で分からなくなるので警告）
