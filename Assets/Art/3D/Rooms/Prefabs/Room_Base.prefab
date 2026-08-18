@@ -1445,6 +1445,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Furniture_Nightstand_Default
       objectReference: {fileID: 0}
+    - target: {fileID: 3363454746926500930, guid: 1b81a832f13024e5e8368a7b4e9096f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6590073662394334595, guid: 1b81a832f13024e5e8368a7b4e9096f3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.1
@@ -1693,6 +1697,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Furniture_Sofa_Default
       objectReference: {fileID: 0}
+    - target: {fileID: 2212466796571692593, guid: f05e9c004054c4ab4bcd0158a8b1d15c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2822159607715060271, guid: f05e9c004054c4ab4bcd0158a8b1d15c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.48
@@ -1879,6 +1887,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Furniture_Bed_Default
       objectReference: {fileID: 0}
+    - target: {fileID: 2334687244759717793, guid: 1834513eb2d9641e7b1851dba5a6a4cc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3816305641763828630, guid: 1834513eb2d9641e7b1851dba5a6a4cc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3816305641763828630, guid: 1834513eb2d9641e7b1851dba5a6a4cc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3816305641763828630, guid: 1834513eb2d9641e7b1851dba5a6a4cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.14750004
@@ -2002,6 +2022,10 @@ PrefabInstance:
     - target: {fileID: 244932350929589241, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
       propertyPath: m_Name
       value: Furniture_Table_Default
+      objectReference: {fileID: 0}
+    - target: {fileID: 244932350929589241, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7030350241470514004, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
       propertyPath: m_LocalPosition.x

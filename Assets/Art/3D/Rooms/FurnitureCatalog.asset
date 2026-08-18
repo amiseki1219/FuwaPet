@@ -72,35 +72,35 @@ MonoBehaviour:
   - category: 0
     id: Bed_Poko
     displayName: "\u3053\u3082\u308C\u3073\u306E\u30D9\u30C3\u30C9"
-    prefab: {fileID: 0}
+    prefab: {fileID: 3848569199326635662, guid: ec7313c8ec4b6455b82af0400361db2a, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 3862650747711848614, guid: 0120a3415c403462b98fc2ee8ec72ecd, type: 3}
     ownedByDefault: 0
   - category: 0
     id: Bed_Eru
     displayName: "\u661F\u306E\u3079\u3063\u3069"
-    prefab: {fileID: 0}
+    prefab: {fileID: 3369269863182242855, guid: d09d95fd4cc2344bca035b4b5eb72cca, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -645891140695522035, guid: 88bc27836a4744a3289c1253cea4cf62, type: 3}
     ownedByDefault: 0
   - category: 0
     id: Bed_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30D9\u30C3\u30C9"
-    prefab: {fileID: 0}
+    prefab: {fileID: 8352284975346337948, guid: 297be254a435c41698baf1a43b845b67, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -6963072821907401207, guid: 4b8515d931db04bf09d8e2ec0456c3dc, type: 3}
     ownedByDefault: 0
   - category: 0
     id: Bed_Paru
     displayName: "\u30EA\u30DC\u30F3\u306E\u3079\u3063\u3069"
-    prefab: {fileID: 0}
+    prefab: {fileID: 6582387526470299132, guid: da19fc647ac0d4dff90913e5039646ee, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 7744058539163611640, guid: 01a3fb8a6b1dd4c82b506f7b776c5ac4, type: 3}
     ownedByDefault: 0
   - category: 0
     id: Bed_Piyoko
     displayName: "\u305F\u307E\u3054\u306E\u3079\u3063\u3069"
-    prefab: {fileID: 0}
+    prefab: {fileID: 3448268856269050942, guid: 53837a733e4ad450887e728ed2836f59, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 399275890886976974, guid: dfd334f825d39499c9f3aea3407ed10a, type: 3}
     ownedByDefault: 0
@@ -121,35 +121,133 @@ MonoBehaviour:
   - category: 2
     id: Sofa_Poko
     displayName: "\u3053\u3082\u308C\u3073\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 0}
+    prefab: {fileID: 7448240535023385845, guid: 0ae864f47006f4a7eae033c7a0ccd996, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3664358531801786228, guid: c8b78d13d82a040aa89f67f248818422, type: 3}
     ownedByDefault: 0
   - category: 2
     id: Sofa_Eru
     displayName: "\u661F\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 0}
+    prefab: {fileID: 2251562597348360274, guid: ddc04a21c9c8f4afdb12a65010379f4b, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 2879333151190789768, guid: eabcbae4cfcfd4457a3af8e28925d1ef, type: 3}
     ownedByDefault: 0
   - category: 2
     id: Sofa_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 0}
+    prefab: {fileID: 7991730810407657274, guid: b96a08e17281f4cceb4baea3003bae2f, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 2919127301967665301, guid: 32f02a9a2a1c849799a560b2c9cb71a2, type: 3}
     ownedByDefault: 0
   - category: 2
     id: Sofa_Paru
     displayName: "\u308A\u307C\u3093\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 0}
+    prefab: {fileID: 8591711127322278182, guid: 239c4dac5571b4b7c92b6720b75459d4, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3425283342497153935, guid: e50fa1ba04f8848a68674cc063e958e4, type: 3}
     ownedByDefault: 0
   - category: 2
     id: Sofa_Piyoko
     displayName: "\u305F\u307E\u3054\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 0}
+    prefab: {fileID: 2267068377872169162, guid: 0b95eb66815b540cf9417dc3625fc865, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1558947180396752644, guid: b23d7328fd9154e69b6739983e589855, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_None
+    displayName: "\u306A\u3057"
+    prefab: {fileID: 0}
+    isEmptySlot: 0
+    thumbnail: {fileID: 0}
+    ownedByDefault: 1
+  - category: 6
+    id: Nightstand_Default
+    displayName: "\u304D\u307B\u3093\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 3363454746926500930, guid: 1b81a832f13024e5e8368a7b4e9096f3, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 3068097769464666890, guid: 66a4938725eb64058a6853f3c416b397, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_Poko
+    displayName: "\u304D\u306E\u3053\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 1385902957054211648, guid: 483902314ab02486f80dce3304425767, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 659192162165739134, guid: f317558389de840479a575a6eddb81ba, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_Eru
+    displayName: "\u661F\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6936641038790542371, guid: bfd14a6eaf27a412ebc9946e14424b74, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -1727752123545898152, guid: 55b6deae90ccd419e8db93cc84838dfb, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_Koko
+    displayName: "\u304A\u306F\u306A\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6787216858428384920, guid: 333daa4d6a0484488854ad14df649a93, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -667408708484198444, guid: a06eae95ca886478f91f8eca6d36b6d1, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_Paru
+    displayName: "\u30EA\u30DC\u30F3\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6115931893863237176, guid: edca47abbced54d01926cacd5836db72, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 3263348416290822690, guid: eb97eea54821f474fbbc1e88d0dbdc70, type: 3}
+    ownedByDefault: 0
+  - category: 6
+    id: Nightstand_Piyoko
+    displayName: "\u305F\u307E\u3054\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6727870329176676034, guid: 8bfae6f1622d54fff955d8de63f0f006, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -6155256083111238286, guid: 0f5cef0d45d704b3cabe39e4df1fce3a, type: 3}
+    ownedByDefault: 0
+  - category: 1
+    id: Table_None
+    displayName: "\u306A\u3057"
+    prefab: {fileID: 0}
+    isEmptySlot: 0
+    thumbnail: {fileID: 0}
+    ownedByDefault: 1
+  - category: 1
+    id: Table_Default
+    displayName: "\u304D\u307B\u3093\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 244932350929589241, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 4807429320370600691, guid: 54ed7d734a15e46d9ab51d5ea310613f, type: 3}
+    ownedByDefault: 1
+  - category: 1
+    id: Table_Poko
+    displayName: "\u3053\u3082\u308C\u3073\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 5303884892944597525, guid: a5e04f7df300a4bc4a73af0e6d5440f7, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 3777634773457746935, guid: 80221295e5ee14bc7ae461fc924b4589, type: 3}
+    ownedByDefault: 0
+  - category: 1
+    id: Table_Eru
+    displayName: "\u661F\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 2514090496660273379, guid: 7d6737c60d18044c38555bc5e26a5764, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -550329937988558750, guid: 413315192254d461f9b6351413cc1d12, type: 3}
+    ownedByDefault: 0
+  - category: 1
+    id: Table_Koko
+    displayName: "\u304A\u306F\u306A\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 4414084931085620108, guid: a27435fdbce004daf8033cadb59e5561, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -3694040054090000080, guid: e72da67ad1f7b44b1adc729142c28ad1, type: 3}
+    ownedByDefault: 0
+  - category: 1
+    id: Table_Paru
+    displayName: "\u30EA\u30DC\u30F3\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 4150454344989282713, guid: 10dac6a4f800d49feb8dafa222cb9e7f, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 8391044650688622811, guid: 0152b019413cf4704bdb6cfeeeb70131, type: 3}
+    ownedByDefault: 0
+  - category: 1
+    id: Table_Piyoko
+    displayName: "\u3074\u3088\u3053\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 3638976438019029286, guid: 525199a1b48434ff9b34850fd233bc47, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -858145242867497395, guid: 28de135ec76c243509394cd2d0153b1d, type: 3}
     ownedByDefault: 0
