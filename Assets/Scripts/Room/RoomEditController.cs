@@ -87,6 +87,13 @@ public class RoomEditController : MonoBehaviour
     [Tooltip("SafeArea に付けた CanvasGroup。プレビュー中はここの alpha を 0 にする")]
     [SerializeField] private CanvasGroup uiGroup;
 
+    [Tooltip("プレビュー中のカメラ位置。\n" +
+             "★空のままでよい。空なら「入室したときのカメラ位置」へ戻る。\n" +
+             "  RoomEdit の入室時カメラは Main 画面とまったく同じアングルなので、\n" +
+             "  空にしておくだけで『遊んでいるときの見え方』になる。\n" +
+             "別アングルにしたくなったときだけ、View_Preview のような空オブジェクトを作って入れる")]
+    [SerializeField] private Transform previewViewpoint;
+
     [SerializeField] private Button previewButton;
 
     [Tooltip("プレビュー中だけ有効になる全画面の透明ボタン。押すとプレビューを抜ける")]
@@ -270,8 +277,11 @@ public class RoomEditController : MonoBehaviour
         SetCardVisible(false);
         if (itemListPanel != null) itemListPanel.SetActive(true);
 
-        MoveCameraTo(FindViewpoint(category));
-        SetCharacterVisible(false);
+        // ★カメラとキャラは「いまの状態」から自動で決める。
+        //   カテゴリ選択中／家具の編集中／プレビュー中 の3状態があり、
+        //   それぞれで置き場所が違うため、判断を1箇所にまとめてある（下の2つのメソッド）
+        UpdateCameraForState();
+        UpdateCharacterForState();
         MoveHighlightTo(CurrentKey);
     }
 
@@ -321,9 +331,39 @@ public class RoomEditController : MonoBehaviour
         }
     }
 
-    /// <summary>「もどる」。カメラとキャラを戻して、カテゴリカードに帰る。</summary>
+    /// <summary>
+    /// 「もどる」。★保存していない変更をすべて取り消してから、カテゴリカードに帰る。
+    ///
+    /// 【なぜ取り消すか】
+    ///   アイテムをタップした時点で部屋には反映される（＝プレビュー）が、
+    ///   それは「試着」であって保存ではない。
+    ///   保存は「けってい」を押したときだけ行う（OnDecide）。
+    ///   ここで戻さないと、決定していない家具がそのまま残ってしまう。
+    ///
+    /// 【どこまで戻るか】
+    ///   入室した時点、または最後に「けってい」を押した時点。
+    ///   OnDecide が保存後に TakeSnapshot() を呼んで戻り先を更新しているので、
+    ///   別のカテゴリで決定済みの内容が巻き戻ることはない。
+    /// </summary>
     public void CloseItemList()
     {
+        CloseItemListInternal(revertChanges: true);
+    }
+
+    /// <summary>
+    /// 一覧を閉じる本体。
+    /// 「けってい」からは revertChanges = false で呼ぶ。
+    /// 保存直後に戻す処理を走らせると、置いたばかりの家具を作り直すことになって無駄なため。
+    /// </summary>
+    private void CloseItemListInternal(bool revertChanges)
+    {
+        // ★先にプレビューを解除する。
+        //   UI を透明にしたまま閉じてしまうと、カテゴリカードが見えないまま操作不能になる。
+        //   カメラとキャラはこのメソッドの最後でまとめて置き直すので、ここでは動かさない
+        if (_inPreview) SetPreview(false, updateView: false);
+
+        if (revertChanges) applier?.RestoreSnapshot();
+
         _openedCategory = null;
         _openedSlotIndex = 0;
 
@@ -331,8 +371,10 @@ public class RoomEditController : MonoBehaviour
         if (slotTabRoot != null) slotTabRoot.SetActive(false);
         ShowCategoryCard();
 
-        MoveCameraHome();
-        SetCharacterVisible(true);
+        // ★状態（カテゴリ未選択）を先に更新してから呼ぶこと。
+        //   先に呼ぶと「家具を編集中」と判定されてカメラが寄ったままになる
+        UpdateCameraForState();
+        UpdateCharacterForState();
 
         if (highlightObject != null) highlightObject.SetActive(false);
     }
@@ -475,7 +517,9 @@ public class RoomEditController : MonoBehaviour
         RoomFurnitureSave.Commit();
 
         applier.TakeSnapshot(); // ここまでを新しい「戻り先」にする
-        CloseItemList();
+
+        // ★保存した直後なので取り消さずに閉じる
+        CloseItemListInternal(revertChanges: false);
     }
 
     // ─────────────────────────────────────────────
@@ -498,6 +542,41 @@ public class RoomEditController : MonoBehaviour
     private void MoveCameraHome()
     {
         StartCameraMove(_homeCamPos, _homeCamRot);
+    }
+
+    /// <summary>
+    /// いまの状態に合わせてカメラを置き直す。
+    ///
+    /// 【3つの状態】
+    ///   プレビュー中        → previewViewpoint（未設定なら入室時の位置）
+    ///   家具を編集している間 → そのカテゴリの View_〇〇（未設定なら入室時の位置）
+    ///   カテゴリ選択中       → 入室時の位置
+    ///
+    /// ★判断をここ1箇所にまとめてある。
+    ///   呼び出し側は「状態を変えてから、これを呼ぶ」だけでよい。
+    ///   状態ごとに個別で MoveCameraTo / MoveCameraHome を書くと、
+    ///   プレビューを抜けたときだけ戻し忘れる、といった漏れが起きる（実際に起きた）
+    /// </summary>
+    private void UpdateCameraForState()
+    {
+        if (_inPreview)
+        {
+            // 入室時のカメラは Main 画面とまったく同じアングルなので、
+            // previewViewpoint が空でも「遊んでいるときの見え方」になる
+            if (previewViewpoint != null)
+                StartCameraMove(previewViewpoint.position, previewViewpoint.rotation);
+            else
+                MoveCameraHome();
+            return;
+        }
+
+        if (_openedCategory != null)
+        {
+            MoveCameraTo(FindViewpoint(_openedCategory.Value));
+            return;
+        }
+
+        MoveCameraHome();
     }
 
     private void StartCameraMove(Vector3 pos, Quaternion rot)
@@ -555,6 +634,18 @@ public class RoomEditController : MonoBehaviour
         characterRoot.SetActive(visible);
     }
 
+    /// <summary>
+    /// いまの状態に合わせてキャラを出し入れする。
+    ///
+    ///   プレビュー中        → 出す（完成イメージを見るため。部屋にキャラが居る状態が本番）
+    ///   家具を編集している間 → 隠す（キャラが家具の手前に立って見えなくなるため）
+    ///   カテゴリ選択中       → 出す
+    /// </summary>
+    private void UpdateCharacterForState()
+    {
+        SetCharacterVisible(_inPreview || _openedCategory == null);
+    }
+
     // ─────────────────────────────────────────────
     // 強調表示・プレビュー
     // ─────────────────────────────────────────────
@@ -580,7 +671,16 @@ public class RoomEditController : MonoBehaviour
         highlightObject.SetActive(true);
     }
 
-    private void SetPreview(bool on)
+    /// <summary>
+    /// プレビューの出し入れ。UI を消して、カメラとキャラを切り替える。
+    /// </summary>
+    /// <param name="on">true でプレビュー開始</param>
+    /// <param name="updateView">
+    /// カメラとキャラをここで動かすか。
+    /// 一覧を閉じる処理から呼ぶときだけ false にする。
+    /// （直後に「カテゴリ未選択」の状態で置き直すので、ここで動かすとカメラが二度手間になる）
+    /// </param>
+    private void SetPreview(bool on, bool updateView = true)
     {
         _inPreview = on;
 
@@ -599,6 +699,15 @@ public class RoomEditController : MonoBehaviour
         {
             Debug.LogWarning("[RoomEdit] previewExitButton が未設定です。" +
                              "プレビューから戻れないので、全画面の透明ボタンを用意してください", this);
+        }
+
+        // ★UI を消すだけでは「家具に寄ったカメラのまま」になる。
+        //   プレビューは部屋全体を見るための機能なので、カメラとキャラも必ず一緒に切り替える。
+        //   _inPreview を先に更新してあるので、下の2つが自動で正しい場所を選ぶ
+        if (updateView)
+        {
+            UpdateCameraForState();
+            UpdateCharacterForState();
         }
 
         Debug.Log($"[RoomEdit] プレビュー {(on ? "開始" : "終了")}", this);
