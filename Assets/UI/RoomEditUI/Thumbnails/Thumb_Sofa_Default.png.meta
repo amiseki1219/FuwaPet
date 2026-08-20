@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: fc3381dd1f8344691b6b3292fe20c5d3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1568586319853515148
+    second: Thumb_Sofa_Default_0
+  - first:
+      213: 5614111415947611151
+    second: Thumb_Sofa_Default_1
+  - first:
+      213: 700425623673823167
+    second: Thumb_Sofa_Default_2
+  - first:
+      213: -6446682635876861016
+    second: Thumb_Sofa_Default_3
+  - first:
+      213: 7106669224488277861
+    second: Thumb_Sofa_Default_4
+  - first:
+      213: -6561285590110012023
+    second: Thumb_Sofa_Default_5
+  - first:
+      213: 1313254144513873811
+    second: Thumb_Sofa_Default_6
+  - first:
+      213: 459066353811681282
+    second: Thumb_Sofa_Default_7
+  - first:
+      213: -3614690283321128809
+    second: Thumb_Sofa_Default_8
+  - first:
+      213: -3106027306399936406
+    second: Thumb_Sofa_Default_9
+  - first:
+      213: -8178211758178106784
+    second: Thumb_Sofa_Default_10
+  - first:
+      213: -3839957454833679576
+    second: Thumb_Sofa_Default_11
+  - first:
+      213: -1849120325310680499
+    second: Thumb_Sofa_Default_12
+  - first:
+      213: 2037884508793275765
+    second: Thumb_Sofa_Default_13
+  - first:
+      213: -4991314813101607040
+    second: Thumb_Sofa_Default_14
+  - first:
+      213: 5006058945297825885
+    second: Thumb_Sofa_Default_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 256
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_0
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 0
+        width: 1236
+        height: 1192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81f76a72fcb4c510800000000000000
+      internalID: 1568586319853515148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_1
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 1190
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0cc505869459ed40800000000000000
+      internalID: 5614111415947611151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_2
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 1163
+        width: 85
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbfd8aac46968b900800000000000000
+      internalID: 700425623673823167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_3
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 1155
+        width: 103
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ab71e47c48c886a0800000000000000
+      internalID: -6446682635876861016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_4
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 1192
+        width: 21
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56713d5c106ff9260800000000000000
+      internalID: 7106669224488277861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_5
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1174
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98d7a9bd481a1f4a0800000000000000
+      internalID: -6561285590110012023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_6
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1165
+        width: 23
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3971f8fbfad993210800000000000000
+      internalID: 1313254144513873811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_7
+      rect:
+        serializedVersion: 2
+        x: 1048
+        y: 1157
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2007743aa6eee5600800000000000000
+      internalID: 459066353811681282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 813
+        width: 83
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7988699b65a06ddc0800000000000000
+      internalID: -3614690283321128809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_9
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 718
+        width: 43
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a605e5b0f9c25e4d0800000000000000
+      internalID: -3106027306399936406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_10
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 696
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0620fd76cb7218e80800000000000000
+      internalID: -8178211758178106784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_11
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 631
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82386003a0bb5bac0800000000000000
+      internalID: -3839957454833679576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_12
+      rect:
+        serializedVersion: 2
+        x: 1302
+        y: 510
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42f6e67cda9656e0800000000000000
+      internalID: -1849120325310680499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_13
+      rect:
+        serializedVersion: 2
+        x: 1300
+        y: 446
+        width: 12
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57505efd925084c10800000000000000
+      internalID: 2037884508793275765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_14
+      rect:
+        serializedVersion: 2
+        x: 1286
+        y: 297
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 087fee26f994bbab0800000000000000
+      internalID: -4991314813101607040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Sofa_Default_15
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 2
+        width: 41
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d50c4276618197540800000000000000
+      internalID: 5006058945297825885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Thumb_Sofa_Default_0: 1568586319853515148
+      Thumb_Sofa_Default_1: 5614111415947611151
+      Thumb_Sofa_Default_10: -8178211758178106784
+      Thumb_Sofa_Default_11: -3839957454833679576
+      Thumb_Sofa_Default_12: -1849120325310680499
+      Thumb_Sofa_Default_13: 2037884508793275765
+      Thumb_Sofa_Default_14: -4991314813101607040
+      Thumb_Sofa_Default_15: 5006058945297825885
+      Thumb_Sofa_Default_2: 700425623673823167
+      Thumb_Sofa_Default_3: -6446682635876861016
+      Thumb_Sofa_Default_4: 7106669224488277861
+      Thumb_Sofa_Default_5: -6561285590110012023
+      Thumb_Sofa_Default_6: 1313254144513873811
+      Thumb_Sofa_Default_7: 459066353811681282
+      Thumb_Sofa_Default_8: -3614690283321128809
+      Thumb_Sofa_Default_9: -3106027306399936406
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

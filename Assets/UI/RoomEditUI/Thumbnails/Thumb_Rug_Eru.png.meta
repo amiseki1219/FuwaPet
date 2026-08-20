@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 25b83c8ee84604fc280efbc0e11d55f1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5749276154556977474
+    second: Thumb_Rug_Eru_0
+  - first:
+      213: -5391140954359509238
+    second: Thumb_Rug_Eru_1
+  - first:
+      213: -9044114219848537496
+    second: Thumb_Rug_Eru_2
+  - first:
+      213: 8083991820448189981
+    second: Thumb_Rug_Eru_3
+  - first:
+      213: -7707178234858019058
+    second: Thumb_Rug_Eru_4
+  - first:
+      213: 434552754918948906
+    second: Thumb_Rug_Eru_5
+  - first:
+      213: -949918715287845443
+    second: Thumb_Rug_Eru_6
+  - first:
+      213: -8009835337163185263
+    second: Thumb_Rug_Eru_7
+  - first:
+      213: -7535925045662394282
+    second: Thumb_Rug_Eru_8
+  - first:
+      213: -8631298371754900590
+    second: Thumb_Rug_Eru_9
+  - first:
+      213: 1174825951866848851
+    second: Thumb_Rug_Eru_10
+  - first:
+      213: -3955395046370958732
+    second: Thumb_Rug_Eru_11
+  - first:
+      213: -2000250601310304426
+    second: Thumb_Rug_Eru_12
+  - first:
+      213: -2306574788298978139
+    second: Thumb_Rug_Eru_13
+  - first:
+      213: 6948341127878227306
+    second: Thumb_Rug_Eru_14
+  - first:
+      213: 5413867364374408551
+    second: Thumb_Rug_Eru_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 256
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_0
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 31
+        width: 1200
+        height: 1172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebee1046cc77630b0800000000000000
+      internalID: -5749276154556977474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_1
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 1174
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0f47519dd1de25b0800000000000000
+      internalID: -5391140954359509238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_2
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 1154
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86a6ed9e80adc7280800000000000000
+      internalID: -9044114219848537496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_3
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 897
+        width: 49
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1e4af8dabb103070800000000000000
+      internalID: 8083991820448189981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_4
+      rect:
+        serializedVersion: 2
+        x: 1217
+        y: 921
+        width: 40
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e076aa2da3a9a0590800000000000000
+      internalID: -7707178234858019058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_5
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 881
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a208c11ad67d70600800000000000000
+      internalID: 434552754918948906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_6
+      rect:
+        serializedVersion: 2
+        x: 1241
+        y: 851
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db5c5c916f531d2f0800000000000000
+      internalID: -949918715287845443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_7
+      rect:
+        serializedVersion: 2
+        x: 1251
+        y: 681
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1936403e23957d090800000000000000
+      internalID: -8009835337163185263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_8
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 320
+        width: 41
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 658d25719140b6790800000000000000
+      internalID: -7535925045662394282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_9
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 368
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29344298cd7773880800000000000000
+      internalID: -8631298371754900590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_10
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 282
+        width: 25
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3560fed8af1dd4010800000000000000
+      internalID: 1174825951866848851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_11
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 71
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47228b2792d9b19c0800000000000000
+      internalID: -3955395046370958732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_12
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 65
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65743270daead34e0800000000000000
+      internalID: -2000250601310304426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_13
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 49
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ac419763766dffd0800000000000000
+      internalID: -2306574788298978139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_14
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 21
+        width: 13
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a653b6121777d6060800000000000000
+      internalID: 6948341127878227306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Eru_15
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 0
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76ded9a1fabe12b40800000000000000
+      internalID: 5413867364374408551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: fa3464951eff74be697a64264e209c4d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Thumb_Rug_Eru_0: -5749276154556977474
+      Thumb_Rug_Eru_1: -5391140954359509238
+      Thumb_Rug_Eru_10: 1174825951866848851
+      Thumb_Rug_Eru_11: -3955395046370958732
+      Thumb_Rug_Eru_12: -2000250601310304426
+      Thumb_Rug_Eru_13: -2306574788298978139
+      Thumb_Rug_Eru_14: 6948341127878227306
+      Thumb_Rug_Eru_15: 5413867364374408551
+      Thumb_Rug_Eru_2: -9044114219848537496
+      Thumb_Rug_Eru_3: 8083991820448189981
+      Thumb_Rug_Eru_4: -7707178234858019058
+      Thumb_Rug_Eru_5: 434552754918948906
+      Thumb_Rug_Eru_6: -949918715287845443
+      Thumb_Rug_Eru_7: -8009835337163185263
+      Thumb_Rug_Eru_8: -7535925045662394282
+      Thumb_Rug_Eru_9: -8631298371754900590
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
