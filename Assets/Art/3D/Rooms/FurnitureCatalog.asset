@@ -592,11 +592,11 @@ MonoBehaviour:
     displayName: "\u304A\u306F\u306A\u306E\u7D75"
     prefab: {fileID: 4737167162443918718, guid: 051ccd20d4ad6458489cf1bed05c0b00, type: 3}
     isEmptySlot: 0
-    thumbnail: {fileID: 7999785208531816425, guid: ccf1f84eed71544dfb5215262ea2030d, type: 3}
+    thumbnail: {fileID: -112805899, guid: ccf1f84eed71544dfb5215262ea2030d, type: 3}
     ownedByDefault: 1
   - category: 11
-    id: Decoration2_ParuMirror
-    displayName: "\u308A\u307C\u3093\u306E\u93E1"
+    id: Decoration2_ParuDeco
+    displayName: "\u308A\u307C\u3093\u306E\u58C1\u98FE\u308A"
     prefab: {fileID: 6516466944751233739, guid: 453504389b926482ba86ac0ed420762e, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -5510638053917250277, guid: c0488d65af3ec499fbe7480721ec7029, type: 3}
