@@ -297,6 +297,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Default_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1312
+        height: 1199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb03eccf47a84438cbb4b036d4529ef8
+      internalID: 1753320794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -312,6 +334,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Default_0: 3236060542666781401
+      Thumb_Bed_Default_1: 1753320794
       Thumb_RoomShell_Default_1: -5195028523619826684
       Thumb_RoomShell_Default_2: 2289411159739461414
       Thumb_RoomShell_Default_3: -7769484824739568736

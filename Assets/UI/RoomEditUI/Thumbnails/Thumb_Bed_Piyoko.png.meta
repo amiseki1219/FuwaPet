@@ -147,6 +147,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Piyoko_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9107a2fd12ae840e1a52bd411468e40f
+      internalID: 891780208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -162,6 +184,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Piyoko_0: 399275890886976974
+      Thumb_Bed_Piyoko_1: 891780208
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

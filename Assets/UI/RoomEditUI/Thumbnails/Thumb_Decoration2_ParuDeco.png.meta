@@ -137,7 +137,7 @@ TextureImporter:
         width: 813
         height: 1136
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -159,7 +159,7 @@ TextureImporter:
         width: 15
         height: 17
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -172,11 +172,33 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_ParuDeco_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 766775bc51b6547c5b1fe27bca47be7c
+      internalID: 100908843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 146ac194fa3de4ff1ab41b043153bbd4
     internalID: 0
     vertices: []
     indices: 
@@ -188,6 +210,7 @@ TextureImporter:
     nameFileIdTable:
       Thumb_Decoration2_ParuDeco_0: -5510638053917250277
       Thumb_Decoration2_ParuDeco_1: 2344598473746064866
+      Thumb_Decoration2_ParuDeco_2: 100908843
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

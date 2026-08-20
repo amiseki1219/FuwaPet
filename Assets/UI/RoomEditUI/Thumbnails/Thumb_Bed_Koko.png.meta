@@ -222,6 +222,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Koko_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b34b29bdf77424578bc19182a1fa28e6
+      internalID: 839368258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -237,6 +259,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Koko_0: -6963072821907401207
+      Thumb_Bed_Koko_1: 839368258
       Thumb_RoomShell_Koko_1: 7574045565696333737
       Thumb_RoomShell_Koko_2: 23424543869987572
       Thumb_RoomShell_Koko_3: 3673621079148304315

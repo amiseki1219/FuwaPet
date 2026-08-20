@@ -134,7 +134,7 @@ TextureImporter:
         width: 1277
         height: 1158
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -147,11 +147,33 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Rug_Poko_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1312
+        height: 1199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e2d739bde1b04b6eafd4500fd90d4c1
+      internalID: 1306498974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a89795cefb27d4169b658e87fc42ca3f
     internalID: 0
     vertices: []
     indices: 
@@ -162,6 +184,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Rug_Poko_0: -8795605620652527627
+      Thumb_Rug_Poko_1: 1306498974
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

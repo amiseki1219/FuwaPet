@@ -134,7 +134,7 @@ TextureImporter:
         width: 1187
         height: 1199
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -147,11 +147,33 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_RoomShell_Poko_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1312
+        height: 1199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f48b06d22f618446d930a07ee1220205
+      internalID: 961034814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 61eb11c0a77634f7fa1c7885a61c3225
     internalID: 0
     vertices: []
     indices: 
@@ -162,6 +184,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_RoomShell_Poko_0: 3862650747711848614
+      Thumb_RoomShell_Poko_1: 961034814
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -156,7 +156,7 @@ TextureImporter:
         width: 1254
         height: 1254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -165,6 +165,28 @@ TextureImporter:
       bones: []
       spriteID: 0c202f23c340546309f2ba13891c7e78
       internalID: -741735116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_PokoClock_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7993086dc9fb74a799aa3118681ec8eb
+      internalID: 86609324
       vertices: []
       indices: 
       edges: []
@@ -185,6 +207,7 @@ TextureImporter:
     nameFileIdTable:
       Thumb_Decoration2_PokoClock_0: -5209375623344534614
       Thumb_Decoration2_PokoClock_1: -741735116
+      Thumb_Decoration2_PokoClock_2: 86609324
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

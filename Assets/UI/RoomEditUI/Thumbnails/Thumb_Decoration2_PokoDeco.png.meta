@@ -181,7 +181,7 @@ TextureImporter:
         width: 1254
         height: 1254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -190,6 +190,50 @@ TextureImporter:
       bones: []
       spriteID: e33ed8e634a30430194c1c96acebea01
       internalID: -1310713414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_PokoDeco_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1251
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4724c069272324cc68a281f715914a14
+      internalID: 1660533609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_PokoDeco_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be379cf5d39fd48fa9d5dca4221e802e
+      internalID: 726379986
       vertices: []
       indices: 
       edges: []
@@ -211,6 +255,8 @@ TextureImporter:
       Thumb_Decoration2_PokoDeco_0: -645102665802235973
       Thumb_Decoration2_PokoDeco_1: 8257856739091123069
       Thumb_Decoration2_PokoDeco_2: -1310713414
+      Thumb_Decoration2_PokoDeco_3: 1660533609
+      Thumb_Decoration2_PokoDeco_4: 726379986
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

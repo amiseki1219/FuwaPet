@@ -197,6 +197,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Poko_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 36
+        width: 1254
+        height: 1218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efcd9f21d937344f08bcfbbf2fee210c
+      internalID: -2059546047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Poko_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c24d57ee0f7ae45e88c9d0ff436a447c
+      internalID: -1712436752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -212,6 +256,8 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Poko_0: 3862650747711848614
+      Thumb_Bed_Poko_1: -2059546047
+      Thumb_Bed_Poko_2: -1712436752
       Thumb_RoomShell_Poko_1: -231476521773691962
       Thumb_RoomShell_Poko_2: -5490475854942687423
   mipmapLimitGroupName: 

@@ -222,6 +222,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Eru_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22449cd01a1da4990bad20d683183e2f
+      internalID: -509923045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -237,6 +259,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Eru_0: -645891140695522035
+      Thumb_Bed_Eru_1: -509923045
       Thumb_RoomShell_Eru_1: 7847973386822673894
       Thumb_RoomShell_Eru_2: 6551445531386583623
       Thumb_RoomShell_Eru_3: -8950133571761229940

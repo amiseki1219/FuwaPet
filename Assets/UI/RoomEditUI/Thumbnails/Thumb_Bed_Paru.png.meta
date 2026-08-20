@@ -172,6 +172,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Thumb_Bed_Paru_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc1a6b61fe42f40e9851afb808cb3a56
+      internalID: 1987550193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -187,6 +209,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Thumb_Bed_Paru_0: 7744058539163611640
+      Thumb_Bed_Paru_1: 1987550193
       Thumb_RoomShell_Paru_1: -2584872400329886923
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

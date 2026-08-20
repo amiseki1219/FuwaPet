@@ -181,7 +181,7 @@ TextureImporter:
         width: 1254
         height: 1254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -190,6 +190,28 @@ TextureImporter:
       bones: []
       spriteID: 1116f7677535a4bbd81c6433ca123fed
       internalID: -1820188433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_PiyokoPicture_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a562e595f0e13433ead5e57c0bb4adbb
+      internalID: 1662283739
       vertices: []
       indices: 
       edges: []
@@ -211,6 +233,7 @@ TextureImporter:
       Thumb_Decoration2_PiyokoPicture_0: 4132570840136028144
       Thumb_Decoration2_PiyokoPicture_1: 138008272637147455
       Thumb_Decoration2_PiyokoPicture_2: -1820188433
+      Thumb_Decoration2_PiyokoPicture_3: 1662283739
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

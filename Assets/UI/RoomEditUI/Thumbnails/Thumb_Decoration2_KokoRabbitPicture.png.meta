@@ -231,7 +231,7 @@ TextureImporter:
         width: 1224
         height: 1254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -253,7 +253,7 @@ TextureImporter:
         width: 1254
         height: 1254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -262,6 +262,28 @@ TextureImporter:
       bones: []
       spriteID: c0fc5e81b0d964cc5af1d2d3a10be11e
       internalID: -1453427412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Decoration2_KokoRabbitPicture_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b9f4f80a4e8f4dc096131779f6c9382
+      internalID: 847742391
       vertices: []
       indices: 
       edges: []
@@ -280,6 +302,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      Thumb_Decoration2_KokoRabbitPicture_0: 847742391
       Thumb_Decoration2_KokoRabbotPicture_0: -7897584433628223020
       Thumb_Decoration2_KokoRabbotPicture_1: -2082774562142802290
       Thumb_Decoration2_KokoRabbotPicture_2: -2273294206273921914
