@@ -37,6 +37,13 @@ public class RoomEditController : MonoBehaviour
         [Tooltip("このカテゴリを選んだときのカメラ位置（View_〇〇）。\n" +
                  "空にするとカメラを動かさない。お部屋（RoomShell）は空にする")]
         public Transform viewpoint;
+
+        [Tooltip("スロットごとにカメラ位置を変えたいときだけ使う。\n" +
+                 "（かべかざりのように、設置場所が離れていて1つのアングルでは映らないもの）\n\n" +
+                 "スロット番号の順に入れる。0番目 = ひだり、1番目 = みぎ。\n" +
+                 "★空のままなら、上の viewpoint が全スロット共通で使われる。\n" +
+                 "  スロットが1つしかないカテゴリは、ここを触らなくてよい")]
+        public Transform[] slotViewpoints;
     }
 
     [Header("── 参照 ──")]
@@ -65,19 +72,28 @@ public class RoomEditController : MonoBehaviour
     [SerializeField] private Button returnButton;
     [SerializeField] private Button decideButton;
 
-    [Header("── スロット切り替え（かべA / かべB）──")]
-    [Tooltip("スロットが2つ以上あるカテゴリのときだけ出す親。\n" +
+    [Header("── 設置場所の切り替え（ひだり / みぎ）──")]
+    [Tooltip("設置場所ボタンをまとめた親。\n" +
              "スロットが1つしかないカテゴリでは自動で非表示になる。\n" +
-             "使わないなら空のままでよい")]
+             "★ボタンを ItemListPanel の直下に直接置いた場合は、空のままでよい\n" +
+             "  （その場合はボタン1つずつが個別に出し入れされる）")]
     [SerializeField] private GameObject slotTabRoot;
 
-    [Tooltip("スロット番号の順に並べる。0番目 = かべA、1番目 = かべB。\n" +
+    [Tooltip("スロット番号の順に並べる。0番目 = ひだり、1番目 = みぎ。\n" +
              "実際のスロット数より多く用意しておいてOK（余ったぶんは自動で隠れる）")]
     [SerializeField] private Button[] slotTabButtons;
 
     [Tooltip("選択中のタブに出す枠。slotTabButtons と同じ数・同じ順に入れる。\n" +
-             "枠の演出を使わないなら空のままでよい")]
+             "枠の演出を使わないなら空のままでよい（色だけで表現する場合は不要）")]
     [SerializeField] private GameObject[] slotTabSelectedMarks;
+
+    [Tooltip("選択中の設置場所ボタンの色。明るいほうを入れる")]
+    [SerializeField] private Color slotTabSelectedColor = Color.white;
+
+    [Tooltip("選択していない設置場所ボタンの色。少し暗いほうを入れる。\n" +
+             "★ボタンの Transition が Color Tint だと、こちらの指定が上書きされてしまう。\n" +
+             "  設置場所ボタンの Transition は None にしておくこと")]
+    [SerializeField] private Color slotTabUnselectedColor = new Color(0.72f, 0.72f, 0.72f, 1f);
 
     [Tooltip("カテゴリ選択中だけ見せて、家具を編集している間は隠すもの。\n" +
              "「カテゴリーを選んでね」の見出しや、広告ゾーンなどを入れる")]
@@ -114,6 +130,12 @@ public class RoomEditController : MonoBehaviour
 
     [Header("── 演出の速さ ──")]
     [SerializeField] private float cameraMoveDuration = 0.4f;
+
+    [Header("── デバッグ ──")]
+    [Tooltip("設置場所の切り替え・カメラ移動・保存の内容を Console に出す。\n" +
+             "「ひだり/みぎ が逆に動く」など、結線の食い違いを調べるときに使う。\n" +
+             "調整が終わったらオフにしてよい")]
+    [SerializeField] private bool verboseLog = true;
 
     // ── 内部状態 ──
     private readonly List<ItemButtonView> _pool = new List<ItemButtonView>();
@@ -283,6 +305,29 @@ public class RoomEditController : MonoBehaviour
         UpdateCameraForState();
         UpdateCharacterForState();
         MoveHighlightTo(CurrentKey);
+
+        // カテゴリを開いた時点の結線を一覧で出しておく。
+        // スロットとカメラの並び順が食い違っていると、ここを見れば分かる
+        if (verboseLog && applier != null)
+        {
+            int count = applier.GetSlotCount(category);
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"[RoomEdit] <b>{ToDisplayName(category)}</b>（{category}）を開きました　アイテム{entries.Count}件 / 設置場所{count}箇所");
+
+            for (int i = 0; i < count; i++)
+            {
+                var key = new SlotKey(category, i);
+                var slot = applier.GetSlot(key);
+                var view = FindViewpoint(category, i);
+                string btn = (slotTabButtons != null && i < slotTabButtons.Length && slotTabButtons[i] != null)
+                    ? slotTabButtons[i].name : "★ボタン未結線";
+
+                sb.AppendLine($"    [{i}] ボタン={btn}");
+                sb.AppendLine($"        スロット={(slot != null ? slot.name + " " + slot.position.ToString() : "★見つからない")}");
+                sb.AppendLine($"        カメラ  ={(view != null ? view.name + " " + view.position.ToString() : "★未設定")}");
+            }
+            Debug.Log(sb.ToString(), this);
+        }
     }
 
     /// <summary>
@@ -295,13 +340,46 @@ public class RoomEditController : MonoBehaviour
         if (_openedCategory == null || applier == null) return;
 
         // 用意されていない番号を押されても無視する（タブを多めに置いていても安全）
-        if (index < 0 || index >= applier.GetSlotCount(_openedCategory.Value)) return;
+        if (index < 0 || index >= applier.GetSlotCount(_openedCategory.Value))
+        {
+            if (verboseLog)
+                Debug.LogWarning($"[RoomEdit] タブ[{index}] を押しましたが、" +
+                                 $"{_openedCategory.Value} のスロットは " +
+                                 $"{applier.GetSlotCount(_openedCategory.Value)} 個しかありません。無視します", this);
+            return;
+        }
 
         _openedSlotIndex = index;
 
         RefreshSlotTabs();
         RefreshItemSelection();          // 選択枠を、そのスロットの中身に合わせ直す
         MoveHighlightTo(CurrentKey);
+
+        // ★そのスロット専用のカメラ位置が設定されていれば、そこへ寄り直す。
+        //   かべかざりのように設置場所が離れていると、1つのアングルでは
+        //   両方を映せないため。専用の位置が無いカテゴリでは何も起きない
+        //   （UpdateCameraForState がカテゴリ共通の viewpoint を返すので、同じ場所を指す）
+        UpdateCameraForState();
+
+        // 「ひだり/みぎ が逆に動く」を切り分けるためのログ。
+        // ボタンの並び順・スロットの並び順・カメラの並び順の3つが
+        // ぜんぶ一致していないと逆になるので、3つまとめて出す
+        if (verboseLog)
+        {
+            var slot = applier.GetSlot(CurrentKey);
+            var view = FindViewpoint(_openedCategory.Value, _openedSlotIndex);
+            string btn = (slotTabButtons != null && index < slotTabButtons.Length && slotTabButtons[index] != null)
+                ? slotTabButtons[index].name : "（ボタン未結線）";
+
+            Debug.Log(
+                $"[RoomEdit] タブ[{index}] <b>{btn}</b> を押しました\n" +
+                $"    スロット : {CurrentKey}  →  " +
+                $"{(slot != null ? slot.name : "★見つからない")}" +
+                $"{(slot != null ? $"  位置{slot.position}" : "")}\n" +
+                $"    カメラ   : {(view != null ? view.name + "  位置" + view.position : "★未設定（入室位置に戻ります）")}\n" +
+                $"    いま入っているもの: {applier.GetCurrentId(CurrentKey) ?? "（なし）"}",
+                this);
+        }
     }
 
     /// <summary>タブの出し入れと、選択中の枠を更新する。</summary>
@@ -311,8 +389,8 @@ public class RoomEditController : MonoBehaviour
             ? applier.GetSlotCount(_openedCategory.Value)
             : 0;
 
-        // ★スロットが1つしかないカテゴリではタブそのものを出さない。
-        //   ベッドやソファの画面に「かべA/かべB」が出てしまうのを防ぐ
+        // ★スロットが1つしかないカテゴリでは、設置場所ボタンそのものを出さない。
+        //   ベッドやソファの画面に「ひだり/みぎ」が出てしまうのを防ぐ
         if (slotTabRoot != null) slotTabRoot.SetActive(count > 1);
 
         if (slotTabButtons == null) return;
@@ -320,7 +398,18 @@ public class RoomEditController : MonoBehaviour
         for (int i = 0; i < slotTabButtons.Length; i++)
         {
             if (slotTabButtons[i] != null)
+            {
                 slotTabButtons[i].gameObject.SetActive(count > 1 && i < count);
+
+                // 選択中を明るく、それ以外を少し暗くする。
+                // targetGraphic（＝ボタンの Image）に直接色を入れている。
+                // Button の Transition が Color Tint だと Unity 側が毎フレーム
+                // normalColor で塗り直してしまい、この指定が消える。
+                // そのため設置場所ボタンの Transition は None にしておくこと
+                var g = slotTabButtons[i].targetGraphic;
+                if (g != null)
+                    g.color = (i == _openedSlotIndex) ? slotTabSelectedColor : slotTabUnselectedColor;
+            }
 
             if (slotTabSelectedMarks != null
                 && i < slotTabSelectedMarks.Length
@@ -525,10 +614,32 @@ public class RoomEditController : MonoBehaviour
     // ─────────────────────────────────────────────
     // カメラ
     // ─────────────────────────────────────────────
-    private Transform FindViewpoint(FurnitureCategory category)
+    /// <summary>
+    /// いま編集しているスロットのカメラ位置を返す。
+    ///
+    /// 【探す順番】
+    ///   1. そのスロット専用の位置（slotViewpoints の該当番号）
+    ///   2. 無ければ、カテゴリ共通の位置（viewpoint）
+    ///
+    /// この順番にしてあるので、スロットが1つしかない既存のカテゴリは
+    /// slotViewpoints を空のままにしておけば今までどおり動く。
+    /// </summary>
+    private Transform FindViewpoint(FurnitureCategory category, int slotIndex)
     {
         foreach (var b in categories)
-            if (b != null && b.category == category) return b.viewpoint;
+        {
+            if (b == null || b.category != category) continue;
+
+            if (b.slotViewpoints != null
+                && slotIndex >= 0
+                && slotIndex < b.slotViewpoints.Length
+                && b.slotViewpoints[slotIndex] != null)
+            {
+                return b.slotViewpoints[slotIndex];
+            }
+
+            return b.viewpoint;
+        }
         return null;
     }
 
@@ -572,7 +683,9 @@ public class RoomEditController : MonoBehaviour
 
         if (_openedCategory != null)
         {
-            MoveCameraTo(FindViewpoint(_openedCategory.Value));
+            // ★スロット番号も渡す。かべかざりのように設置場所ごとに
+            //   カメラ位置が違うカテゴリでは、選んでいる場所へ寄る
+            MoveCameraTo(FindViewpoint(_openedCategory.Value, _openedSlotIndex));
             return;
         }
 
