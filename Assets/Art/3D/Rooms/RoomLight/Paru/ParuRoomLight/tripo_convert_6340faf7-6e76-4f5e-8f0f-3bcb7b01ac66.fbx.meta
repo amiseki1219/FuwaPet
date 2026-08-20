@@ -3,7 +3,17 @@ guid: 58b85b2902c744c31b65afda0ec25b37
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_6340faf7
+    second: {fileID: 2100000, guid: 47f443b2c7184ef39ea153b01334a3bd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MCP_Light_Diffusers
+    second: {fileID: 2100000, guid: 32d39e01ef6c4d8e8a7eefcded0adf9f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
