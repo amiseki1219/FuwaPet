@@ -6,12 +6,13 @@ public class BadgeManager : MonoBehaviour
     [SerializeField] private GameObject questBadge;
     [SerializeField] private GameObject noticeBadge;
     [SerializeField] private GameObject shopBadge;
-    [SerializeField] private GameObject gachaBadge;
+    // 旧名は gachaBadge。実際の結線先はガチャではなく「もようがえ」ボタンの Badge だった。
+    // ガチャ廃止（2026/8/21）に伴い、名前を実態に合わせて改名した。
+    [SerializeField] private GameObject furnitureBadge;
     [SerializeField] private GameObject collectionBadge;
 
     [Header("バージョン管理（新着チェック用）")]
     [SerializeField] private string currentShopVersion       = "2026.05.07";
-    [SerializeField] private string currentGachaVersion      = "2026.05.07";
     [SerializeField] private string currentCollectionVersion = "2026.05.07";
 
     private void Start()   => RefreshAllBadges();
@@ -24,7 +25,7 @@ public class BadgeManager : MonoBehaviour
         CheckQuestBadge();
         CheckNoticeBadge();
         CheckShopBadge();
-        CheckGachaBadge();
+        CheckFurnitureBadge();
         CheckCollectionBadge();
     }
 
@@ -80,11 +81,12 @@ public class BadgeManager : MonoBehaviour
         shopBadge.SetActive(false);
     }
 
-    private void CheckGachaBadge()
+    private void CheckFurnitureBadge()
     {
-        if (gachaBadge == null) return;
-        // 現時点は常に非表示。アップデート時に currentGachaVersion を更新して有効化
-        gachaBadge.SetActive(false);
+        if (furnitureBadge == null) return;
+        // 現時点は常に非表示。もようがえに新着マークを出したくなったら、
+        // CheckShopBadge と同じくバージョン比較の実装を足す
+        furnitureBadge.SetActive(false);
     }
 
     private void CheckCollectionBadge()
@@ -107,15 +109,6 @@ public class BadgeManager : MonoBehaviour
         data.lastShopVersion = currentShopVersion;
         SaveManager.Instance.Save();
         CheckShopBadge();
-    }
-
-    public void OnGachaVisited()
-    {
-        var data = SaveManager.Instance?.Data;
-        if (data == null) return;
-        data.lastGachaVersion = currentGachaVersion;
-        SaveManager.Instance.Save();
-        CheckGachaBadge();
     }
 
     public void OnCollectionVisited()
