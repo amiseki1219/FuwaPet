@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 5a3618e391dd04f68b3974efaa4a9e7f, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5a3618e391dd04f68b3974efaa4a9e7f, type: 3}
       propertyPath: m_Name
       value: Furniture_WallShelf_Piyoko

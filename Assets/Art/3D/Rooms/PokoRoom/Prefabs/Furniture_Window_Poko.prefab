@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 33f6e82e99563443b9b6e4c651c2c59d, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 33f6e82e99563443b9b6e4c651c2c59d, type: 3}
       propertyPath: m_Name
       value: Furniture_Window_Poko

@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4666400789485935942}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.15, y: 0.04, z: 0.8454545}
+  m_LocalPosition: {x: 0.15, y: 0.027, z: 0.685}
   m_LocalScale: {x: 0.5, y: 0.45454547, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -50,7 +50,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -185,6 +185,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 030b1d55bf9964a45b364737790d811f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 030b1d55bf9964a45b364737790d811f, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 030b1d55bf9964a45b364737790d811f, type: 3}

@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -89.26999
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: f9472dc48fa9e47d9a6ae90b4b77c05e, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f9472dc48fa9e47d9a6ae90b4b77c05e, type: 3}
       propertyPath: m_Name
       value: Furniture_Decoration_Paru
