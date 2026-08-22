@@ -50,7 +50,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -137,27 +137,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.69
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.163
+      value: -0.24
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.94
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_LocalRotation.w
@@ -187,6 +187,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 65a97b65323a4d2fa18d5174d203c275, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e1c47cafe414d1093cad833198afdc2, type: 2}
     - target: {fileID: 919132149155446097, guid: 998a941a8b8f44f95a9f1229c2069082, type: 3}
       propertyPath: m_Name
       value: Furniture_RoomLight_Piyoko

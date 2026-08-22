@@ -121,7 +121,7 @@ MonoBehaviour:
   - category: 2
     id: Sofa_Poko
     displayName: "\u3053\u3082\u308C\u3073\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 7448240535023385845, guid: 0ae864f47006f4a7eae033c7a0ccd996, type: 3}
+    prefab: {fileID: 6240196071690129136, guid: 0ae864f47006f4a7eae033c7a0ccd996, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3664358531801786228, guid: c8b78d13d82a040aa89f67f248818422, type: 3}
     ownedByDefault: 1
@@ -268,7 +268,7 @@ MonoBehaviour:
   - category: 4
     id: Shelf_Poko
     displayName: "\u3053\u3082\u308C\u3073\u306E\u672C\u68DA"
-    prefab: {fileID: 5938463209103118191, guid: 219bd884efef944e5bd9172c7e8a769e, type: 3}
+    prefab: {fileID: 2348292940159641361, guid: 219bd884efef944e5bd9172c7e8a769e, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 5409750296234659457, guid: 8b0443543db374600813d44cf82c1019, type: 3}
     ownedByDefault: 1
@@ -282,7 +282,7 @@ MonoBehaviour:
   - category: 4
     id: Shelf_Koko
     displayName: "\u304A\u306F\u306A\u306E\u672C\u68DA"
-    prefab: {fileID: 5201054218532247221, guid: d4ac9e157dce840a885a98b5b33efe90, type: 3}
+    prefab: {fileID: 5145409779243881766, guid: 1a6eaec56b8b645ed8297f34a19b9833, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1681171118030248631, guid: c9a94a2a1a89a48a7bd061b36dceb61a, type: 3}
     ownedByDefault: 1
@@ -310,7 +310,7 @@ MonoBehaviour:
   - category: 7
     id: RoomLight_Default
     displayName: "\u304D\u307B\u3093\u306E\u30E9\u30A4\u30C8"
-    prefab: {fileID: 74259781678438911, guid: abfbb5f0008ca4545bb15eb857afd31b, type: 3}
+    prefab: {fileID: 7646035117752206979, guid: abfbb5f0008ca4545bb15eb857afd31b, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 6677866693867197145, guid: e2f5c9275ef134daeaedb811ea620207, type: 3}
     ownedByDefault: 1
@@ -324,14 +324,14 @@ MonoBehaviour:
   - category: 7
     id: RoomLight_Eru
     displayName: "\u304F\u308D\u306D\u3053\u306E\u30E9\u30A4\u30C8"
-    prefab: {fileID: 5870232843395454848, guid: 35fb53c2106bb47a89fe9551d34ea086, type: 3}
+    prefab: {fileID: 6365379481010862424, guid: 35fb53c2106bb47a89fe9551d34ea086, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -2907844652610541627, guid: 4a64e620fb75445109f12fcd2b90ffbb, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30E9\u30A4\u30C8"
-    prefab: {fileID: 7751637760748977303, guid: 0007964b0d5ba403fbd61ca77cb9dd27, type: 3}
+    prefab: {fileID: 5182547111340050012, guid: 0007964b0d5ba403fbd61ca77cb9dd27, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 9035549458761647817, guid: bc6e3f9eb7ac74e72a7108f97addec08, type: 3}
     ownedByDefault: 1
@@ -513,7 +513,7 @@ MonoBehaviour:
   - category: 8
     id: Decoration_Poko
     displayName: "\u8449\u3063\u3071\u306E\u30AC\u30FC\u30E9\u30F3\u30C9"
-    prefab: {fileID: 776487637522291515, guid: f1258a840e0024da0b63f955c64c8785, type: 3}
+    prefab: {fileID: 655226576312564400, guid: 57f968a09c40141779bae3d60d854599, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -4324671953205252099, guid: 18b63aff9d24d4c6d9a563488835125c, type: 3}
     ownedByDefault: 1
@@ -555,7 +555,7 @@ MonoBehaviour:
   - category: 11
     id: Decoration2_PokoWallDeco
     displayName: "\u6728\u306E\u8449\u306E\u58C1\u304B\u3056\u308A"
-    prefab: {fileID: 8544097962443004769, guid: e05598c68db324b42ac0279df470544c, type: 3}
+    prefab: {fileID: 826763493884439496, guid: e05598c68db324b42ac0279df470544c, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -1310713414, guid: 92da1e732cfac48c090be3a4efcca90a, type: 3}
     ownedByDefault: 1
