@@ -36,7 +36,7 @@ public class BathSceneManager : MonoBehaviour
             imageName = "IchigoImage",
             description = "ふんわり甘くてかわいい香り。\n使うたびに甘えん坊になっちゃう？",
             effectText = "清潔 +60\n甘えん坊度 +2",
-            costCoin = 0, costLuna = 50
+            costCoin = 0, costLuna = 500
         },
         new ShampooData
         {
@@ -45,7 +45,7 @@ public class BathSceneManager : MonoBehaviour
             imageName = "HoshiImage",
             description = "星空みたいな神秘的な香り。\nコツコツがんばる気持ちが芽生えるかも",
             effectText = "清潔 +60\n勤勉さ +2",
-            costCoin = 0, costLuna = 50
+            costCoin = 0, costLuna = 500
         },
         new ShampooData
         {
@@ -97,6 +97,10 @@ public class BathSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI effortText;
 
+    // 1日のお風呂上限。CareSceneManager.MaxBathPerDay と同じ値を持たせている。
+    // ※ 定数が2箇所にあるのは暫定。日付リセットの整理とあわせて後で一元化する
+    private const int MaxBathPerDay = 2;
+
     private string _selectedId = "normal";
     private Coroutine _coinCoroutine;
     private Coroutine _lunaStoneCoroutine;
@@ -105,6 +109,7 @@ public class BathSceneManager : MonoBehaviour
     {
         SetRandomSpeechBubble();
         SetupButtonListeners();
+        ApplyPriceLabels();          // 価格は AllShampoo を正とし、Scene の直書きを上書きする
         OnSelectShampoo("normal");
         if (goNextButton != null) goNextButton.onClick.AddListener(OnGoNext);
         RefreshWallet();
@@ -114,6 +119,23 @@ public class BathSceneManager : MonoBehaviour
     {
         var data = AllShampoo.Find(s => s.id == _selectedId);
         if (data == null) return;
+
+        // 1日2回の上限チェック。
+        // 通常は Care 画面（CareSceneManager.OnBtnBath）で止まるが、Bath.unity から直接 Play した場合は
+        // そこを通らないため、ここでも守る。シャンプー代を払う前に判定するのが重要。
+        // ここでは回数のリセットはしない（リセットの責務を増やさないため）。
+        // 日付が変わっていれば「今日は0回」とみなすだけにする。
+        var saveForLimit = SaveManager.Instance?.Data;
+        if (saveForLimit != null)
+        {
+            string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+            int bathToday = (saveForLimit.lastBathDate == today) ? saveForLimit.bathCountToday : 0;
+            if (bathToday >= MaxBathPerDay)
+            {
+                Debug.LogWarning($"[Bath] 今日のお風呂は {MaxBathPerDay} 回までです（現在 {bathToday} 回）");
+                return;
+            }
+        }
 
         bool hasCost = data.costCoin > 0 || data.costLuna > 0;
         if (hasCost)
@@ -200,6 +222,52 @@ public class BathSceneManager : MonoBehaviour
         if (ichigoButton    != null) ichigoButton.onClick.AddListener(()    => OnSelectShampoo("ichigo"));
         if (hoshizoraButton != null) hoshizoraButton.onClick.AddListener(() => OnSelectShampoo("hoshizora"));
         if (rainbowButton   != null) rainbowButton.onClick.AddListener(()   => OnSelectShampoo("rainbow"));
+    }
+
+    // 各シャンプーボタンの価格ラベルを AllShampoo の値から書き込む。
+    // Scene に数字を直書きしていると、価格改定のたびにコードと Scene の両方を直す必要があり、
+    // 実際に「コードは 500 なのに画面は 50」というズレが起きた（2026/8/22）。
+    // 価格の出所を AllShampoo の1箇所に集約するのが目的。
+    private void ApplyPriceLabels()
+    {
+        ApplyPriceLabel(nomalButton,     "normal");
+        ApplyPriceLabel(ichigoButton,    "ichigo");
+        ApplyPriceLabel(hoshizoraButton, "hoshizora");
+        ApplyPriceLabel(rainbowButton,   "rainbow");
+    }
+
+    private void ApplyPriceLabel(Button btn, string shampooId)
+    {
+        if (btn == null) return;
+
+        var data = AllShampoo.Find(s => s.id == shampooId);
+        if (data == null) return;
+
+        // ボタンの子 CoinPanel の中にある TextMeshProUGUI を探す。
+        // UpdateFrame() が "SelectFrame" を Find しているのと同じやり方に揃えた。
+        var coinPanel = btn.transform.Find("CoinPanel");
+        if (coinPanel == null)
+        {
+            Debug.LogWarning($"[Bath] {btn.name} に CoinPanel が見つかりません。価格表示を更新できません");
+            return;
+        }
+
+        // 非アクティブな子も対象にするため includeInactive = true
+        var label = coinPanel.GetComponentInChildren<TextMeshProUGUI>(true);
+        if (label == null)
+        {
+            Debug.LogWarning($"[Bath] {btn.name}/CoinPanel に TextMeshProUGUI が見つかりません");
+            return;
+        }
+
+        label.text = GetPriceLabel(data);
+    }
+
+    // 無料なら FREE、無償コイン🪙ならその数字、有償コイン♡ならその数字を返す。
+    private string GetPriceLabel(ShampooData data)
+    {
+        if (data.costCoin <= 0 && data.costLuna <= 0) return "FREE";
+        return data.costCoin > 0 ? data.costCoin.ToString() : data.costLuna.ToString();
     }
 
     public void OnSelectShampoo(string shampooId)

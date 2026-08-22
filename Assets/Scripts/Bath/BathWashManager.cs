@@ -29,6 +29,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         new ShampooData { id = "rainbow",   displayName = "レインボーせっけん", imageName = "RainbowImage", description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪"         },
     };
 
+    // お風呂1回あたりの信頼度加点。requirements.md §5「お世話ボタン効果一覧」で +3pt と確定している。
+    private const int TrustPerBath = 3;
+
     [Header("こすり設定")]
     [SerializeField] private float requiredDistancePerScrub = 80f;
     [SerializeField] private int maxScrubCount = 24;
@@ -256,7 +259,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         float pct = (float)_scrubCount / maxScrubCount * 100f;
         Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
         if (percentText  != null) percentText.text  = $"{Mathf.RoundToInt(pct)}%";
-        if (rubCountText != null) rubCountText.text = $"あと {_scrubCount} 回";
+        if (rubCountText != null) rubCountText.text = $"あと {maxScrubCount - _scrubCount} 回";  // _scrubCount は 0→max へ増えるので、残り回数は引き算で出す
         if (gaugeSlider  != null)
         {
             float target = (float)_scrubCount / maxScrubCount;
@@ -374,6 +377,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         if (ctx != null)
         {
             ctx.PetStatus.AddClean(cleanAmount);
+            ctx.PetStatus.AddTrust(TrustPerBath);   // 信頼度 +3pt（§5）。保存は下の SavePetStatus() がまとめて行う
             ctx.PetStatus.OnBath();   // 最終入浴時刻（表情の放置日数判定が参照）
         }
         else
@@ -381,6 +385,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             // Bath.unity には GameContext が無いため、単独再生時のみここに来る。
             Debug.LogWarning("[OnComplete] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
             save.clean = Mathf.Clamp(save.clean + cleanAmount, 0f, 100f);
+            save.trust += TrustPerBath;   // 単独再生時は PetStatus を経由できないので SaveData へ直接
         }
 
         ResetBathCountIfNewDay(save);
