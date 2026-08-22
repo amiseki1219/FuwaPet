@@ -6754,6 +6754,13 @@ MonoBehaviour:
   kokoStaticPrefab: {fileID: 7383319223186776842, guid: 140b2d3dd3818461d8846f557c2d0c1e, type: 3}
   paruStaticPrefab: {fileID: 5475391032555259115, guid: a74dcf78711b1446db8272e4d7c1b956, type: 3}
   piyokoStaticPrefab: {fileID: 1965757653352890437, guid: a783566536ec742528b52c1ee83dd24d, type: 3}
+  eruScaleOverride: 0
+  kokoScaleOverride: 0
+  paruScaleOverride: 0
+  piyokoScaleOverride: 0
+  characterShadowPrefab: {fileID: 0}
+  shadowYOffset: 0.01
+  shadowScale: 1
 --- !u!4 &280267389
 Transform:
   m_ObjectHideFlags: 0
@@ -10694,7 +10701,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3338749442709606003, guid: 1a0d3ee244e5c48a99bbb0ec3979c17e, type: 3}
+  m_Sprite: {fileID: -3338749442709606003, guid: bcfdfa9a11d9b44978199f9784b2b897, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11083,6 +11090,7 @@ MonoBehaviour:
     isNotificationOn: 1
     isSeOn: 1
     readNoticeIds: []
+    roomFurniture: []
     lastShopVersion: 
     lastGachaVersion: 
     lastCollectionVersion: 
@@ -14678,7 +14686,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3338749442709606003, guid: 1a0d3ee244e5c48a99bbb0ec3979c17e, type: 3}
+  m_Sprite: {fileID: -3338749442709606003, guid: bcfdfa9a11d9b44978199f9784b2b897, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
