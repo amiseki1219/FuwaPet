@@ -99,8 +99,10 @@ InitTestScene*.unity*
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
-# フォントの SDF アセットは大きく、Assets/Fonts/README.md の手順で再生成できる
-/[Aa]ssets/Fonts/**/*SDF.asset
+# フォントの SDF アセット
+# 2026/8/23: 除外をやめて Git LFS 管理にした（.gitattributes 参照）。
+# 実体が無いと Unity が .meta を自動削除し、GUID が失われるため。
+# 未使用の Light / Medium / Regular / Thin は削除済み。
 
 # TextMesh Pro パッケージ付属のサンプル（パッケージから再インポートできる）
 /[Aa]ssets/TextMesh Pro/Examples & Extras/**/*.asset
@@ -135,6 +137,8 @@ venv/
 # 3Dモデル（大きいバイナリ、Git管理外）
 *.fbx
 *.FBX
+!Assets/Art/3D/Furniture3Dmodel/**/*.fbx
+!Assets/Art/3D/Furniture3Dmodel/**/*.FBX
 !Assets/Art/3D/Characters/**/Models/*.fbx
 !Assets/Art/3D/Characters/**/Models/*.FBX
 # テスト用FBXのmeta（FBX本体は上記ルールで除外済み、metaも追跡不要）

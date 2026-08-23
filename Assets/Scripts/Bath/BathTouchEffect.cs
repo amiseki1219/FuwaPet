@@ -1,35 +1,340 @@
 using UnityEngine;
 
+/// <summary>
+/// こすっている指に追従するパーティクル（お風呂画面）。
+///
+/// パーティクルシステムを2つ使う:
+///   touchParticle  … 泡。シャンプーごとに「色だけ」を粒ごとランダムで変える
+///   accentParticle … いちご / 星などの飾り。色を付けずスプライトのまま出す
+///
+/// なぜ2つ必要か:
+///   ParticleSystem の色設定は、そのシステムの全ての粒に一律で掛かる。
+///   1つにまとめると「泡だけ色をランダムにして、いちごは元の色のまま」ができず、
+///   いちごまで緑や青に染まってしまう。役割ごとに分けるのが確実。
+/// </summary>
 public class BathTouchEffect : MonoBehaviour
 {
+    /// <summary>シャンプー1種類ぶんの設定。Inspector から差し替えられる。</summary>
+    [System.Serializable]
+    public class ShampooParticleSet
+    {
+        [Tooltip("BathSceneManager の AllShampoo と同じ ID。normal / ichigo / hoshizora / rainbow")]
+        public string shampooId;
+
+        [Tooltip("泡の色。粒ごとにこの中から1色がランダムで選ばれる（最大8色）")]
+        public Color[] bubbleColors;
+
+        [Tooltip("いちご・星などの飾り。空にするとそのシャンプーでは飾りを出さない")]
+        public Sprite accentSprite;
+
+        [Tooltip("飾りの色。白にするとスプライトの色そのまま出る")]
+        public Color accentTint = Color.white;
+    }
+
+    [Header("パーティクル")]
+    [Tooltip("泡を出すパーティクルシステム")]
     [SerializeField] private ParticleSystem touchParticle;
+
+    [Tooltip("いちご・星を出すパーティクルシステム。未結線でも動作する（飾りが出ないだけ）")]
+    [SerializeField] private ParticleSystem accentParticle;
+
+    // カメラからパーティクルを出すまでの距離（ワールド単位）。
+    //
+    // なぜ SerializeField にしたか:
+    //   もともと const 3f がハードコードされていた。これは Orthographic カメラ
+    //   （位置 Z=-10 / キャラ前面 Z≒-5.74）を前提にした値で、カメラを動かすと破綻する。
+    //   2026/8/23 に Bath のカメラを Perspective (-8.53, 1.82, 9.89) へ作り替えたところ、
+    //   カメラからキャラまでの距離が約 12.6 になり、3 のままでは泡がカメラの目の前に出ていた。
+    //
+    // 目安: 「カメラからキャラまでの距離」より少しだけ小さい値（＝キャラの手前）にする。
+    [SerializeField] private float particleDistance = 10.5f;
+
+    // ── 泡のスプライト（大きさ違い） ──────────────────────────────────────────
+    //
+    // 大・中・小のように大きさの違う泡を登録すると、粒ごとに1枚がランダムで選ばれる。
+    // 色はシャンプーごとに別で掛かるので、ここには「白い泡」だけを入れる。
+    //
+    // ※Unity の制約で、ここに入れるスプライトは全て同じテクスチャ（1枚のスプライトシート）
+    //   から切り出したものである必要がある。バラバラの PNG を入れるとエラーになる。
+    //
+    // 空のままでも動く（パーティクル側に元から設定されている絵がそのまま使われる）。
+    [Header("泡のスプライト（大きさ違い・全シャンプー共通）")]
+    [SerializeField] private Sprite[] bubbleSprites;
+
+    // ── シャンプー別の設定（requirements.md §5「シャンプーごとに泡の色・アニメーションが異なる」） ──
+    [Header("シャンプー別の設定")]
+    [SerializeField] private ShampooParticleSet[] shampooSets;
+
+    private const string FallbackShampooId = "normal";
+
+    /// <summary>いま選ばれているシャンプーで飾りを出すかどうか。SetShampoo で決まる。</summary>
+    private bool _accentEnabled;
+
+    // ── シャンプー切り替え ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// シャンプーの種類に応じて、泡の色と飾りの絵を切り替える。
+    /// BathWashManager.Initialize() から1回だけ呼ばれる。
+    /// </summary>
+    public void SetShampoo(string shampooId)
+    {
+        if (touchParticle == null)
+        {
+            Debug.LogWarning("[Bath] SetShampoo: touchParticle が未結線です");
+            return;
+        }
+
+        ShampooParticleSet set = FindSet(shampooId);
+        if (set == null)
+        {
+            Debug.LogWarning($"[Bath] SetShampoo: shampooId={shampooId} に対応する設定がありません。パーティクルは変更しません");
+            return;
+        }
+
+        ApplyBubbleSprites();
+        ApplyBubbleColors(set);
+        ApplyAccent(set);
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Bath] パーティクルを切り替えました shampooId={shampooId} 泡の色={(set.bubbleColors != null ? set.bubbleColors.Length : 0)}色 飾り={(_accentEnabled ? set.accentSprite.name : "なし")}");
+    }
+
+    /// <summary>ID に一致するセットを探す。見つからなければ normal にフォールバックする。</summary>
+    private ShampooParticleSet FindSet(string shampooId)
+    {
+        if (shampooSets == null || shampooSets.Length == 0) return null;
+
+        foreach (var s in shampooSets)
+        {
+            if (s != null && s.shampooId == shampooId) return s;
+        }
+
+        foreach (var s in shampooSets)
+        {
+            if (s != null && s.shampooId == FallbackShampooId) return s;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 泡の絵（大きさ違い）を登録する。
+    ///
+    /// Texture Sheet Animation を Sprites モードにして複数枚を登録し、
+    /// Start Frame をランダムにすることで「粒ごとに違う大きさの泡」を出している。
+    /// bubbleSprites が空のときは何もしない（パーティクル側の元の設定をそのまま使う）。
+    /// </summary>
+    private void ApplyBubbleSprites()
+    {
+        if (bubbleSprites == null || bubbleSprites.Length == 0) return;
+
+        var tsa = touchParticle.textureSheetAnimation;
+        tsa.enabled = true;
+        tsa.mode = ParticleSystemAnimationMode.Sprites;
+
+        for (int i = tsa.spriteCount - 1; i >= 0; i--)
+        {
+            tsa.RemoveSprite(i);
+        }
+
+        int added = 0;
+        foreach (var sprite in bubbleSprites)
+        {
+            if (sprite == null) continue;
+            tsa.AddSprite(sprite);
+            added++;
+        }
+
+        if (added == 0)
+        {
+            Debug.LogWarning("[Bath] ApplyBubbleSprites: 泡のスプライトが全て未設定です");
+            return;
+        }
+
+        tsa.frameOverTime = new ParticleSystem.MinMaxCurve(0f);   // 絵を切り替えない
+        tsa.startFrame    = new ParticleSystem.MinMaxCurve(0f, added); // 粒ごとに1枚選ぶ
+        tsa.cycleCount    = 1;
+    }
+
+    /// <summary>
+    /// 泡の色を設定する。
+    ///
+    /// 粒ごとに「決まった数色の中から1色」を選ばせたいので、
+    /// GradientMode.Fixed（補間せず段階で切り替わる）のグラデーションを組み立て、
+    /// MinMaxGradient を RandomColor モードにしている。
+    /// こうすると、中間色が混ざらず指定した色そのものだけが出る。
+    /// </summary>
+    private void ApplyBubbleColors(ShampooParticleSet set)
+    {
+        var main = touchParticle.main;
+
+        if (set.bubbleColors == null || set.bubbleColors.Length == 0)
+        {
+            // 色未設定なら白（スプライトそのまま）
+            main.startColor = new ParticleSystem.MinMaxGradient(Color.white);
+            return;
+        }
+
+        if (set.bubbleColors.Length == 1)
+        {
+            main.startColor = new ParticleSystem.MinMaxGradient(set.bubbleColors[0]);
+            return;
+        }
+
+        var gradient = new ParticleSystem.MinMaxGradient(BuildDiscreteGradient(set.bubbleColors));
+        gradient.mode = ParticleSystemGradientMode.RandomColor;
+        main.startColor = gradient;
+    }
+
+    /// <summary>
+    /// 指定された色を「混ざらない帯」として並べた Gradient を作る。
+    /// Unity の Gradient はキーを最大8個までしか持てないため、9色目以降は切り捨てる。
+    /// </summary>
+    private static Gradient BuildDiscreteGradient(Color[] colors)
+    {
+        int count = Mathf.Min(colors.Length, 8);
+
+        var colorKeys = new GradientColorKey[count];
+        var alphaKeys = new GradientAlphaKey[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            // 0, 1/n, 2/n ... と等間隔に置くことで、各色が同じ確率で選ばれる
+            float time = (float)i / count;
+            colorKeys[i] = new GradientColorKey(colors[i], time);
+            alphaKeys[i] = new GradientAlphaKey(colors[i].a, time);
+        }
+
+        var g = new Gradient();
+        g.mode = GradientMode.Fixed; // 補間しない＝指定した色だけが出る
+        g.SetKeys(colorKeys, alphaKeys);
+        return g;
+    }
+
+    /// <summary>
+    /// 飾り（いちご・星）を設定する。
+    /// accentSprite が空、または accentParticle が未結線なら飾りを出さない。
+    /// </summary>
+    private void ApplyAccent(ShampooParticleSet set)
+    {
+        _accentEnabled = false;
+
+        if (accentParticle == null) return;
+        if (set.accentSprite == null)
+        {
+            // このシャンプーでは飾りなし。放出を止める
+            var off = accentParticle.emission;
+            off.enabled = false;
+            return;
+        }
+
+        // Texture Sheet Animation に1枚だけ登録して、その絵を出す
+        var tsa = accentParticle.textureSheetAnimation;
+        tsa.enabled = true;
+        tsa.mode = ParticleSystemAnimationMode.Sprites;
+
+        for (int i = tsa.spriteCount - 1; i >= 0; i--)
+        {
+            tsa.RemoveSprite(i);
+        }
+        tsa.AddSprite(set.accentSprite);
+
+        tsa.frameOverTime = new ParticleSystem.MinMaxCurve(0f); // 絵を切り替えない
+        tsa.startFrame    = new ParticleSystem.MinMaxCurve(0f);
+        tsa.cycleCount    = 1;
+
+        var main = accentParticle.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(set.accentTint);
+
+        _accentEnabled = true;
+    }
+
+    /// <summary>コンポーネント追加時・Reset 時に、4種類ぶんの枠を用意する。</summary>
+    private void Reset()
+    {
+        shampooSets = new[]
+        {
+            new ShampooParticleSet
+            {
+                shampooId = "normal",
+                bubbleColors = new[]
+                {
+                    new Color(1f, 1f, 1f),
+                    new Color(0.90f, 0.95f, 1f),
+                },
+            },
+            new ShampooParticleSet
+            {
+                shampooId = "ichigo",
+                bubbleColors = new[]
+                {
+                    new Color(1f, 0.78f, 0.85f),
+                    new Color(1f, 0.66f, 0.76f),
+                    new Color(1f, 0.88f, 0.92f),
+                },
+            },
+            new ShampooParticleSet
+            {
+                shampooId = "hoshizora",
+                bubbleColors = new[]
+                {
+                    new Color(0.80f, 0.72f, 0.96f),
+                    new Color(0.68f, 0.60f, 0.92f),
+                    new Color(0.90f, 0.86f, 1f),
+                },
+            },
+            new ShampooParticleSet
+            {
+                shampooId = "rainbow",
+                bubbleColors = new[]
+                {
+                    new Color(1f,    0.45f, 0.50f), // 赤
+                    new Color(1f,    0.72f, 0.42f), // 橙
+                    new Color(1f,    0.95f, 0.55f), // 黄
+                    new Color(0.62f, 0.95f, 0.68f), // 緑
+                    new Color(0.55f, 0.85f, 1f),    // 水色
+                    new Color(0.66f, 0.68f, 1f),    // 青紫
+                    new Color(0.90f, 0.66f, 1f),    // 紫
+                },
+            },
+        };
+    }
+
+    // ── 位置・再生まわり ──────────────────────────────────────────────────────
 
     private Vector3 ScreenToWorld(Vector2 screenPosition)
     {
         var cam = Camera.main;
         if (cam == null) return Vector3.zero;
 
-        // カメラ Z=-10、キャラ前面 Z≈-5.74（カメラ距離 4.26）
-        // dist=3 → Z=-7 でキャラ前面より確実に手前
-        const float dist = 3f;
-        return cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, dist));
+        return cam.ScreenToWorldPoint(
+            new Vector3(screenPosition.x, screenPosition.y, particleDistance));
     }
 
     // 一発再生（OnPointerDown 時など）
     public void Play(Vector2 screenPosition)
     {
-        if (touchParticle == null) return;
-        touchParticle.transform.position = ScreenToWorld(screenPosition);
-        touchParticle.Play();
+        Vector3 world = ScreenToWorld(screenPosition);
+
+        if (touchParticle != null)
+        {
+            touchParticle.transform.position = world;
+            touchParticle.Play();
+        }
+
+        if (_accentEnabled && accentParticle != null)
+        {
+            accentParticle.transform.position = world;
+            accentParticle.Play();
+        }
     }
 
     // 毎フレーム位置を更新（ドラッグ追従用）
     public void UpdatePosition(Vector2 screenPosition)
     {
-        if (touchParticle == null) return;
-        var worldPos = ScreenToWorld(screenPosition);
-        touchParticle.transform.position = worldPos;
-        Debug.Log($"[TouchEffect] UpdatePosition: screen={screenPosition} world={worldPos} isPlaying={touchParticle.isPlaying} emissionEnabled={touchParticle.emission.enabled}");
+        Vector3 world = ScreenToWorld(screenPosition);
+
+        if (touchParticle != null) touchParticle.transform.position = world;
+        if (accentParticle != null) accentParticle.transform.position = world;
     }
 
     // 連続放出：emission を有効化し、停止中なら Play() する
@@ -40,33 +345,46 @@ public class BathTouchEffect : MonoBehaviour
             Debug.LogWarning("[TouchEffect] StartContinuous: touchParticle is null");
             return;
         }
-        var rend = touchParticle.GetComponent<ParticleSystemRenderer>();
-        if (rend != null && rend.sharedMaterial == null)
-            Debug.LogWarning("[TouchEffect] Particle Renderer に Material が設定されていません");
 
         // 先に位置を確定してから再生する（原点に出ないよう）
         UpdatePosition(screenPosition);
 
-        var emission = touchParticle.emission;
+        StartOne(touchParticle);
+
+        if (_accentEnabled && accentParticle != null)
+        {
+            StartOne(accentParticle);
+        }
+    }
+
+    /// <summary>1つのパーティクルシステムの放出を開始する。</summary>
+    private static void StartOne(ParticleSystem ps)
+    {
+        var emission = ps.emission;
         emission.enabled = true;
 
-        if (!touchParticle.isPlaying)
+        if (!ps.isPlaying)
         {
-            var main = touchParticle.main;
+            var main = ps.main;
             main.loop = true;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
-            touchParticle.Play();
+            ps.Play();
         }
-
-        Debug.Log($"[TouchEffect] StartContinuous: emissionEnabled={touchParticle.emission.enabled} rateOverTime={touchParticle.emission.rateOverTimeMultiplier} isPlaying={touchParticle.isPlaying} worldPos={touchParticle.transform.position}");
     }
 
     // 新規放出だけ止める（Stop() を呼ばず StopAction を起動させない）
     public void StopContinuous()
     {
-        if (touchParticle == null) return;
-        var emission = touchParticle.emission;
-        emission.enabled = false;
-        Debug.Log($"[TouchEffect] StopContinuous: emissionEnabled={touchParticle.emission.enabled} isPlaying={touchParticle.isPlaying}");
+        if (touchParticle != null)
+        {
+            var e = touchParticle.emission;
+            e.enabled = false;
+        }
+
+        if (accentParticle != null)
+        {
+            var e = accentParticle.emission;
+            e.enabled = false;
+        }
     }
 }

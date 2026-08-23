@@ -29,6 +29,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         new ShampooData { id = "rainbow",   displayName = "レインボーせっけん", imageName = "RainbowImage", description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪"         },
     };
 
+    // お風呂1回あたりの信頼度加点。requirements.md §5「お世話ボタン効果一覧」で +3pt と確定している。
+    private const int TrustPerBath = 3;
+
     [Header("こすり設定")]
     [SerializeField] private float requiredDistancePerScrub = 80f;
     [SerializeField] private int maxScrubCount = 24;
@@ -70,11 +73,37 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     private void Awake()
     {
-        // Screen Space Camera の場合 worldCamera が必要
-        // null のまま使うと ScreenSpaceOverlay として誤判定する
+        _canvasCamera = ResolveCanvasCamera();
+
         var canvas = GetComponentInParent<Canvas>();
-        _canvasCamera = canvas != null ? canvas.worldCamera : null;
-        Debug.Log($"[BathWash] Awake: canvas={canvas?.name} renderMode={canvas?.renderMode} worldCamera={_canvasCamera?.name ?? "null"}");
+        Debug.Log($"[BathWash] Awake: canvas={canvas?.name} renderMode={canvas?.renderMode} 使用カメラ={_canvasCamera?.name ?? "null"}");
+    }
+
+    /// <summary>
+    /// scrubArea の座標変換に使うカメラを決める。判断をここ1箇所に集約している。
+    ///
+    /// なぜ Render Mode を見るのか:
+    ///   Unity は Canvas の Render Mode を Screen Space - Overlay に変えても、
+    ///   Render Camera の参照（worldCamera）を消さない。Inspector 上は欄が隠れるだけで、
+    ///   内部には Screen Space - Camera 時代のカメラが残り続ける。
+    ///   その状態で worldCamera をそのまま渡すと「カメラ空間の Canvas」として変換され、
+    ///   ScreenPointToLocalPointInRectangle の結果が大きくズレる。
+    ///   → 画面のどこを触っても scrubArea の範囲外と判定され、一切こすれなくなる。
+    ///
+    ///   2026/8/23: お風呂画面を Orthographic → Perspective に作り替え、Canvas を
+    ///   Screen Space - Camera → Overlay へ変更した際に、この不具合として表面化した。
+    ///
+    /// Overlay のときは必ず null を渡すのが正解。
+    /// </summary>
+    private Camera ResolveCanvasCamera()
+    {
+        var canvas = GetComponentInParent<Canvas>();
+        if (canvas == null) return null;
+
+        // Overlay ではカメラを使わない（残っている参照を無視する）
+        if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) return null;
+
+        return canvas.worldCamera;
     }
 
     private void OnEnable()
@@ -99,8 +128,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         _accumulatedDistance = 0f;
 
         // canvas camera を再取得（Awake後に別 Canvas に移動した場合のため）
-        var canvas = GetComponentInParent<Canvas>();
-        _canvasCamera = canvas != null ? canvas.worldCamera : null;
+        _canvasCamera = ResolveCanvasCamera();
 
         StartCoroutine(UnblockInputNextFrame());
 
@@ -113,6 +141,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         UpdateUI();
         ResetBubbles();
         UpdateShampooInfo(shampooId);
+
+        // シャンプー別に泡の色を切り替える（requirements.md §5）
+        touchEffect?.SetShampoo(shampooId);
     }
 
     private System.Collections.IEnumerator UnblockInputNextFrame()
@@ -256,7 +287,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         float pct = (float)_scrubCount / maxScrubCount * 100f;
         Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
         if (percentText  != null) percentText.text  = $"{Mathf.RoundToInt(pct)}%";
-        if (rubCountText != null) rubCountText.text = $"あと {_scrubCount} 回";
+        if (rubCountText != null) rubCountText.text = $"あと {maxScrubCount - _scrubCount} 回";  // _scrubCount は 0→max へ増えるので、残り回数は引き算で出す
         if (gaugeSlider  != null)
         {
             float target = (float)_scrubCount / maxScrubCount;
@@ -374,6 +405,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         if (ctx != null)
         {
             ctx.PetStatus.AddClean(cleanAmount);
+            ctx.PetStatus.AddTrust(TrustPerBath);   // 信頼度 +3pt（§5）。保存は下の SavePetStatus() がまとめて行う
             ctx.PetStatus.OnBath();   // 最終入浴時刻（表情の放置日数判定が参照）
         }
         else
@@ -381,6 +413,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             // Bath.unity には GameContext が無いため、単独再生時のみここに来る。
             Debug.LogWarning("[OnComplete] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
             save.clean = Mathf.Clamp(save.clean + cleanAmount, 0f, 100f);
+            save.trust += TrustPerBath;   // 単独再生時は PetStatus を経由できないので SaveData へ直接
         }
 
         ResetBathCountIfNewDay(save);

@@ -1,0 +1,1339 @@
+fileFormatVersion: 2
+guid: bf65b339e5d184c8ab2a0c189e9d8946
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -867866004983398697
+    second: WhiteParticle_0
+  - first:
+      213: -1951876566267169754
+    second: WhiteParticle_1
+  - first:
+      213: 1229685741689983393
+    second: WhiteParticle_2
+  - first:
+      213: -7887266962822204183
+    second: WhiteParticle_3
+  - first:
+      213: 6801372828358590432
+    second: WhiteParticle_4
+  - first:
+      213: 3395599286678989235
+    second: WhiteParticle_5
+  - first:
+      213: -6392206723935886447
+    second: WhiteParticle_6
+  - first:
+      213: 7600812567414384022
+    second: WhiteParticle_7
+  - first:
+      213: 5642255150910158874
+    second: WhiteParticle_8
+  - first:
+      213: 6238041990480477356
+    second: WhiteParticle_9
+  - first:
+      213: -4627194068198261649
+    second: WhiteParticle_10
+  - first:
+      213: 6332779919969883899
+    second: WhiteParticle_11
+  - first:
+      213: -4233567020495123775
+    second: WhiteParticle_12
+  - first:
+      213: 1116322060090030963
+    second: WhiteParticle_13
+  - first:
+      213: -3046550137218055147
+    second: WhiteParticle_14
+  - first:
+      213: -833091398017706698
+    second: WhiteParticle_15
+  - first:
+      213: 1261849499320561586
+    second: WhiteParticle_16
+  - first:
+      213: -1022124341164925736
+    second: WhiteParticle_17
+  - first:
+      213: 2009338605453078437
+    second: WhiteParticle_18
+  - first:
+      213: 5663131362267669729
+    second: WhiteParticle_19
+  - first:
+      213: 8073448286876744180
+    second: WhiteParticle_20
+  - first:
+      213: -2310770854058348243
+    second: WhiteParticle_21
+  - first:
+      213: 4120530560568827659
+    second: WhiteParticle_22
+  - first:
+      213: -4272604576978289886
+    second: WhiteParticle_23
+  - first:
+      213: 8888540748902363894
+    second: WhiteParticle_24
+  - first:
+      213: -640465662688990170
+    second: WhiteParticle_25
+  - first:
+      213: 4785569384599427643
+    second: WhiteParticle_26
+  - first:
+      213: -4224931462532024704
+    second: WhiteParticle_27
+  - first:
+      213: -9101959853283974727
+    second: WhiteParticle_28
+  - first:
+      213: -6983989474046405216
+    second: WhiteParticle_29
+  - first:
+      213: 262634849005091800
+    second: WhiteParticle_30
+  - first:
+      213: -3060166172701295056
+    second: WhiteParticle_31
+  - first:
+      213: -2555733618886192333
+    second: WhiteParticle_32
+  - first:
+      213: -440276670174025396
+    second: WhiteParticle_33
+  - first:
+      213: -3231768697010342543
+    second: WhiteParticle_34
+  - first:
+      213: 8700892447596588284
+    second: WhiteParticle_35
+  - first:
+      213: -3670048390551326632
+    second: WhiteParticle_36
+  - first:
+      213: 8991511139279576475
+    second: WhiteParticle_37
+  - first:
+      213: 5151023460750447709
+    second: WhiteParticle_38
+  - first:
+      213: 8634911595033426624
+    second: WhiteParticle_39
+  - first:
+      213: 5483050557800114290
+    second: WhiteParticle_40
+  - first:
+      213: 5685440776586492137
+    second: WhiteParticle_41
+  - first:
+      213: 5783671059170483811
+    second: WhiteParticle_42
+  - first:
+      213: 8921572361941989594
+    second: WhiteParticle_43
+  - first:
+      213: 4790572033631261558
+    second: WhiteParticle_44
+  - first:
+      213: 1570050293904973948
+    second: WhiteParticle_45
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WhiteParticle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1232
+        height: 1210
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7deb3547778b4f3f0800000000000000
+      internalID: -867866004983398697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_1
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 1181
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6247c3eba9a89e4e0800000000000000
+      internalID: -1951876566267169754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_2
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 1195
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a15bcabaa8b01110800000000000000
+      internalID: 1229685741689983393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_3
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 1193
+        width: 25
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e4fe406c7cca8290800000000000000
+      internalID: -7887266962822204183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_4
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 1193
+        width: 31
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0efbe4b5d84536e50800000000000000
+      internalID: 6801372828358590432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_5
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 1185
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b922128f879f1f20800000000000000
+      internalID: 3395599286678989235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_6
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 1174
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19320f81ad15a47a0800000000000000
+      internalID: -6392206723935886447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_7
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 1187
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6952f0d52c28b7960800000000000000
+      internalID: 7600812567414384022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_8
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 904
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a183e127a215d4e40800000000000000
+      internalID: 5642255150910158874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_9
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 845
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cac3f88c32af19650800000000000000
+      internalID: 6238041990480477356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_10
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 740
+        width: 79
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6c7f3ac287e8cfb0800000000000000
+      internalID: -4627194068198261649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_11
+      rect:
+        serializedVersion: 2
+        x: 1177
+        y: 783
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf61882e8cd82e750800000000000000
+      internalID: 6332779919969883899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_12
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 744
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca449aa9395f35c0800000000000000
+      internalID: -4233567020495123775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_13
+      rect:
+        serializedVersion: 2
+        x: 1167
+        y: 664
+        width: 83
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37b3996cff8fd7f00800000000000000
+      internalID: 1116322060090030963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_14
+      rect:
+        serializedVersion: 2
+        x: 1175
+        y: 754
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51443b0aaca78b5d0800000000000000
+      internalID: -3046550137218055147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_15
+      rect:
+        serializedVersion: 2
+        x: 1239
+        y: 713
+        width: 27
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63598b399c34074f0800000000000000
+      internalID: -833091398017706698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_16
+      rect:
+        serializedVersion: 2
+        x: 1217
+        y: 629
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bfa10f1f6df28110800000000000000
+      internalID: 1261849499320561586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_17
+      rect:
+        serializedVersion: 2
+        x: 1241
+        y: 619
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dc9590c35fa0d1f0800000000000000
+      internalID: -1022124341164925736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_18
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 515
+        width: 51
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af6283d0da92eb10800000000000000
+      internalID: 2009338605453078437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_19
+      rect:
+        serializedVersion: 2
+        x: 1169
+        y: 563
+        width: 29
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e4a65c28fb779e40800000000000000
+      internalID: 5663131362267669729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_20
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 564
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f936c32176aa0070800000000000000
+      internalID: 8073448286876744180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_21
+      rect:
+        serializedVersion: 2
+        x: 1167
+        y: 500
+        width: 39
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d21b686b62e7eefd0800000000000000
+      internalID: -2310770854058348243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_22
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 532
+        width: 10
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0f98dc96b01f2930800000000000000
+      internalID: 4120530560568827659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_23
+      rect:
+        serializedVersion: 2
+        x: 1207
+        y: 550
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22b308346c8a4b4c0800000000000000
+      internalID: -4272604576978289886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_24
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 524
+        width: 6
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f2f8e5b7b07a5b70800000000000000
+      internalID: 8888540748902363894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_25
+      rect:
+        serializedVersion: 2
+        x: 1136
+        y: 526
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62c66948fdb9c17f0800000000000000
+      internalID: -640465662688990170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_26
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 508
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3a98011002c96240800000000000000
+      internalID: 4785569384599427643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_27
+      rect:
+        serializedVersion: 2
+        x: 1207
+        y: 516
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 086386f28370e55c0800000000000000
+      internalID: -4224931462532024704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_28
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 486
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b16429dcb75fa180800000000000000
+      internalID: -9101959853283974727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_29
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 484
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a5956c7392e31f90800000000000000
+      internalID: -6983989474046405216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_30
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 457
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8db3690f00115a300800000000000000
+      internalID: 262634849005091800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_31
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 483
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03ef872541b1885d0800000000000000
+      internalID: -3060166172701295056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_32
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 465
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 333d3c180d5388cd0800000000000000
+      internalID: -2555733618886192333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_33
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 454
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c49a26f73b2d3e9f0800000000000000
+      internalID: -440276670174025396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_34
+      rect:
+        serializedVersion: 2
+        x: 1143
+        y: 431
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 175b8722e737623d0800000000000000
+      internalID: -3231768697010342543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_35
+      rect:
+        serializedVersion: 2
+        x: 1145
+        y: 411
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfcafdfe497cfb870800000000000000
+      internalID: 8700892447596588284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_36
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 64
+        width: 101
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 850b1bcfe6e511dc0800000000000000
+      internalID: -3670048390551326632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_37
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 62
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9d1abafdb348cc70800000000000000
+      internalID: 8991511139279576475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_38
+      rect:
+        serializedVersion: 2
+        x: 710
+        y: 66
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d54dbb7db8c1c7740800000000000000
+      internalID: 5151023460750447709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_39
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 47
+        width: 39
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ca7ed0985e55d770800000000000000
+      internalID: 8634911595033426624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_40
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 72
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 278ee2f8e65b71c40800000000000000
+      internalID: 5483050557800114290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_41
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 47
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e875f7734eb6ee40800000000000000
+      internalID: 5685440776586492137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_42
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 17
+        width: 41
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36e50936f2ab34050800000000000000
+      internalID: 5783671059170483811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_43
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 47
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad8be7f6bcacfcb70800000000000000
+      internalID: 8921572361941989594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_44
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 39
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 673138f02e78b7240800000000000000
+      internalID: 4790572033631261558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteParticle_45
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 15
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7024bf7c60f9c510800000000000000
+      internalID: 1570050293904973948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WhiteParticle_0: -867866004983398697
+      WhiteParticle_1: -1951876566267169754
+      WhiteParticle_10: -4627194068198261649
+      WhiteParticle_11: 6332779919969883899
+      WhiteParticle_12: -4233567020495123775
+      WhiteParticle_13: 1116322060090030963
+      WhiteParticle_14: -3046550137218055147
+      WhiteParticle_15: -833091398017706698
+      WhiteParticle_16: 1261849499320561586
+      WhiteParticle_17: -1022124341164925736
+      WhiteParticle_18: 2009338605453078437
+      WhiteParticle_19: 5663131362267669729
+      WhiteParticle_2: 1229685741689983393
+      WhiteParticle_20: 8073448286876744180
+      WhiteParticle_21: -2310770854058348243
+      WhiteParticle_22: 4120530560568827659
+      WhiteParticle_23: -4272604576978289886
+      WhiteParticle_24: 8888540748902363894
+      WhiteParticle_25: -640465662688990170
+      WhiteParticle_26: 4785569384599427643
+      WhiteParticle_27: -4224931462532024704
+      WhiteParticle_28: -9101959853283974727
+      WhiteParticle_29: -6983989474046405216
+      WhiteParticle_3: -7887266962822204183
+      WhiteParticle_30: 262634849005091800
+      WhiteParticle_31: -3060166172701295056
+      WhiteParticle_32: -2555733618886192333
+      WhiteParticle_33: -440276670174025396
+      WhiteParticle_34: -3231768697010342543
+      WhiteParticle_35: 8700892447596588284
+      WhiteParticle_36: -3670048390551326632
+      WhiteParticle_37: 8991511139279576475
+      WhiteParticle_38: 5151023460750447709
+      WhiteParticle_39: 8634911595033426624
+      WhiteParticle_4: 6801372828358590432
+      WhiteParticle_40: 5483050557800114290
+      WhiteParticle_41: 5685440776586492137
+      WhiteParticle_42: 5783671059170483811
+      WhiteParticle_43: 8921572361941989594
+      WhiteParticle_44: 4790572033631261558
+      WhiteParticle_45: 1570050293904973948
+      WhiteParticle_5: 3395599286678989235
+      WhiteParticle_6: -6392206723935886447
+      WhiteParticle_7: 7600812567414384022
+      WhiteParticle_8: 5642255150910158874
+      WhiteParticle_9: 6238041990480477356
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
