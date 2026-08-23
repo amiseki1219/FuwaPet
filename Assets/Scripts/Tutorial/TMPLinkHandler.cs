@@ -34,8 +34,8 @@ public class TMPLinkHandler : MonoBehaviour, IPointerClickHandler
         Debug.Log($"[TMPLinkHandler] リンク押下: {linkID}");
 
         if (linkID == "terms")
-            Application.OpenURL("https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae");
+            Application.OpenURL("https://yurufuworld.com/terms.html");
         else if (linkID == "privacy")
-            Application.OpenURL("https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785");
+            Application.OpenURL("https://yurufuworld.com/privacy.html");
     }
 }

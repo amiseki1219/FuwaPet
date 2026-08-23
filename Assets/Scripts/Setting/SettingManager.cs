@@ -105,9 +105,9 @@ public class SettingManager : MonoBehaviour
     }
 
     // --- ボタン処理 ---
-    public void OnContactClicked() => Application.OpenURL("https://forms.gle/cw6MdGnq1Kibqbdr7");
-    public void OnTermsOfServiceClicked() => Application.OpenURL("https://jagged-wombat-9c5.notion.site/YURUFU-35184120f12f80cba92bd4f91f2bdeae");
-    public void OnPrivacyPolicyClicked() => Application.OpenURL("https://jagged-wombat-9c5.notion.site/YURUFUWorld-35184120f12f80b4b2b7f16a179c5785");
+    public void OnContactClicked() => Application.OpenURL("https://yurufuworld.com/contact.html");
+    public void OnTermsOfServiceClicked() => Application.OpenURL("https://yurufuworld.com/terms.html");
+    public void OnPrivacyPolicyClicked() => Application.OpenURL("https://yurufuworld.com/privacy.html");
     public void OnAiDataUsageClicked() { if (aiDataPanel != null) aiDataPanel.SetActive(true); }
     public void CloseAiDataPanel() { if (aiDataPanel != null) aiDataPanel.SetActive(false); }
 
