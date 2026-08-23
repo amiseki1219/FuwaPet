@@ -1,0 +1,1339 @@
+fileFormatVersion: 2
+guid: e315e9654ef8c45408cafc0aad0e704f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2053486289074076661
+    second: YellowStar_0
+  - first:
+      213: 2347678506677576594
+    second: YellowStar_1
+  - first:
+      213: -2689354156397847641
+    second: YellowStar_2
+  - first:
+      213: -5954854355843387739
+    second: YellowStar_3
+  - first:
+      213: -5621766487408474633
+    second: YellowStar_4
+  - first:
+      213: 4615834472997893646
+    second: YellowStar_5
+  - first:
+      213: 2612105197551686028
+    second: YellowStar_6
+  - first:
+      213: -3028305826381909636
+    second: YellowStar_7
+  - first:
+      213: 7124213923233030813
+    second: YellowStar_8
+  - first:
+      213: -6638579356425968094
+    second: YellowStar_9
+  - first:
+      213: -2411651391097592729
+    second: YellowStar_10
+  - first:
+      213: -5657823957786683797
+    second: YellowStar_11
+  - first:
+      213: -2385780785042781759
+    second: YellowStar_12
+  - first:
+      213: -5711480668440313012
+    second: YellowStar_13
+  - first:
+      213: -1480582087373306564
+    second: YellowStar_14
+  - first:
+      213: 977107082709298071
+    second: YellowStar_15
+  - first:
+      213: 2438263984935037889
+    second: YellowStar_16
+  - first:
+      213: 316600718422345385
+    second: YellowStar_17
+  - first:
+      213: 3757673125854015107
+    second: YellowStar_18
+  - first:
+      213: -7385208560752721008
+    second: YellowStar_19
+  - first:
+      213: 6912911692389983425
+    second: YellowStar_20
+  - first:
+      213: 1185436373947250531
+    second: YellowStar_21
+  - first:
+      213: -4307681336246262720
+    second: YellowStar_22
+  - first:
+      213: -1737906087781681774
+    second: YellowStar_23
+  - first:
+      213: -1495442328513624892
+    second: YellowStar_24
+  - first:
+      213: -8306278228240983995
+    second: YellowStar_25
+  - first:
+      213: -5300446929867716975
+    second: YellowStar_26
+  - first:
+      213: -7196785632934404111
+    second: YellowStar_27
+  - first:
+      213: -7616500678532205783
+    second: YellowStar_28
+  - first:
+      213: -2912946818314029699
+    second: YellowStar_29
+  - first:
+      213: 4769960203535921775
+    second: YellowStar_30
+  - first:
+      213: -2180587387866772165
+    second: YellowStar_31
+  - first:
+      213: -8159042094101689128
+    second: YellowStar_32
+  - first:
+      213: 2205183974331965848
+    second: YellowStar_33
+  - first:
+      213: -6737815746155549421
+    second: YellowStar_34
+  - first:
+      213: -2257193176562504759
+    second: YellowStar_35
+  - first:
+      213: 8795691028713703866
+    second: YellowStar_36
+  - first:
+      213: -468126599904576995
+    second: YellowStar_37
+  - first:
+      213: 3547395284416985291
+    second: YellowStar_38
+  - first:
+      213: 1652646358435617758
+    second: YellowStar_39
+  - first:
+      213: -1711370145034461359
+    second: YellowStar_40
+  - first:
+      213: 39330450967046579
+    second: YellowStar_41
+  - first:
+      213: 1272155066674480449
+    second: YellowStar_42
+  - first:
+      213: -7242059437976533625
+    second: YellowStar_43
+  - first:
+      213: 6946224208472997791
+    second: YellowStar_44
+  - first:
+      213: -6583609638763216652
+    second: YellowStar_45
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: YellowStar_0
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 551
+        width: 35
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fb356b66e27f7c10800000000000000
+      internalID: 2053486289074076661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_1
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 554
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 293265dc921a49020800000000000000
+      internalID: 2347678506677576594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_2
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 538
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ab9fa0c4ae7daad0800000000000000
+      internalID: -2689354156397847641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_3
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 567
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ae64c6738b1c5da0800000000000000
+      internalID: -5954854355843387739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_4
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 554
+        width: 28
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f582d34a297bf1b0800000000000000
+      internalID: -5621766487408474633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_5
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 557
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e06ba095ffcbe0040800000000000000
+      internalID: 4615834472997893646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_6
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 326
+        width: 85
+        height: 237
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81150076df004420800000000000000
+      internalID: 2612105197551686028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_7
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 442
+        width: 105
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71b24345eb49f5d0800000000000000
+      internalID: -3028305826381909636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_8
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 545
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d92623641da4ed260800000000000000
+      internalID: 7124213923233030813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_9
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 539
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2262dfe7f370fd3a0800000000000000
+      internalID: -6638579356425968094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_10
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 0
+        width: 519
+        height: 542
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7642d8756d7188ed0800000000000000
+      internalID: -2411651391097592729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_11
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 532
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b661e6a361f5b71b0800000000000000
+      internalID: -5657823957786683797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_12
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 472
+        width: 75
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c98293340104eed0800000000000000
+      internalID: -2385780785042781759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_13
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 491
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c43ca10c79ebcb0b0800000000000000
+      internalID: -5711480668440313012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_14
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 494
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c35ce4d9f6ae37be0800000000000000
+      internalID: -1480582087373306564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_15
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 494
+        width: 28
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79be76cf6b16f8d00800000000000000
+      internalID: 977107082709298071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_16
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 402
+        width: 101
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cb6ea20d2476d120800000000000000
+      internalID: 2438263984935037889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_17
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 406
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a6823d0daac46400800000000000000
+      internalID: 316600718422345385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_18
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 424
+        width: 26
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38e6f888ccfe52430800000000000000
+      internalID: 3757673125854015107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_19
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 358
+        width: 10
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 093092841f7728990800000000000000
+      internalID: -7385208560752721008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_20
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 344
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c4ac8cde889fef50800000000000000
+      internalID: 6912911692389983425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_21
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 341
+        width: 61
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 367f3f4f914837010800000000000000
+      internalID: 1185436373947250531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_22
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 260
+        width: 77
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0442673d5aa0834c0800000000000000
+      internalID: -4307681336246262720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_23
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 254
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 295b8c8fe97b1e7e0800000000000000
+      internalID: -1737906087781681774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_24
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 283
+        width: 12
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c4ccda102f1f3be0800000000000000
+      internalID: -1495442328513624892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_25
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 246
+        width: 27
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5489220c5fb2abc80800000000000000
+      internalID: -8306278228240983995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_26
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 235
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 196cc6aa9970176b0800000000000000
+      internalID: -5300446929867716975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_27
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 241
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ff5f48d891ef1c90800000000000000
+      internalID: -7196785632934404111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_28
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 200
+        width: 19
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 923f090acf0cc4690800000000000000
+      internalID: -7616500678532205783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_29
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 147
+        width: 86
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d75b9cc5d422397d0800000000000000
+      internalID: -2912946818314029699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_30
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 121
+        width: 39
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f623284688d423240800000000000000
+      internalID: 4769960203535921775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_31
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 164
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3d0180f25ffcb1e0800000000000000
+      internalID: -2180587387866772165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_32
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 141
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dc0c91a17245ce80800000000000000
+      internalID: -8159042094101689128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_33
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 136
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 891e07e14236a9e10800000000000000
+      internalID: 2205183974331965848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_34
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 133
+        width: 18
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31d6d5007487e72a0800000000000000
+      internalID: -6737815746155549421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_35
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 41
+        width: 95
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cb6e89d3c6dca0e0800000000000000
+      internalID: -2257193176562504759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_36
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 0
+        width: 75
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab902989362901a70800000000000000
+      internalID: 8795691028713703866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_37
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 101
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1ab6ce6651e089f0800000000000000
+      internalID: -468126599904576995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 21
+        width: 19
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc8f19d5731ea3130800000000000000
+      internalID: 3547395284416985291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_39
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 36
+        width: 15
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edbd5ed5b116fe610800000000000000
+      internalID: 1652646358435617758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_40
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 25
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15f130a9bedff38e0800000000000000
+      internalID: -1711370145034461359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_41
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 46
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b92fb636dabb8000800000000000000
+      internalID: 39330450967046579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_42
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 14
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14588500b4a97a110800000000000000
+      internalID: 1272155066674480449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_43
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 52
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 785c42daf490f7b90800000000000000
+      internalID: -7242059437976533625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_44
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 30
+        width: 30
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9f704c6d12f56060800000000000000
+      internalID: 6946224208472997791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowStar_45
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 35
+        width: 31
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f04ead3ae152a4a0800000000000000
+      internalID: -6583609638763216652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      YellowStar_0: 2053486289074076661
+      YellowStar_1: 2347678506677576594
+      YellowStar_10: -2411651391097592729
+      YellowStar_11: -5657823957786683797
+      YellowStar_12: -2385780785042781759
+      YellowStar_13: -5711480668440313012
+      YellowStar_14: -1480582087373306564
+      YellowStar_15: 977107082709298071
+      YellowStar_16: 2438263984935037889
+      YellowStar_17: 316600718422345385
+      YellowStar_18: 3757673125854015107
+      YellowStar_19: -7385208560752721008
+      YellowStar_2: -2689354156397847641
+      YellowStar_20: 6912911692389983425
+      YellowStar_21: 1185436373947250531
+      YellowStar_22: -4307681336246262720
+      YellowStar_23: -1737906087781681774
+      YellowStar_24: -1495442328513624892
+      YellowStar_25: -8306278228240983995
+      YellowStar_26: -5300446929867716975
+      YellowStar_27: -7196785632934404111
+      YellowStar_28: -7616500678532205783
+      YellowStar_29: -2912946818314029699
+      YellowStar_3: -5954854355843387739
+      YellowStar_30: 4769960203535921775
+      YellowStar_31: -2180587387866772165
+      YellowStar_32: -8159042094101689128
+      YellowStar_33: 2205183974331965848
+      YellowStar_34: -6737815746155549421
+      YellowStar_35: -2257193176562504759
+      YellowStar_36: 8795691028713703866
+      YellowStar_37: -468126599904576995
+      YellowStar_38: 3547395284416985291
+      YellowStar_39: 1652646358435617758
+      YellowStar_4: -5621766487408474633
+      YellowStar_40: -1711370145034461359
+      YellowStar_41: 39330450967046579
+      YellowStar_42: 1272155066674480449
+      YellowStar_43: -7242059437976533625
+      YellowStar_44: 6946224208472997791
+      YellowStar_45: -6583609638763216652
+      YellowStar_5: 4615834472997893646
+      YellowStar_6: 2612105197551686028
+      YellowStar_7: -3028305826381909636
+      YellowStar_8: 7124213923233030813
+      YellowStar_9: -6638579356425968094
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
