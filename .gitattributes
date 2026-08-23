@@ -1,0 +1,2 @@
+Assets/Art/3D/Furniture3Dmodel/**/*.fbx filter=lfs diff=lfs merge=lfs -text
+Assets/Art/3D/Furniture3Dmodel/**/*.FBX filter=lfs diff=lfs merge=lfs -text
