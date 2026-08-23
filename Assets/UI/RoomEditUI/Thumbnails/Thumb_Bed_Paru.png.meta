@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 01a3fb8a6b1dd4c82b506f7b776c5ac4
+guid: 856a989b3503641c09042d222421fa5e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7744058539163611640
-    second: Thumb_RoomShell_Paru_0
-  - first:
-      213: -2584872400329886923
-    second: Thumb_RoomShell_Paru_1
+      213: 7895881298476460906
+    second: Thumb_Bed_Paru_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -133,63 +130,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 71
-        width: 1223
-        height: 1163
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8f17daa263c687b60800000000000000
-      internalID: 7744058539163611640
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Thumb_RoomShell_Paru_1
-      rect:
-        serializedVersion: 2
-        x: 305
-        y: 1148
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 53330a44f30b02cd0800000000000000
-      internalID: -2584872400329886923
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Thumb_Bed_Paru_1
-      rect:
-        serializedVersion: 2
-        x: 0
         y: 0
-        width: 1254
-        height: 1254
+        width: 1295
+        height: 1199
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fc1a6b61fe42f40e9851afb808cb3a56
-      internalID: 1987550193
+      spriteID: a6be650f43ec39d60800000000000000
+      internalID: 7895881298476460906
       vertices: []
       indices: 
       edges: []
@@ -198,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 8b8a45951e8c1445992b595a1b641530
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -208,9 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Thumb_Bed_Paru_0: 7744058539163611640
-      Thumb_Bed_Paru_1: 1987550193
-      Thumb_RoomShell_Paru_1: -2584872400329886923
+      Thumb_Bed_Paru_0: 7895881298476460906
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

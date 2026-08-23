@@ -93,9 +93,9 @@ MonoBehaviour:
   - category: 0
     id: Bed_Paru
     displayName: "\u30EA\u30DC\u30F3\u306E\u3079\u3063\u3069"
-    prefab: {fileID: 4258633975664127822, guid: be409f9901a974c92b7afa9d1014f559, type: 3}
+    prefab: {fileID: 5467683025080547503, guid: 91314fc9de3844500825049c46164750, type: 3}
     isEmptySlot: 0
-    thumbnail: {fileID: 7744058539163611640, guid: 01a3fb8a6b1dd4c82b506f7b776c5ac4, type: 3}
+    thumbnail: {fileID: 7895881298476460906, guid: 856a989b3503641c09042d222421fa5e, type: 3}
     ownedByDefault: 1
   - category: 0
     id: Bed_Piyoko
@@ -247,7 +247,7 @@ MonoBehaviour:
   - category: 1
     id: Table_Piyoko
     displayName: "\u3074\u3088\u3053\u306E\u30C6\u30FC\u30D6\u30EB"
-    prefab: {fileID: 3638976438019029286, guid: 525199a1b48434ff9b34850fd233bc47, type: 3}
+    prefab: {fileID: 8455672227072326826, guid: 525199a1b48434ff9b34850fd233bc47, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -858145242867497395, guid: 28de135ec76c243509394cd2d0153b1d, type: 3}
     ownedByDefault: 1
