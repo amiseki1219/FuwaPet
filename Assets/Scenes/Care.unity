@@ -948,6 +948,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 62647949}
   m_CullTransparentMesh: 1
+--- !u!1 &71093987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 71093989}
+  - component: {fileID: 71093988}
+  m_Layer: 0
+  m_Name: IrisRevealController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &71093988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71093987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbbde105d77b5445e817fdbb30696ddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IrisRevealController
+  veil: {fileID: 1481353936}
+  veilColor: {r: 0.106, g: 0.129, b: 0.251, a: 1}
+  uvClosed: 40
+  uvOpen: 0.1
+  holdBeforeOpen: 0.4
+  duration: 5
+  driftAmplitude: 0.014
+  driftSpeed: 0.8
+--- !u!4 &71093989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71093987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 438.3836, y: 839.7544, z: -0.54435}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &73894992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1645,7 +1697,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ed9af5d64674f62b6cd46051609906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CareSceneManager
-  petNameText: {fileID: 0}
   conditionText: {fileID: 1375526946}
   personalityLabelText: {fileID: 1751266732}
   personalityText: {fileID: 1452816488}
@@ -1661,7 +1712,8 @@ MonoBehaviour:
   lunaStoneText: {fileID: 551546819}
   noticePanelRect: {fileID: 341263548}
   noticeText: {fileID: 1909208685}
-  noticeDuration: 2
+  noticeDuration: 5
+  statusAnimateDuration: 5
   trustSlider: {fileID: 1131528825}
   trustRemainingText: {fileID: 1920822768}
   speechBubbleText: {fileID: 792640062}
@@ -1670,6 +1722,14 @@ MonoBehaviour:
   hungerPopup: {fileID: 1496369673}
   energyPopup: {fileID: 388591346}
   moodPopup: {fileID: 1133170566}
+  irisReveal: {fileID: 71093988}
+  sleepResultDelay: 1
+  wakeUpMessages:
+  - "\u304A\u306F\u3088\u3046\uFF01"
+  - "\u305F\u304F\u3055\u3093\u5BDD\u308C\u305F\u306D\uFF01"
+  - "\u3069\u3093\u306A\u5922\u3092\u898B\u305F\uFF1F"
+  - "\u3088\u304F\u7720\u308C\u305F\u307F\u305F\u3044\u301C"
+  - "\u3059\u3063\u304D\u308A\u3057\u305F\uFF01"
   oyatuManager: {fileID: 123376012}
   characterAnimator: {fileID: 0}
   sparkleEffect: {fileID: 0}
@@ -3624,7 +3684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
   popupText: {fileID: 388591347}
   floatDistance: 50
-  duration: 1
+  duration: 2.5
 --- !u!114 &388591347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4595,6 +4655,7 @@ RectTransform:
   - {fileID: 123376009}
   - {fileID: 341263548}
   - {fileID: 756861537}
+  - {fileID: 1481353938}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7402,8 +7463,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000025749, y: -0.000033379}
-  m_SizeDelta: {x: 184.3149, y: 99.0159}
+  m_AnchoredPosition: {x: -1.2234, y: 15.4683}
+  m_SizeDelta: {x: 434.3865, y: 169.0634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &792640062
 MonoBehaviour:
@@ -7452,8 +7513,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8813,8 +8874,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 299.03, y: 234}
-  m_SizeDelta: {x: 301.9453, y: 194.1105}
+  m_AnchoredPosition: {x: 242, y: 264}
+  m_SizeDelta: {x: 500, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &964665668
 MonoBehaviour:
@@ -9982,7 +10043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
   popupText: {fileID: 1133170567}
   floatDistance: 50
-  duration: 1
+  duration: 2.5
 --- !u!114 &1133170567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11430,7 +11491,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -215.13, y: -26.075}
+  m_AnchoredPosition: {x: -215.13, y: -33}
   m_SizeDelta: {x: 447.26, y: 30.549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1375526946
@@ -11585,7 +11646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
   popupText: {fileID: 1376042995}
   floatDistance: 50
-  duration: 1
+  duration: 2.5
 --- !u!114 &1376042995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12536,6 +12597,78 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1481353935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1481353938}
+  - component: {fileID: 1481353937}
+  - component: {fileID: 1481353936}
+  m_Layer: 5
+  m_Name: IrisVeil
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1481353936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481353935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 05cdc5acd6b4943e885a481b10d28daa, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &1481353937
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481353935}
+  m_CullTransparentMesh: 1
+--- !u!224 &1481353938
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481353935}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 507223205}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1488514273
 GameObject:
   m_ObjectHideFlags: 0
@@ -12663,7 +12796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StatusPopup
   popupText: {fileID: 1496369674}
   floatDistance: 50
-  duration: 1
+  duration: 2.5
 --- !u!114 &1496369674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13981,7 +14114,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u304A\u3084\u3064\u30EA\u30BB\u30C3\u30C8"
+  m_text: 'Dev.Reset
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 46eb132de9f75408eb3685c8137cac7d, type: 2}
   m_sharedMaterial: {fileID: 5860046056626304245, guid: 46eb132de9f75408eb3685c8137cac7d, type: 2}
@@ -14216,8 +14351,20 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 756861538}
         m_TargetAssemblyTypeName: DevResetHelper, Assembly-CSharp
-        m_MethodName: DevResetFreeOyatuCount
-        m_Mode: 0
+        m_MethodName: DevResetAll
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 11500000, guid: 54db1a6d7f7e148e0b468fb0de9eadeb, type: 3}
+        m_TargetAssemblyTypeName: DevResetHelper, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: 
@@ -19031,3 +19178,4 @@ SceneRoots:
   - {fileID: 1237694483}
   - {fileID: 1297896977}
   - {fileID: 480101654}
+  - {fileID: 71093989}
