@@ -64,6 +64,11 @@ public class CarePokoController : MonoBehaviour
     /// </summary>
     public void PlayEat()
     {
+        // ぽこ以外を選んでいると、このオブジェクト（ぽこの Prefab）は非アクティブ。
+        // 非アクティブなオブジェクトではコルーチンを起動できずエラーになるので、ここで抜ける。
+        // ぽこ以外は CareCharacterActionController が担当する。
+        if (!gameObject.activeInHierarchy) return;
+
         Debug.Log("[CarePokoController] PlayEat called. coroutine already running: " + (_eatCoroutine != null));
         if (_eatCoroutine != null) return;
         _eatCoroutine = StartCoroutine(EatSequence());

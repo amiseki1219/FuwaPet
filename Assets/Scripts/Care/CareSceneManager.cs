@@ -80,6 +80,9 @@ public class CareSceneManager : MonoBehaviour
     [SerializeField] private Animator characterAnimator;
     [SerializeField] private GameObject sparkleEffect;
 
+    [Tooltip("ぽこ以外のキャラのアクション。未結線でもよい（アニメが出ないだけ）")]
+    [SerializeField] private CareCharacterActionController careCharacterAction;
+
     private const int MaxNadePerDay = 10;
     private const int MaxPlayPerDay = 5;
     private const int MaxBathPerDay = 2;
@@ -244,6 +247,9 @@ public class CareSceneManager : MonoBehaviour
 
     private void PlayBathCompleteEffect()
     {
+        // ぽこ以外は嬉しいアニメ＋しばらく表情を固定する
+        careCharacterAction?.PlayHappy();
+
         if (characterAnimator != null) characterAnimator.SetTrigger("Happy");
         if (sparkleEffect != null)
         {

@@ -68,6 +68,9 @@ public class OyatuManager : MonoBehaviour
     [SerializeField] private CareSceneManager    careManager;
     [SerializeField] private CarePokoController  carePokoController;
 
+    [Tooltip("ぽこ以外のキャラのアクション。未結線でもよい（アニメが出ないだけ）")]
+    [SerializeField] private CareCharacterActionController careCharacterAction;
+
     // true=hungerPopup / false=energyPopup
     // true=hungerPopup / false=energyPopup
     private static readonly Dictionary<string, (bool useHunger, string text)> PopupMap = new()
@@ -244,7 +247,10 @@ public class OyatuManager : MonoBehaviour
         careManager?.ShowNotice($"{_selectedOyatu.displayName}をあげたよ！");
         careManager?.RefreshAll();
         HidePanel();
+        // ぽこは carePokoController、それ以外は careCharacterAction が担当する。
+        // 担当でないほうは中で何もしないので、両方呼んでよい
         carePokoController?.PlayEat();
+        careCharacterAction?.PlayEat();
     }
 
     // ── プライベートヘルパー ────────────────────────────────────────────────────
