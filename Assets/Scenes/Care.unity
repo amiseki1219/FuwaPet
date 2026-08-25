@@ -9665,6 +9665,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1062348190}
   m_CullTransparentMesh: 1
+--- !u!1 &1099971276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1099971278}
+  - component: {fileID: 1099971277}
+  m_Layer: 0
+  m_Name: LoadingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1099971277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099971276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f77fe3b340143f4be956835b50cbfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadingManager
+  loadingPanelPrefab: {fileID: 266951962385834318, guid: 767812adc48f54fa68fb402c4c04b553, type: 3}
+--- !u!4 &1099971278
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099971276}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.51728, y: 0, z: -7.21844}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1122056651
 GameObject:
   m_ObjectHideFlags: 0
@@ -19199,7 +19244,6 @@ SceneRoots:
   - {fileID: 507223205}
   - {fileID: 1041924204}
   - {fileID: 1868804524}
-  - {fileID: 1598714669}
   - {fileID: 924527123}
   - {fileID: 508581907}
   - {fileID: 1855416605}
@@ -19211,3 +19255,5 @@ SceneRoots:
   - {fileID: 480101654}
   - {fileID: 137671731}
   - {fileID: 71093989}
+  - {fileID: 1598714669}
+  - {fileID: 1099971278}
