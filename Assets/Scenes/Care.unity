@@ -1476,6 +1476,7 @@ MonoBehaviour:
   closeButton: {fileID: 1446828821}
   careManager: {fileID: 137671730}
   carePokoController: {fileID: 7609542747541520337}
+  careCharacterAction: {fileID: 229219113}
 --- !u!114 &123376013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1733,6 +1734,7 @@ MonoBehaviour:
   oyatuManager: {fileID: 123376012}
   characterAnimator: {fileID: 0}
   sparkleEffect: {fileID: 0}
+  careCharacterAction: {fileID: 229219113}
 --- !u!224 &137671731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2709,6 +2711,7 @@ GameObject:
   m_Component:
   - component: {fileID: 229219112}
   - component: {fileID: 229219111}
+  - component: {fileID: 229219113}
   m_Layer: 0
   m_Name: CharacterDisplaySystem
   m_TagString: Untagged
@@ -2757,6 +2760,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &229219113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229219110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af0c36db311f4340aafca39b1d81602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CareCharacterActionController
+  characterDisplayAnchor: {fileID: 1964486326}
+  careButtonGroup: {fileID: 1838650385}
+  dishRoot: {fileID: 0}
+  snackRoot: {fileID: 0}
+  eatTrigger: Eat
+  happyTrigger: Happy
+  playHappyAfterEat: 1
+  eatStartExpression: Fun
+  dishOnRatio: 0.22
+  midExpression: Surprised
+  midExpressionRatio: 0.52
+  endExpression: Happy
+  endExpressionRatio: 0.78
+  dishOffRatio: 0.92
+  bathExpression: Relaxed
+  bathExpressionDuration: 300
+  fallbackEatLength: 3.4
 --- !u!1 &269766497
 GameObject:
   m_ObjectHideFlags: 0
@@ -19167,7 +19199,6 @@ SceneRoots:
   - {fileID: 507223205}
   - {fileID: 1041924204}
   - {fileID: 1868804524}
-  - {fileID: 137671731}
   - {fileID: 1598714669}
   - {fileID: 924527123}
   - {fileID: 508581907}
@@ -19178,4 +19209,5 @@ SceneRoots:
   - {fileID: 1237694483}
   - {fileID: 1297896977}
   - {fileID: 480101654}
+  - {fileID: 137671731}
   - {fileID: 71093989}
