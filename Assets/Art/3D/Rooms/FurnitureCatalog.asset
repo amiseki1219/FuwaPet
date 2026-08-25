@@ -296,7 +296,7 @@ MonoBehaviour:
   - category: 4
     id: Shelf_Piyoko
     displayName: "\u305F\u307E\u3054\u306E\u672C\u68DA"
-    prefab: {fileID: 6284920686606561789, guid: 6557315f9921a440ebb21f84ec795749, type: 3}
+    prefab: {fileID: 6950497602829096584, guid: 6557315f9921a440ebb21f84ec795749, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1673047254065089203, guid: d636b13cbe75d4070bf150eb5b8b5557, type: 3}
     ownedByDefault: 1

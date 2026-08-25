@@ -7,9 +7,6 @@ using Game.Core;
 
 public class CareSceneManager : MonoBehaviour
 {
-    [Header("キャラクター情報")]
-    [SerializeField] private TextMeshProUGUI petNameText;
-
     [Header("コンディション")]
     [SerializeField] private TextMeshProUGUI conditionText;
 
@@ -38,6 +35,10 @@ public class CareSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI noticeText;
     [SerializeField] private float noticeDuration = 2f;
 
+    // バーと数字は同じ時間で動かす。ここを長くすると、数字がゆっくりカウントアップする
+    [Tooltip("ステータスバーと数字が今の値まで動くのにかかる時間")]
+    [SerializeField] private float statusAnimateDuration = 1.2f;
+
     [Header("信頼度")]
     [SerializeField] private Slider trustSlider;
     [SerializeField] private TextMeshProUGUI trustRemainingText;
@@ -51,6 +52,26 @@ public class CareSceneManager : MonoBehaviour
     [SerializeField] private StatusPopup hungerPopup;
     [SerializeField] private StatusPopup energyPopup;
     [SerializeField] private StatusPopup moodPopup;
+
+    [Header("ねんねからの復帰演出")]
+    [Tooltip("Sleep から戻ったときに、閉じた幕の穴を広げて朝を見せる。未結線でも動く（演出が出ないだけ）")]
+    [SerializeField] private IrisRevealController irisReveal;
+
+    // アイリスが開ききるのを待つと間延びする。開いている途中で出したほうが自然。
+    // マイナスにすると「開ききるまで待つ」（IrisRevealController の長さに自動で追従する）。
+    [Tooltip("ねんねから戻って、通知・Popup・吹き出しを出すまでの待ち時間。\n" +
+             "マイナスにすると、アイリスが開ききるまで待つ")]
+    [SerializeField] private float sleepResultDelay = 2f;
+
+    [Tooltip("ねんねから戻ったときの吹き出し。この中からランダムで1つ出る。増やしてよい")]
+    [SerializeField] private string[] wakeUpMessages =
+    {
+        "おはよう！",
+        "たくさん寝れたね！",
+        "どんな夢を見た？",
+        "よく眠れたみたい〜",
+        "すっきりした！",
+    };
 
     [Header("おやつ")]
     [SerializeField] private OyatuManager oyatuManager;
@@ -67,6 +88,16 @@ public class CareSceneManager : MonoBehaviour
     private SaveData _save;
     private Coroutine _noticeCoroutine;
     private Coroutine _sliderCoroutine;
+
+    /// <summary>次の SetSpeechBubble() で優先して出す文言。出したら空に戻す。</summary>
+    private string _overrideSpeech;
+
+    /// <summary>
+    /// true の間は吹き出しを出さない。
+    /// ねんね明けは幕が開くまで隠しておき、開いたところで「おはよう」系をタイプライターで出す。
+    /// 隠さないと、幕の裏で通常のコメントが出て、開いたあとに差し替わる二段階になってしまう。
+    /// </summary>
+    private bool _suppressSpeech;
     private Coroutine _coinCoroutine;
     private Coroutine _lunaStoneCoroutine;
     private Coroutine _typewriterCoroutine;
@@ -86,6 +117,26 @@ public class CareSceneManager : MonoBehaviour
     private void OnAppResumed()
     {
         RefreshAll();
+    }
+
+    // ねんねから戻ってきたときは、Care が見える前に幕を出しておく。
+    // Start でやると、他のコンポーネントの初期化順によっては一瞬中身が見えてしまう。
+    // フラグはここでは消さない。下の Start() が通知を出すときに消す。
+    private void Awake()
+    {
+        // 効果の有無に関わらず、ねんねから戻ったら演出は出す。
+        // SleepJustCompleted はクールダウン中に立たないので、こちらを見る
+        Debug.Log($"[Care][確認用] Awake SleepReturning={SleepSceneManager.SleepReturning} " +
+                  $"SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
+                  $"irisReveal={(irisReveal != null ? irisReveal.name : "★未結線")}");
+
+        if (SleepSceneManager.SleepReturning)
+        {
+            SleepSceneManager.SleepReturning = false;
+            _suppressSpeech = true;   // 幕が開くまで吹き出しを出さない
+            if (irisReveal != null) irisReveal.PlayReveal();
+            else Debug.LogWarning("[Care][確認用] irisReveal が未結線なのでアイリス演出は出ません");
+        }
     }
 
     private void Start()
@@ -115,7 +166,6 @@ public class CareSceneManager : MonoBehaviour
 
         // ApplyTimeDecay は起動時は MainUIManager.Start()、復帰時は GameContext が適用するため
         // Care では呼ばない
-        LoadCharacterInfo();
 
         if (noticePanelRect != null)
         {
@@ -136,6 +186,60 @@ public class CareSceneManager : MonoBehaviour
             ShowCleanPopup($"+{cleanAmount}");
             PlayBathCompleteEffect();
         }
+
+        // ねんねから戻ってきたとき。お風呂と同じ作り（静的フラグを拾ってすぐ戻す）
+        //
+        // ただしお風呂と違って、すぐには出さない。
+        // 戻った直後は画面が幕で覆われていて、通知も吹き出しも見えないため、
+        // アイリスが開ききってから出す。
+        Debug.Log($"[Care][確認用] Start SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
+                  $"energyAmount={SleepSceneManager.SleepJustEnergyAmount}");
+
+        if (SleepSceneManager.SleepJustCompleted)
+        {
+            SleepSceneManager.SleepJustCompleted = false;
+            int energyAmount = Mathf.RoundToInt(SleepSceneManager.SleepJustEnergyAmount);
+            StartCoroutine(ShowSleepResultCoroutine(energyAmount));
+        }
+        else
+        {
+            Debug.LogWarning("[Care][確認用] SleepJustCompleted が false なので、ねんねの結果表示は出しません");
+        }
+    }
+
+    /// <summary>
+    /// ねんねの結果を、アイリスが開ききってから出す。
+    /// 幕がまだ閉じている間に出しても見えないので、そのぶん待つ。
+    /// </summary>
+    private IEnumerator ShowSleepResultCoroutine(int energyAmount)
+    {
+        float wait = sleepResultDelay >= 0f
+            ? sleepResultDelay
+            : (irisReveal != null ? irisReveal.TotalDuration : 0f);
+
+        Debug.Log($"[Care][確認用] ねんねの結果表示を {wait} 秒後に出します");
+        if (wait > 0f) yield return new WaitForSeconds(wait);
+
+        ShowNotice($"ねんね完了！元気 +{energyAmount}");
+        energyPopup?.Show($"+{energyAmount}");
+
+        // ここで初めて吹き出しを出す。
+        // 機嫌などの通常の判定は SetSpeechBubble() の中で今までどおり動く
+        _suppressSpeech = false;
+        _overrideSpeech = PickWakeUpMessage();
+        SetSpeechBubble();
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Care][確認用] ねんねの結果を表示しました 元気+{energyAmount} " +
+                  $"notice={(noticePanelRect != null ? "OK" : "★未結線")} " +
+                  $"energyPopup={(energyPopup != null ? "OK" : "★未結線")} " +
+                  $"吹き出し={(speechBubbleText != null ? "OK" : "★未結線")}");
+    }
+
+    /// <summary>ねんね明けの言葉を1つ選ぶ。未設定なら既定の1文。</summary>
+    private string PickWakeUpMessage()
+    {
+        if (wakeUpMessages == null || wakeUpMessages.Length == 0) return "おはよう！";
+        return wakeUpMessages[Random.Range(0, wakeUpMessages.Length)];
     }
 
     private void PlayBathCompleteEffect()
@@ -162,12 +266,6 @@ public class CareSceneManager : MonoBehaviour
         SetTrustLevel();
         SetPersonality();
         SetSpeechBubble();
-    }
-
-    private void LoadCharacterInfo()
-    {
-        if (petNameText != null)
-            petNameText.text = ResolveCharName();
     }
 
     private string ResolveCharName()
@@ -261,39 +359,67 @@ public class CareSceneManager : MonoBehaviour
 
     private void SetStatusBars()
     {
-        if (moodValueText != null)   moodValueText.text   = $"{(int)_status.Mood}/100";
-        if (cleanValueText != null)  cleanValueText.text  = $"{(int)_status.Clean}/100";
-        if (hungerValueText != null) hungerValueText.text = $"{(int)_status.Hunger}/100";
-        if (energyValueText != null) energyValueText.text = $"{(int)_status.Energy}/100";
-
+        // 数字はここでは入れない。バーと同じコルーチンの中でカウントアップさせる。
+        // （即代入するとバーだけ伸びて数字はパッと切り替わり、ちぐはぐに見える）
         if (_sliderCoroutine != null) StopCoroutine(_sliderCoroutine);
         _sliderCoroutine = StartCoroutine(AnimateSlidersCoroutine());
     }
 
+    /// <summary>
+    /// バーと数字を、今の値まで一緒に動かす。
+    ///
+    /// 数字をバーと同じ時間で動かしているので、
+    /// statusAnimateDuration を長くすると「カウントアップしている」感じが強くなる。
+    /// バーの開始位置は今表示されている値。値が減るときも同じように動く。
+    /// </summary>
     private IEnumerator AnimateSlidersCoroutine()
     {
-        float startClean  = cleanSlider  != null ? cleanSlider.value  : 0f;
-        float startHunger = hungerSlider != null ? hungerSlider.value : 0f;
-        float startEnergy = energySlider != null ? energySlider.value : 0f;
-        float startMood   = moodSlider   != null ? moodSlider.value   : 0f;
+        float startClean  = cleanSlider  != null ? cleanSlider.value  : _status.Clean;
+        float startHunger = hungerSlider != null ? hungerSlider.value : _status.Hunger;
+        float startEnergy = energySlider != null ? energySlider.value : _status.Energy;
+        float startMood   = moodSlider   != null ? moodSlider.value   : _status.Mood;
 
-        float elapsed = 0f;
-        const float duration = 0.5f;
-        while (elapsed < duration)
+        float duration = Mathf.Max(0f, statusAnimateDuration);
+
+        if (duration > 0f)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            if (cleanSlider  != null) cleanSlider.value  = Mathf.Lerp(startClean,  _status.Clean,  t);
-            if (hungerSlider != null) hungerSlider.value = Mathf.Lerp(startHunger, _status.Hunger, t);
-            if (energySlider != null) energySlider.value = Mathf.Lerp(startEnergy, _status.Energy, t);
-            if (moodSlider   != null) moodSlider.value   = Mathf.Lerp(startMood,   _status.Mood,   t);
-            yield return null;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                float clean  = Mathf.Lerp(startClean,  _status.Clean,  t);
+                float hunger = Mathf.Lerp(startHunger, _status.Hunger, t);
+                float energy = Mathf.Lerp(startEnergy, _status.Energy, t);
+                float mood   = Mathf.Lerp(startMood,   _status.Mood,   t);
+
+                if (cleanSlider  != null) cleanSlider.value  = clean;
+                if (hungerSlider != null) hungerSlider.value = hunger;
+                if (energySlider != null) energySlider.value = energy;
+                if (moodSlider   != null) moodSlider.value   = mood;
+
+                SetStatusValueTexts(mood, clean, hunger, energy);
+
+                yield return null;
+            }
         }
 
         if (cleanSlider  != null) cleanSlider.value  = _status.Clean;
         if (hungerSlider != null) hungerSlider.value = _status.Hunger;
         if (energySlider != null) energySlider.value = _status.Energy;
         if (moodSlider   != null) moodSlider.value   = _status.Mood;
+
+        SetStatusValueTexts(_status.Mood, _status.Clean, _status.Hunger, _status.Energy);
+    }
+
+    /// <summary>数字の表示だけを書き換える。切り上げではなく切り捨てで、バーの見た目と揃える。</summary>
+    private void SetStatusValueTexts(float mood, float clean, float hunger, float energy)
+    {
+        if (moodValueText != null)   moodValueText.text   = $"{(int)mood}/100";
+        if (cleanValueText != null)  cleanValueText.text  = $"{(int)clean}/100";
+        if (hungerValueText != null) hungerValueText.text = $"{(int)hunger}/100";
+        if (energyValueText != null) energyValueText.text = $"{(int)energy}/100";
     }
 
     private void SetPersonality()
@@ -306,8 +432,17 @@ public class CareSceneManager : MonoBehaviour
 
     private void SetSpeechBubble()
     {
+        // ねんね明けは幕が開くまで黙っている
+        if (_suppressSpeech)
+        {
+            if (speechBubbleRoot != null) speechBubbleRoot.SetActive(false);
+            return;
+        }
+
         string speech;
-        if (_status.Hunger < 40f)      speech = "おなかすいたよ…";
+        // ねんね明けなど、状態に関係なく出したい言葉があるときはそちらを優先する
+        if (!string.IsNullOrEmpty(_overrideSpeech)) { speech = _overrideSpeech; _overrideSpeech = null; }
+        else if (_status.Hunger < 40f) speech = "おなかすいたよ…";
         else if (_status.Clean < 40f)  speech = "お風呂入りたいな…";
         else if (_status.Energy < 40f) speech = "ちょっとつかれたかも…";
         else if (_status.Mood < 40f)   speech = "なんかしょんぼりしてる…";
@@ -315,6 +450,8 @@ public class CareSceneManager : MonoBehaviour
                  _status.Energy >= 70f && _status.Mood >= 70f)
                                        speech = "今日も元気だよ！";
         else                           speech = "一緒にいられて嬉しいな";
+
+        Debug.Log($"[Care][確認用] 吹き出し「{speech}」 root={(speechBubbleRoot != null ? "OK" : "★未結線")} text={(speechBubbleText != null ? "OK" : "★未結線")}");
 
         if (speechBubbleRoot != null) speechBubbleRoot.SetActive(true);
         if (speechBubbleText != null)
@@ -411,6 +548,13 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnSleep()
     {
+        // クールダウンの判定は SleepSceneManager に一元化している（定数を2箇所に持たないため）
+        var remain = SleepSceneManager.GetRemainingCooldown(_save);
+        if (remain > System.TimeSpan.Zero)
+        {
+            ShowNotice($"ねんねはあと{SleepSceneManager.FormatRemain(remain)}後だよ！");
+            return;
+        }
         GoToScene("Sleep");
     }
 

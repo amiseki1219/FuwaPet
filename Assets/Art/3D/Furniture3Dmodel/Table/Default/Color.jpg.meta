@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9234a7acb21e8419ca7f392748a0dd7e
+guid: cabbba73de3294c83870d364cf251b65
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7173195987685868465
-    second: "\u3075\u304D\u305F\u3099\u3057_0"
+      213: -5107608962211522720
+    second: Color_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,45 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u3075\u304D\u305F\u3099\u3057_0"
+      name: Color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 895
-        height: 595
+        width: 2048
+        height: 2048
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b3064edebf4c8360800000000000000
-      internalID: 7173195987685868465
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: "\u3075\u304D\u3060\u3057_0"
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 895
-        height: 595
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 90c7069f91dd84842aa0b275fe61be21
-      internalID: 1421301289
+      spriteID: 067d7cbc5b02e19b0800000000000000
+      internalID: -5107608962211522720
       vertices: []
       indices: 
       edges: []
@@ -173,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ecc8035fd585f49b295e28c05bc6b03f
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -183,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u3075\u304D\u305F\u3099\u3057_0": 7173195987685868465
-      "\u3075\u304D\u3060\u3057_0": 1421301289
+      Color_0: -5107608962211522720
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

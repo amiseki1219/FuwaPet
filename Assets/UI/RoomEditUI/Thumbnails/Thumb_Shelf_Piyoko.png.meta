@@ -11,9 +11,6 @@ TextureImporter:
   - first:
       213: -160205742858323160
     second: Thumb_Shelf_Piyoko_2
-  - first:
-      213: -9163527206950714723
-    second: Thumb_Shelf_Piyoko_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -81,7 +78,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -139,9 +136,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1231
-        height: 1229
+        y: 1
+        width: 1175
+        height: 1296
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,10 +157,10 @@ TextureImporter:
       name: Thumb_Shelf_Piyoko_1
       rect:
         serializedVersion: 2
-        x: 88
-        y: 521
-        width: 8
-        height: 8
+        x: 141
+        y: 595
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,9 +179,9 @@ TextureImporter:
       name: Thumb_Shelf_Piyoko_2
       rect:
         serializedVersion: 2
-        x: 1163
-        y: 505
-        width: 6
+        x: 1157
+        y: 379
+        width: 8
         height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -196,28 +193,6 @@ TextureImporter:
       bones: []
       spriteID: 82bb3f5c9b5d6cdf0800000000000000
       internalID: -160205742858323160
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Thumb_Shelf_Piyoko_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 336
-        width: 5
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d9243144e8c94d080800000000000000
-      internalID: -9163527206950714723
       vertices: []
       indices: 
       edges: []
@@ -239,7 +214,6 @@ TextureImporter:
       Thumb_Shelf_Piyoko_0: 1673047254065089203
       Thumb_Shelf_Piyoko_1: -986330251381429174
       Thumb_Shelf_Piyoko_2: -160205742858323160
-      Thumb_Shelf_Piyoko_3: -9163527206950714723
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
