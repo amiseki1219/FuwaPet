@@ -49,6 +49,14 @@ public class BathTouchEffect : MonoBehaviour
     // 目安: 「カメラからキャラまでの距離」より少しだけ小さい値（＝キャラの手前）にする。
     [SerializeField] private float particleDistance = 10.5f;
 
+    // 指に追従させるか。
+    //
+    // ON  … 指の位置から泡が出る（従来）
+    // OFF … Scene に置いた位置から動かない。キャラのまわりに置いて「漂う泡」にしたいときはこちら。
+    //        こすっている間だけ出る、という制御はそのまま効く。
+    [Tooltip("OFF にすると指を追いかけず、Scene に置いた位置から出続ける")]
+    [SerializeField] private bool followFinger = true;
+
     // ── 泡のスプライト（大きさ違い） ──────────────────────────────────────────
     //
     // 大・中・小のように大きさの違う泡を登録すると、粒ごとに1枚がランダムで選ばれる。
@@ -114,6 +122,24 @@ public class BathTouchEffect : MonoBehaviour
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// 指定したシャンプーの「泡の色」を返す。
+    ///
+    /// なぜ外に出すのか:
+    ///   体に付く泡（BubbleController）にも同じ色を使いたいため。
+    ///   色の設定を2箇所に持つと必ずズレるので、Inspector の設定を正として
+    ///   ここから読み取る形にした（お風呂の MaxBathPerDay が2箇所にある問題の再発防止）。
+    ///
+    /// 見つからない・未設定のときは null を返す。呼び出し側は「色を変えない」を選ぶこと。
+    /// </summary>
+    public Color[] GetBubbleColors(string shampooId)
+    {
+        ShampooParticleSet set = FindSet(shampooId);
+        if (set == null) return null;
+        if (set.bubbleColors == null || set.bubbleColors.Length == 0) return null;
+        return set.bubbleColors;
     }
 
     /// <summary>
@@ -301,6 +327,19 @@ public class BathTouchEffect : MonoBehaviour
 
     // ── 位置・再生まわり ──────────────────────────────────────────────────────
 
+    /// <summary>
+    /// 画面座標を「泡を出している平面」のワールド座標に変換して返す。
+    ///
+    /// なぜ外に出すのか:
+    ///   体に泡を置く BathBubblePainter が、指の位置を同じ平面に載せる必要があるため。
+    ///   変換の距離（particleDistance）を2箇所に持つとカメラを動かしたときに必ずズレるので、
+    ///   この1箇所を正として共有する。
+    /// </summary>
+    public Vector3 ScreenToWorldPosition(Vector2 screenPosition)
+    {
+        return ScreenToWorld(screenPosition);
+    }
+
     private Vector3 ScreenToWorld(Vector2 screenPosition)
     {
         var cam = Camera.main;
@@ -347,7 +386,8 @@ public class BathTouchEffect : MonoBehaviour
         }
 
         // 先に位置を確定してから再生する（原点に出ないよう）
-        UpdatePosition(screenPosition);
+        // followFinger が OFF のときは Scene に置いた位置のまま動かさない
+        if (followFinger) UpdatePosition(screenPosition);
 
         StartOne(touchParticle);
 

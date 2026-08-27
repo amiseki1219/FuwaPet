@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+using Yurufu.Bath.Foam;
 
 public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -40,7 +41,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI percentText;
-    [SerializeField] private TextMeshProUGUI rubCountText;
     [SerializeField] private Slider gaugeSlider;
     [SerializeField] private RawImage shampooIcon;
     [SerializeField] private TextMeshProUGUI shampooNameText;
@@ -48,14 +48,29 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [SerializeField] private GameObject hintText;
     [SerializeField] private GameObject completeButton;
 
+    [Header("UI（A2 で追加）")]
+    [Tooltip("あわあわゲージ一式。Canvas/WashPanel/GaugeArea を結線する。\n" +
+             "★お風呂開始時に非表示にするだけで、進行度の計算は今までどおり動く")]
+    [SerializeField] private GameObject gaugeArea;
+    [Tooltip("「流す」ボタン。Canvas/WashPanel/ShowerSButton を結線する。\n" +
+             "こすり終わり（Ready）になったときに表示する")]
+    [SerializeField] private GameObject showerButton;
+
     [Header("タッチエフェクト")]
     [SerializeField] private BathTouchEffect touchEffect;
 
     [Header("手のカーソル")]
     [SerializeField] private RectTransform handCursor;
 
-    [Header("泡 (BubbleGroupの子を順番に登録)")]
-    [SerializeField] private BubbleController[] bubbles;
+    [Header("体に付く泡")]
+    [Tooltip("こすった場所に泡を置く担当。BathBubblePainter を結線する")]
+    [SerializeField] private BathBubblePainter bubblePainter;
+
+    [Header("体に付く泡（新方式・泡シェル）")]
+    [Tooltip("ON で新方式を試す。初期化に失敗したら、そのお風呂は自動で旧方式へ戻る")]
+    [SerializeField] private bool useNewFoam = true;
+    [Tooltip("Bath.unity の BathFoamSystem を結線する。未結線でも旧方式で動く")]
+    [SerializeField] private BathFoamController foam;
 
     private int _scrubCount;
     private bool _isComplete;
@@ -64,6 +79,21 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private Vector2 _lastTouchPos;
     private float _accumulatedDistance;
     private string _shampooId;
+
+    /// <summary>
+    /// このお風呂で新方式の泡を使うか。
+    /// ★useNewFoam ではなくこのフラグで分岐する。
+    ///   結線漏れ・未対応キャラ（ここちゃんなど）・初期化失敗のときは false になり、
+    ///   旧方式（BathBubblePainter）で洗える状態を必ず保つ。「泡が一切出ない」を作らないため。
+    /// </summary>
+    private bool _newFoamActiveForSession;
+
+    /// <summary>
+    /// 「流す」ボタンを押したか。連打で完了ボタンが二重に出ないようにするための目印。
+    /// お風呂を始めるたびに false へ戻す。
+    /// </summary>
+    private bool _showerPressed;
+
     private System.Collections.IEnumerator _sliderCoroutine;
 
     // Screen Space Camera 対応：scrubArea 判定に使うカメラ
@@ -132,18 +162,70 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         StartCoroutine(UnblockInputNextFrame());
 
+        _showerPressed = false;
+
         if (completeButton != null) completeButton.SetActive(false);
         if (hintText != null) hintText.SetActive(true);
         if (handCursor != null) handCursor.gameObject.SetActive(false);
 
+        // ★A2：あわあわゲージは画面に出さない（2026/8/27）
+        //   「あと何%で終わるか」という作業感を出さないため。requirements.md §5 の
+        //   「罪悪感を煽らない」方針にそろえ、進捗は体に付いていく泡そのもので見せる。
+        //   ★消すのは見た目だけ。requiredDistancePerScrub / maxScrubCount / UpdateUI() は
+        //     一切変えていないので、洗い終わりまでの操作時間はこれまでと同じ。
+        if (gaugeArea != null) gaugeArea.SetActive(false);
+
+        // ★A2：「流す」ボタンは Scene 上で active=1 のため、開始時に必ず隠す。
+        //   隠さないと、洗う前から画面に出てしまう。
+        if (showerButton != null) showerButton.SetActive(false);
+        else Debug.LogWarning("[BathWash] Shower Button が未結線です。\n" +
+                              "      Hierarchy の Canvas/WashPanel を選び、BathWashManager の \"Shower Button\" 欄に " +
+                              "Canvas/WashPanel/ShowerSButton をドラッグしてください");
+
         Debug.Log($"[BathWash] Initialize: shampooId={shampooId} canvasCamera={_canvasCamera?.name ?? "null"} scrubArea={scrubArea?.name ?? "null"}");
 
         UpdateUI();
-        ResetBubbles();
         UpdateShampooInfo(shampooId);
 
         // シャンプー別に泡の色を切り替える（requirements.md §5）
         touchEffect?.SetShampoo(shampooId);
+
+        // 体に付く泡の準備。前回の泡を片付けて、シャンプーの色を取り込む。
+        // SetShampoo より後に呼ぶこと（色の実体は BathTouchEffect が持っているため）
+        //
+        // ★新方式を先に試し、成功したときだけ新方式を使う。
+        //   失敗（未結線・未対応キャラ・例外）なら、このお風呂は旧方式で通す。
+        //
+        //   ★どちらで動いているかを必ずログに出す。
+        //     黙って旧方式に落ちると、何が悪いのか分からないまま時間を溶かすため。
+        _newFoamActiveForSession = false;
+        if (useNewFoam)
+        {
+            if (foam == null)
+            {
+                Debug.LogError("[BathWash] 新方式が ON ですが Foam が未結線です。\n" +
+                               "      Hierarchy の Canvas/WashPanel を選び、BathWashManager の \"Foam\" 欄に " +
+                               "BathFoamSystem をドラッグしてください");
+            }
+            else
+            {
+                _newFoamActiveForSession = foam.TryBeginWash(shampooId);
+            }
+        }
+
+        if (_newFoamActiveForSession)
+        {
+            Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] このお風呂は【新方式：泡シェル＋泡3.png】で動きます");
+        }
+        else
+        {
+            if (useNewFoam)
+                Debug.LogWarning("<color=#00E5FF>[決定]</color> [BathWash] このお風呂は【旧方式：スプライトの泡（球方式）】で動きます。理由は直前のログを見てください");
+            else
+                Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] このお風呂は【旧方式：スプライトの泡（球方式）】で動きます（Use New Foam が OFF）");
+
+            bubblePainter?.Begin(shampooId);
+        }
     }
 
     private System.Collections.IEnumerator UnblockInputNextFrame()
@@ -175,6 +257,8 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         Debug.Log($"[BathWash] OnPointerUp pos={eventData.position} scrubCount={_scrubCount}");
         _isDragging = false;
+        // 指を離したら、泡を置く線をいったん切る
+        if (_newFoamActiveForSession) foam.EndStroke(); else bubblePainter?.EndStroke();
         UpdateFollowEffects(eventData.position, show: false);
     }
 
@@ -201,6 +285,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         if (!hasInput)
         {
             _isDragging = false;
+            if (_newFoamActiveForSession) foam.EndStroke(); else bubblePainter?.EndStroke();
             UpdateFollowEffects(Vector2.zero, show: false);
             return;
         }
@@ -215,9 +300,18 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         float dist = Vector2.Distance(currentPos, _lastTouchPos);
         _lastTouchPos = currentPos;
 
-        if (!inArea) return;
+        if (!inArea)
+        {
+            // 範囲の外へ出たら線を切る。次に戻ってきたとき、外を横切った跡が線でつながらないようにするため
+            if (_newFoamActiveForSession) foam.EndStroke(); else bubblePainter?.EndStroke();
+            return;
+        }
 
-        // ② こすり距離が閾値を超えたらカウント
+        // ② 指の位置に泡を置く（置けない条件は、それぞれの実装側で弾く）
+        if (_newFoamActiveForSession) foam.Paint(currentPos);
+        else                          bubblePainter?.TryPaint(currentPos);
+
+        // ③ こすり距離が閾値を超えたらカウント
         _accumulatedDistance += dist;
         if (_accumulatedDistance >= requiredDistancePerScrub)
         {
@@ -225,7 +319,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             _scrubCount++;
             Debug.Log($"[BathWash] ★ scrubCount++ = {_scrubCount}");
             UpdateUI();
-            UpdateBubbles(_scrubCount);
 
             if (_scrubCount >= maxScrubCount)
                 OnWashComplete();
@@ -287,7 +380,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         float pct = (float)_scrubCount / maxScrubCount * 100f;
         Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
         if (percentText  != null) percentText.text  = $"{Mathf.RoundToInt(pct)}%";
-        if (rubCountText != null) rubCountText.text = $"あと {maxScrubCount - _scrubCount} 回";  // _scrubCount は 0→max へ増えるので、残り回数は引き算で出す
         if (gaugeSlider  != null)
         {
             float target = (float)_scrubCount / maxScrubCount;
@@ -309,50 +401,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         }
         slider.value = to;
         _sliderCoroutine = null;
-    }
-
-    // ── 泡ステージ管理 ────────────────────────────────────────────────────────
-    // bubbles配列の順番:
-    // [0]Head_01 [1]Head_02 [2]Head_03 [3]Ear_L [4]Ear_R
-    // [5]Body_01 [6]Body_02 [7]Body_03 [8]Body_04 [9]Tail
-
-    private void UpdateBubbles(int scrubCount)
-    {
-        int stage = scrubCount / 6;
-        switch (stage)
-        {
-            case 0:
-                for (int i = 0; i < bubbles.Length; i++) SafeHide(i);
-                break;
-            case 1:
-                for (int i = 0; i < 5  && i < bubbles.Length; i++) SafeShow(i, 0.15f);
-                for (int i = 5; i < bubbles.Length; i++) SafeHide(i);
-                break;
-            case 2:
-                for (int i = 0; i < bubbles.Length; i++) SafeShow(i, 0.15f);
-                break;
-            case 3:
-                for (int i = 0; i < 5  && i < bubbles.Length; i++) SafeShow(i, 0.15f);
-                for (int i = 5; i < 9  && i < bubbles.Length; i++) SafeHide(i);
-                if (bubbles.Length > 9) SafeShow(9, 0.15f);
-                break;
-            default: // stage 4 (24回)
-                for (int i = 0; i < bubbles.Length; i++) SafePop(i);
-                break;
-        }
-    }
-
-    private void SafeShow(int i, float size) { if (bubbles[i] != null) bubbles[i].Show(size); }
-    private void SafeHide(int i)             { if (bubbles[i] != null) bubbles[i].Hide(); }
-    private void SafePop(int i)              { if (bubbles[i] != null) bubbles[i].PopEffect(); }
-
-    private void ResetBubbles()
-    {
-        foreach (var b in bubbles)
-        {
-            if (b == null) continue;
-            b.transform.localScale = Vector3.zero;
-        }
     }
 
     private void UpdateShampooInfo(string shampooId)
@@ -386,8 +434,50 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         _isDragging = false;
         touchEffect?.StopContinuous();
         if (hintText != null) hintText.SetActive(false);
+
+        // ★A2：こすり終わりで出すのは「おふろ完了！」ではなく「流す」ボタン（2026/8/27）。
+        //   CompleteButton は A5（泡が消え終わったタイミング）へ引っ越す。
+        if (showerButton != null) showerButton.SetActive(true);
+
+        // 泡側へ「進行度が満タンになった」ことを伝える
+        if (_newFoamActiveForSession) foam.OnReady();
+
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] こすり終わり（Ready）。「流す」ボタンを表示しました");
+    }
+
+    /// <summary>
+    /// 「流す」ボタン（ShowerSButton）を押したとき。Inspector の OnClick から呼ばれる。
+    ///
+    /// 【いまの中身は暫定です】
+    ///   ★A5 で差し替えること。
+    ///     本来の流れ: 流す → 雲が出て雫が降る（A3）→ 泡が上から下へ消える（A4）
+    ///                → 消え終わったら「おふろ完了！」を出す（A5）
+    ///   A3〜A5 がまだ無い状態で何もしないと、お風呂を完了できず、
+    ///   清潔値・信頼度の反映まで確認できなくなる。
+    ///   そのため、ここでは暫定で「おふろ完了！」ボタンを直接出している。
+    ///   A5 を作るときに、この SetActive(true) を「泡が消え終わったときの処理」へ移す。
+    ///
+    /// 【こすり入力について】
+    ///   OnWashComplete() で _isComplete = true になっているため、
+    ///   この時点で Update() のこすり判定も泡の追加もすでに止まっている。
+    ///   ここで改めて止める処理は要らない。
+    /// </summary>
+    public void OnShowerButton()
+    {
+        // 連打対策。二度押しで完了ボタンが二重に出たり、A3 以降で雨が二重に降ったりしないようにする
+        if (_showerPressed) return;
+        _showerPressed = true;
+
+        if (showerButton != null) showerButton.SetActive(false);
+
+        // 指のエフェクトが出たままにならないよう、念のため止める
+        touchEffect?.StopContinuous();
+        if (handCursor != null) handCursor.gameObject.SetActive(false);
+
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] 「流す」を押しました（A3〜A5 は未実装のため、暫定で「おふろ完了！」を表示します）");
+
+        // ★暫定。A5 で「泡が消え終わったら」へ移す
         if (completeButton != null) completeButton.SetActive(true);
-        Debug.Log("[BathWash] WashComplete!");
     }
 
     public void OnComplete()

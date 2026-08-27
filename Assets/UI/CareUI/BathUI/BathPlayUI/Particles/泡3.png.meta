@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0cb71fbf8e4b74d93aaf86b261d4e2f6
+guid: 5eb482f3688144f4a9b28e4e5a7a0a2b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5767179934733856
-    second: BathBG_0
+      213: -6352286771200329309
+    second: "\u6CE13_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BathBG_0
+      name: "\u6CE13_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1080
-        height: 2348
+        width: 263
+        height: 261
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0269d57383d741000800000000000000
-      internalID: 5767179934733856
+      spriteID: 3a9f03366d428d7a0800000000000000
+      internalID: -6352286771200329309
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 3e57848f7cbfe4a2a996d21507aac670
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BathBG_0: 5767179934733856
+      "\u6CE13_0": -6352286771200329309
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
