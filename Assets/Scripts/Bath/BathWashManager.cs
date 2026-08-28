@@ -38,9 +38,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private const int TrustPerBath = 3;
 
     // 性格パラメータの表示名。★並び順は ApplyPersonality() の抽選番号と一致させること。
-    // 0=活動性 1=甘えん坊度 2=勤勉さ 3=素直さ 4=感受性（requirements.md §6）
-    private static readonly string[] PersonalityNames =
-        { "活動性", "甘えん坊度", "勤勉さ", "素直さ", "感受性" };
+    // 0=活動性(おてんば) 1=甘えん坊度(甘えん坊) 2=勤勉さ(しっかりもの)
+    // 3=素直さ(素直) 4=感受性(優しさ)（内部名は requirements.md §6、表示名は §5 の対応表）
+    // ★表示名の正本は ParamNames.cs。ここに文字列を直書きしないこと。
+    private static readonly string[] PersonalityNames = ParamNames.Personality;
 
     [Header("こすり設定")]
     [SerializeField] private float requiredDistancePerScrub = 80f;
@@ -798,6 +799,18 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] お風呂の演出が終わりました。リザルトと完了ボタンを表示します");
     }
 
+    // リザルト1行分の項目名を、全角スペースで6文字ぶんの幅にそろえる。
+    // 表示名の長さがまちまち（キレイ=3／しっかりもの=6）なので、そろえないと ＋ の位置がガタつく。
+    // ★6 は現時点の最長「しっかりもの」に合わせた値。これより長い表示名を足すときは広げること。
+    private const int ResultNameWidth = 6;
+
+    private static string PadName(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return new string('\u3000', ResultNameWidth);
+        int pad = ResultNameWidth - name.Length;
+        return pad > 0 ? name + new string('\u3000', pad) : name;
+    }
+
     /// <summary>
     /// リザルトの文言を組み立てる。
     ///
@@ -819,8 +832,8 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         if (resultText == null) return;
 
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"きれい度　　＋{Mathf.RoundToInt(GetCleanAmount())}");
-        sb.Append($"しんらい度　＋{TrustPerBath}pt");
+        sb.AppendLine($"{PadName(ParamNames.Clean)}{ParamNames.PtWide(Mathf.RoundToInt(GetCleanAmount()))}");
+        sb.Append($"{PadName(ParamNames.Trust)}{ParamNames.PtWide(TrustPerBath)}");
 
         string personality = GetPersonalityResultLine();
         if (!string.IsNullOrEmpty(personality))
@@ -841,13 +854,13 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         switch (_shampooId)
         {
             case "ohisama":
-                return "甘えん坊度　＋2";
+                return $"{PadName(ParamNames.Dependency)}{ParamNames.PtWide(2)}";
             case "hoshizora":
-                return "勤勉さ　　　＋2";
+                return $"{PadName(ParamNames.Diligence)}{ParamNames.PtWide(2)}";
             case "rainbow":
                 int idx = (_rainbowPickedIndex >= 0 && _rainbowPickedIndex < PersonalityNames.Length)
                     ? _rainbowPickedIndex : 0;
-                return $"{PersonalityNames[idx]}　＋1";
+                return $"{PadName(PersonalityNames[idx])}{ParamNames.PtWide(1)}";
             default:
                 return null;   // せっけんは性格が変わらない
         }

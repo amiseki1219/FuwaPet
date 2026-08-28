@@ -185,8 +185,8 @@ public class CareSceneManager : MonoBehaviour
         {
             BathWashManager.BathJustCompleted = false;
             int cleanAmount = Mathf.RoundToInt(BathWashManager.BathJustCleanAmount);
-            ShowNotice($"お風呂完了！清潔 +{cleanAmount}");
-            ShowCleanPopup($"+{cleanAmount}");
+            ShowNotice($"お風呂完了！{ParamNames.Clean} {ParamNames.Pt(cleanAmount)}");
+            ShowCleanPopup(ParamNames.Pt(cleanAmount));
             PlayBathCompleteEffect();
         }
 
@@ -223,8 +223,8 @@ public class CareSceneManager : MonoBehaviour
         Debug.Log($"[Care][確認用] ねんねの結果表示を {wait} 秒後に出します");
         if (wait > 0f) yield return new WaitForSeconds(wait);
 
-        ShowNotice($"ねんね完了！元気 +{energyAmount}");
-        energyPopup?.Show($"+{energyAmount}");
+        ShowNotice($"ねんね完了！{ParamNames.Energy} {ParamNames.Pt(energyAmount)}");
+        energyPopup?.Show(ParamNames.Pt(energyAmount));
 
         // ここで初めて吹き出しを出す。
         // 機嫌などの通常の判定は SetSpeechBubble() の中で今までどおり動く

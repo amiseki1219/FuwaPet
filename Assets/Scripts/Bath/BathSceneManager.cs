@@ -27,7 +27,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "せっけん",
             imageName = "NomalImage",
             description = "さっぱりやさしい泡立ち。\n毎日使えるシンプルなせっけん",
-            effectText = "清潔 +40",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(40)}",
             costCoin = 0, costLuna = 0
         },
         new ShampooData
@@ -40,7 +40,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "おひさまシャンプー",
             imageName = "OhisamaImage",
             description = "おひさまにあたったようないい香り。\n使うたびに甘えん坊になっちゃう？",
-            effectText = "清潔 +60\n甘えん坊度 +2",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n{ParamNames.Dependency} {ParamNames.Pt(2)}",
             costCoin = 0, costLuna = 500
         },
         new ShampooData
@@ -49,7 +49,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "ほしぞらシャンプー",
             imageName = "HoshiImage",
             description = "星空みたいな神秘的な香り。\nコツコツがんばる気持ちが芽生えるかも",
-            effectText = "清潔 +60\n勤勉さ +2",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n{ParamNames.Diligence} {ParamNames.Pt(2)}",
             costCoin = 0, costLuna = 500
         },
         new ShampooData
@@ -58,7 +58,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "レインボーせっけん",
             imageName = "RainbowImage",
             description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪",
-            effectText = "清潔 +60\n性格のどれかが少しアップ",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n性格のどれかが少しアップ",
             costCoin = 100, costLuna = 0
         },
     };

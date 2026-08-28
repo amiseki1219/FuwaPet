@@ -298,16 +298,17 @@ public class OyatuManager : MonoBehaviour
 
         if (data.fullRecovery)
         {
-            sb.AppendLine("おなか 全回復");
-            sb.AppendLine("元気 全回復");
+            // 数値がない表示には pt を付けない（requirements.md §5「パラメータの内部名と表示名」）
+            sb.AppendLine($"{ParamNames.Hunger} 全回復");
+            sb.AppendLine($"{ParamNames.Energy} 全回復");
         }
         else
         {
-            if (data.hungerAmount != 0) sb.AppendLine($"おなか +{data.hungerAmount}");
-            if (data.energyAmount != 0) sb.AppendLine($"元気 +{data.energyAmount}");
+            if (data.hungerAmount != 0) sb.AppendLine($"{ParamNames.Hunger} {ParamNames.Pt(data.hungerAmount)}");
+            if (data.energyAmount != 0) sb.AppendLine($"{ParamNames.Energy} {ParamNames.Pt(data.energyAmount)}");
         }
 
-        if (data.trustAmount > 0) sb.AppendLine($"信頼度 +{data.trustAmount}");
+        if (data.trustAmount > 0) sb.AppendLine($"{ParamNames.Trust} {ParamNames.Pt(data.trustAmount)}");
 
         // 性格パラ表示（全て同値なら「全性格パラ」でまとめる）
         int act = data.personalityActivity;
@@ -318,15 +319,15 @@ public class OyatuManager : MonoBehaviour
         bool allSame = act != 0 && act == dep && act == hon && act == dil && act == sen;
         if (allSame)
         {
-            sb.AppendLine($"全性格パラ <color=#FF69B4>+{act}</color>");
+            sb.AppendLine($"全性格パラ <color=#FF69B4>{ParamNames.Pt(act)}</color>");
         }
         else
         {
-            if (act != 0) sb.AppendLine($"活動性 <color=#FF69B4>{(act > 0 ? "+" : "")}{act}</color>");
-            if (dep != 0) sb.AppendLine($"甘えん坊度 <color=#FF69B4>{(dep > 0 ? "+" : "")}{dep}</color>");
-            if (hon != 0) sb.AppendLine($"素直さ <color=#FF69B4>{(hon > 0 ? "+" : "")}{hon}</color>");
-            if (dil != 0) sb.AppendLine($"勤勉さ <color=#FF69B4>{(dil > 0 ? "+" : "")}{dil}</color>");
-            if (sen != 0) sb.AppendLine($"感受性 <color=#FF69B4>{(sen > 0 ? "+" : "")}{sen}</color>");
+            if (act != 0) sb.AppendLine($"{ParamNames.Activity} <color=#FF69B4>{ParamNames.Pt(act)}</color>");
+            if (dep != 0) sb.AppendLine($"{ParamNames.Dependency} <color=#FF69B4>{ParamNames.Pt(dep)}</color>");
+            if (hon != 0) sb.AppendLine($"{ParamNames.Honesty} <color=#FF69B4>{ParamNames.Pt(hon)}</color>");
+            if (dil != 0) sb.AppendLine($"{ParamNames.Diligence} <color=#FF69B4>{ParamNames.Pt(dil)}</color>");
+            if (sen != 0) sb.AppendLine($"{ParamNames.Sensitivity} <color=#FF69B4>{ParamNames.Pt(sen)}</color>");
         }
 
         return sb.ToString().TrimEnd();
