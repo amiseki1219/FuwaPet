@@ -25,7 +25,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private static readonly List<ShampooData> AllShampoo = new List<ShampooData>
     {
         new ShampooData { id = "normal",    displayName = "せっけん",          imageName = "NomalImage",   description = "さっぱりやさしい泡立ち。\n毎日使えるシンプルなせっけん"          },
-        new ShampooData { id = "ichigo",    displayName = "いちごシャンプー",   imageName = "IchigoImage",  description = "ふんわり甘くてかわいい香り。\n使うたびに甘えん坊になっちゃう？"   },
+        // ★2026/8/28：内部IDを "ichigo" から "ohisama" へ改名した。
+        //   Bath.unity の BathTouchEffect.shampooSets[].shampooId が先に "ohisama" になっていて
+        //   ID が食い違い、飾りパーティクルが せっけん の設定へ黙って落ちていたため、コード側をそろえた。
+        //   シャンプーIDはセーブデータに保存していないので、既存セーブへの影響はない。
+        new ShampooData { id = "ohisama",   displayName = "おひさまシャンプー", imageName = "OhisamaImage", description = "おひさまにあたったようないい香り。\n使うたびに甘えん坊になっちゃう？" },
         new ShampooData { id = "hoshizora", displayName = "ほしぞらシャンプー", imageName = "HoshiImage",   description = "星空みたいな神秘的な香り。\nコツコツがんばる気持ちが芽生えるかも" },
         new ShampooData { id = "rainbow",   displayName = "レインボーせっけん", imageName = "RainbowImage", description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪"         },
     };
@@ -531,7 +535,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         switch (_shampooId)
         {
-            case "ichigo":
+            case "ohisama":
             case "hoshizora":
             case "rainbow":
                 return 60f;
@@ -544,7 +548,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         switch (_shampooId)
         {
-            case "ichigo":
+            case "ohisama":
                 save.personalityDependency = Mathf.Clamp(save.personalityDependency + 2, -100, 100);
                 break;
             case "hoshizora":

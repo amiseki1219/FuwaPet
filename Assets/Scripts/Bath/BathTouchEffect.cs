@@ -5,12 +5,12 @@ using UnityEngine;
 ///
 /// パーティクルシステムを2つ使う:
 ///   touchParticle  … 泡。シャンプーごとに「色だけ」を粒ごとランダムで変える
-///   accentParticle … いちご / 星などの飾り。色を付けずスプライトのまま出す
+///   accentParticle … おひさま / 星などの飾り。色を付けずスプライトのまま出す
 ///
 /// なぜ2つ必要か:
 ///   ParticleSystem の色設定は、そのシステムの全ての粒に一律で掛かる。
-///   1つにまとめると「泡だけ色をランダムにして、いちごは元の色のまま」ができず、
-///   いちごまで緑や青に染まってしまう。役割ごとに分けるのが確実。
+///   1つにまとめると「泡だけ色をランダムにして、おひさまは元の色のまま」ができず、
+///   おひさままで緑や青に染まってしまう。役割ごとに分けるのが確実。
 /// </summary>
 public class BathTouchEffect : MonoBehaviour
 {
@@ -18,13 +18,13 @@ public class BathTouchEffect : MonoBehaviour
     [System.Serializable]
     public class ShampooParticleSet
     {
-        [Tooltip("BathSceneManager の AllShampoo と同じ ID。normal / ichigo / hoshizora / rainbow")]
+        [Tooltip("BathSceneManager の AllShampoo と同じ ID。normal / ohisama / hoshizora / rainbow")]
         public string shampooId;
 
         [Tooltip("泡の色。粒ごとにこの中から1色がランダムで選ばれる（最大8色）")]
         public Color[] bubbleColors;
 
-        [Tooltip("いちご・星などの飾り。空にするとそのシャンプーでは飾りを出さない")]
+        [Tooltip("おひさま・星などの飾り。空にするとそのシャンプーでは飾りを出さない")]
         public Sprite accentSprite;
 
         [Tooltip("飾りの色。白にするとスプライトの色そのまま出る")]
@@ -35,7 +35,7 @@ public class BathTouchEffect : MonoBehaviour
     [Tooltip("泡を出すパーティクルシステム")]
     [SerializeField] private ParticleSystem touchParticle;
 
-    [Tooltip("いちご・星を出すパーティクルシステム。未結線でも動作する（飾りが出ないだけ）")]
+    [Tooltip("おひさま・星を出すパーティクルシステム。未結線でも動作する（飾りが出ないだけ）")]
     [SerializeField] private ParticleSystem accentParticle;
 
     // カメラからパーティクルを出すまでの距離（ワールド単位）。
@@ -237,7 +237,7 @@ public class BathTouchEffect : MonoBehaviour
     }
 
     /// <summary>
-    /// 飾り（いちご・星）を設定する。
+    /// 飾り（おひさま・星）を設定する。
     /// accentSprite が空、または accentParticle が未結線なら飾りを出さない。
     /// </summary>
     private void ApplyAccent(ShampooParticleSet set)
@@ -290,7 +290,7 @@ public class BathTouchEffect : MonoBehaviour
             },
             new ShampooParticleSet
             {
-                shampooId = "ichigo",
+                shampooId = "ohisama",
                 bubbleColors = new[]
                 {
                     new Color(1f, 0.78f, 0.85f),

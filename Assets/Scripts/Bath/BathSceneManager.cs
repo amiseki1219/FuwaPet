@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;   // FormerlySerializedAs（ichigoButton → ohisamaButton の結線引き継ぎ）
 
 public class BathSceneManager : MonoBehaviour
 {
@@ -31,10 +32,14 @@ public class BathSceneManager : MonoBehaviour
         },
         new ShampooData
         {
-            id = "ichigo",
-            displayName = "いちごシャンプー",
-            imageName = "IchigoImage",
-            description = "ふんわり甘くてかわいい香り。\n使うたびに甘えん坊になっちゃう？",
+            // ★2026/8/28：内部IDを "ichigo" から "ohisama" へ改名した。
+            //   Bath.unity の BathTouchEffect.shampooSets[].shampooId が先に "ohisama" になっていて
+            //   ID が食い違い、飾りパーティクルが せっけん の設定へ黙って落ちていたため、コード側をそろえた。
+            //   シャンプーIDはセーブデータに保存していないので、既存セーブへの影響はない。
+            id = "ohisama",
+            displayName = "おひさまシャンプー",
+            imageName = "OhisamaImage",
+            description = "おひさまにあたったようないい香り。\n使うたびに甘えん坊になっちゃう？",
             effectText = "清潔 +60\n甘えん坊度 +2",
             costCoin = 0, costLuna = 500
         },
@@ -87,7 +92,11 @@ public class BathSceneManager : MonoBehaviour
 
     [Header("シャンプーボタン")]
     [SerializeField] private Button nomalButton;
-    [SerializeField] private Button ichigoButton;
+    // ★2026/8/28：ichigoButton から改名。
+    //   FormerlySerializedAs を付けてあるので、Bath.unity 側の結線（OhisamaButton）は
+    //   Unity が自動で引き継ぐ。Inspector での再結線は不要。
+    [FormerlySerializedAs("ichigoButton")]
+    [SerializeField] private Button ohisamaButton;
     [SerializeField] private Button hoshizoraButton;
     [SerializeField] private Button rainbowButton;
 
@@ -219,7 +228,7 @@ public class BathSceneManager : MonoBehaviour
     private void SetupButtonListeners()
     {
         if (nomalButton     != null) nomalButton.onClick.AddListener(()     => OnSelectShampoo("normal"));
-        if (ichigoButton    != null) ichigoButton.onClick.AddListener(()    => OnSelectShampoo("ichigo"));
+        if (ohisamaButton   != null) ohisamaButton.onClick.AddListener(()   => OnSelectShampoo("ohisama"));
         if (hoshizoraButton != null) hoshizoraButton.onClick.AddListener(() => OnSelectShampoo("hoshizora"));
         if (rainbowButton   != null) rainbowButton.onClick.AddListener(()   => OnSelectShampoo("rainbow"));
     }
@@ -231,7 +240,7 @@ public class BathSceneManager : MonoBehaviour
     private void ApplyPriceLabels()
     {
         ApplyPriceLabel(nomalButton,     "normal");
-        ApplyPriceLabel(ichigoButton,    "ichigo");
+        ApplyPriceLabel(ohisamaButton,   "ohisama");
         ApplyPriceLabel(hoshizoraButton, "hoshizora");
         ApplyPriceLabel(rainbowButton,   "rainbow");
     }
@@ -280,7 +289,7 @@ public class BathSceneManager : MonoBehaviour
     private void UpdateSelectFrames(string shampooId)
     {
         UpdateFrame(nomalButton,     "normal",     shampooId);
-        UpdateFrame(ichigoButton,    "ichigo",     shampooId);
+        UpdateFrame(ohisamaButton,   "ohisama",    shampooId);
         UpdateFrame(hoshizoraButton, "hoshizora",  shampooId);
         UpdateFrame(rainbowButton,   "rainbow",    shampooId);
     }
