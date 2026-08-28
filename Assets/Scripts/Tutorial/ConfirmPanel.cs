@@ -18,20 +18,10 @@ public class ConfirmPanel : MonoBehaviour
         var data = SaveManager.Instance.Data;
 
         // キャラクター名の確認
-        var charNameMap = new Dictionary<string, string>
-        {
-            {"poko", "ぽこ"},
-            {"eru", "える"},
-            {"koko", "ここ"},
-            {"paru", "ぱる"},
-            {"piyoko", "ぴよこ"}
-        };
-
-        // selectedCharacterId 優先・空なら characterId にフォールバック（Main と揃える）
-        string charId = !string.IsNullOrEmpty(data.selectedCharacterId)
-            ? data.selectedCharacterId
-            : data.characterId;
-        string defaultCharName = charNameMap.ContainsKey(charId) ? charNameMap[charId] : charId;
+        // ★2026/8/28：対応表を CharacterNames へ集約した。
+        //   見つからないときに「ID をそのまま出す」挙動は変えていない（fallback に charId を渡している）。
+        string charId = CharacterNames.GetCharacterId(data);
+        string defaultCharName = CharacterNames.GetDefaultName(charId, charId);
         string nickname = data.petNickname;
         Debug.Log($"<color=cyan>【ConfirmPanel】selectedCharacterId={charId}</color>");
         Debug.Log($"<color=cyan>【ConfirmPanel】petNickname={nickname}</color>");
