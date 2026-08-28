@@ -55,6 +55,21 @@ namespace Yurufu.Bath.Foam
         private readonly List<Grain> _grains = new List<Grain>();
         private ParticleSystem.Particle[] _buf = new ParticleSystem.Particle[0];
 
+        /// <summary>
+        /// 流す演出（A4）で使う「消える境界のワールド Y」。
+        /// この値より【上】にある粒は、UpdateFollow のときに消す。
+        /// 無限大のあいだは何も消さない（＝通常の洗い中）。
+        ///
+        /// ★ワールド Y を使う理由
+        ///   Head と Body は別々のオブジェクト空間を持つため、object-space Y では
+        ///   同じ高さにならない。CharacterDisplayAnchor 基準の共通の高さが必要になる。
+        ///   ワールド Y なら 1本の線で両方を同じ基準で切れる。
+        /// </summary>
+        public float RinseBoundaryWorldY { get; set; } = float.PositiveInfinity;
+
+        /// <summary>消す粒の番号を貯める作業用。毎フレーム作り直すと GC が出るので使い回す。</summary>
+        private readonly List<int> _removeScratch = new List<int>();
+
         private static readonly int IdTint       = Shader.PropertyToID("_Tint");
         private static readonly int IdAlphaScale = Shader.PropertyToID("_AlphaScale");
 
@@ -209,7 +224,35 @@ namespace Yurufu.Bath.Foam
         public void Clear()
         {
             _grains.Clear();
+            RinseBoundaryWorldY = float.PositiveInfinity;
             if (_ps != null) _ps.SetParticles(_buf, 0);
+        }
+
+        /// <summary>
+        /// いま付いている泡粒の、ワールド Y の範囲を返す。
+        /// 流す演出で「境界をどこからどこまで下げるか」を決めるのに使う。
+        ///
+        /// ★呼ぶ前に picker.BakeAllForFrame() を1回呼ぶこと。
+        /// 粒が1つも無ければ false を返す。
+        /// </summary>
+        public bool TryGetWorldYRange(BathFoamSurfacePicker picker, out float minY, out float maxY)
+        {
+            minY = float.MaxValue;
+            maxY = float.MinValue;
+            if (picker == null || _grains.Count == 0) return false;
+
+            bool any = false;
+            for (int i = 0; i < _grains.Count; i++)
+            {
+                var g  = _grains[i];
+                var sp = picker.GetSurfacePoint(g.Target, g.Triangle, g.Bary);
+                if (!sp.Valid) continue;
+
+                if (sp.Position.y < minY) minY = sp.Position.y;
+                if (sp.Position.y > maxY) maxY = sp.Position.y;
+                any = true;
+            }
+            return any;
         }
 
         // ── 毎フレームの追従 ──────────────────────────────────────────────────
@@ -229,12 +272,24 @@ namespace Yurufu.Bath.Foam
 
             picker.BakeAllForFrame();
 
+            // ★流す演出：境界より上にある粒を消す。
+            //   「置いたときの固定 Y」ではなく「毎フレーム追従した現在の Y」で判定する。
+            //   キャラが動いても、いま見えている高さで正しく切れるようにするため。
+            bool rinsing = !float.IsPositiveInfinity(RinseBoundaryWorldY);
+            if (rinsing) _removeScratch.Clear();
+
             int n = 0;
             for (int i = 0; i < _grains.Count; i++)
             {
                 var g  = _grains[i];
                 var sp = picker.GetSurfacePoint(g.Target, g.Triangle, g.Bary);
                 if (!sp.Valid) continue;
+
+                if (rinsing && sp.Position.y > RinseBoundaryWorldY)
+                {
+                    _removeScratch.Add(i);
+                    continue;   // 消す粒は描かない
+                }
 
                 float size = TierSize(cfg, g.Tier) * (1f + g.SizeJitter * cfg.grainSizeJitter);
                 if (size <= 0f) continue;
@@ -263,6 +318,10 @@ namespace Yurufu.Bath.Foam
             }
 
             _ps.SetParticles(_buf, n);
+
+            // ★後ろから消す。前から消すと番号がずれる
+            for (int k = _removeScratch.Count - 1; k >= 0; k--)
+                _grains.RemoveAt(_removeScratch[k]);
         }
 
         private void ApplyMaterial(BathFoamConfig cfg)

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d5a09536a92294e609980fae42d7f55d
+guid: b55090ca7930045fea1aae2e0031d72c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2301300181336324138
-    second: decoratioms_0
+      213: 4240548057715399233
+    second: "\u304A\u3072\u3055\u307E_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,45 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: decoratioms_0
+      name: "\u304A\u3072\u3055\u307E_0"
       rect:
         serializedVersion: 2
         x: 0
-        y: 1
-        width: 96
-        height: 85
+        y: 0
+        width: 188
+        height: 242
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a28f716725cdfef10800000000000000
-      internalID: 2301300181336324138
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: decoratioms_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 67
-        height: 27
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1690623de73c440ca92b4858a882066
-      internalID: -989145009
+      spriteID: 14a5919bdf379da30800000000000000
+      internalID: 4240548057715399233
       vertices: []
       indices: 
       edges: []
@@ -173,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 533b02e18f79e41048775b4b3ea91cf4
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -183,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      decoratioms_0: 2301300181336324138
-      decoratioms_1: -989145009
+      "\u304A\u3072\u3055\u307E_0": 4240548057715399233
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

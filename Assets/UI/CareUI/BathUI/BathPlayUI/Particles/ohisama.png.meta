@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 05142a9e850394309aed1eea5d9c0198
+guid: 5d0035e025c4c4bc991e0146589de0c6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4474425748017112572
-    second: DescriptionPanel_0
+      213: -589344152158373993
+    second: ohisama_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: DescriptionPanel_0
+      name: ohisama_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 503
-        height: 158
+        width: 36
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cf5eb64e28a581e30800000000000000
-      internalID: 4474425748017112572
+      spriteID: 7977528bd9a32d7f0800000000000000
+      internalID: -589344152158373993
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      DescriptionPanel_0: 4474425748017112572
+      ohisama_0: -589344152158373993
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

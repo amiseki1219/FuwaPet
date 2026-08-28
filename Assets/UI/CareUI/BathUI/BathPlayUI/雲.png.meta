@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 436974d07245b4724aa02e84655a572b
+guid: c7901f9b8dd5a4ae0860168409194e43
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1635368063804335323
-    second: IchigoImage_0
+      213: -2690707527078811457
+    second: "\u96F2_0"
+  - first:
+      213: 6341581728200051071
+    second: "\u96F2_1"
+  - first:
+      213: 2833800849767922325
+    second: "\u96F2_2"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +132,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: IchigoImage_0
+      name: "\u96F2_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 226
-        height: 294
+        x: 1582
+        y: 1200
+        width: 19
+        height: 37
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +147,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 52b9ce719610e49e0800000000000000
-      internalID: -1635368063804335323
+      spriteID: fb86ff592cfa8aad0800000000000000
+      internalID: -2690707527078811457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u96F2_1"
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 0
+        width: 2677
+        height: 1189
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f79c87f8bf2d10850800000000000000
+      internalID: 6341581728200051071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u96F2_2"
+      rect:
+        serializedVersion: 2
+        x: 1555
+        y: 1170
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59afd96dbdea35720800000000000000
+      internalID: 2833800849767922325
       vertices: []
       indices: 
       edges: []
@@ -161,7 +211,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      IchigoImage_0: -1635368063804335323
+      "\u96F2_0": -2690707527078811457
+      "\u96F2_1": 6341581728200051071
+      "\u96F2_2": 2833800849767922325
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

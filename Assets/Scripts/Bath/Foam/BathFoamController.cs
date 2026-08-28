@@ -84,6 +84,47 @@ namespace Yurufu.Bath.Foam
         /// <summary>Editor 側の試作と併用したいときに一時停止するためのフラグ（A1 では誰も呼ばない）。</summary>
         private bool _suspended;
 
+        // ── 流す演出（A4）の状態 ──
+        /// <summary>いま境界がある高さ（ワールド Y）。上から下へ下がる。</summary>
+        private float _rinseY;
+
+        /// <summary>境界の開始・終了の高さ。StartRinse で決める。</summary>
+        private float _rinseFromY, _rinseToY;
+
+        /// <summary>流し始めてからの経過秒。</summary>
+        private float _rinseElapsed;
+
+        /// <summary>流すのにかける秒数。</summary>
+        private float _rinseDuration = 2.5f;
+
+        /// <summary>泡が消え切ったときに1回だけ呼ぶ処理。</summary>
+        private System.Action _onRinseFinished;
+
+        /// <summary>
+        /// いまの境界のワールド Y。雫の演出（BathDropletRain）がここを狙って弾ける。
+        /// 流していないあいだは無限大（＝境界なし）。
+        /// </summary>
+        public float RinseBoundaryWorldY => CurrentPhase == Phase.Rinsing ? _rinseY : float.PositiveInfinity;
+
+        /// <summary>
+        /// キャラのだいたいの範囲（ワールド）。雫が体の位置に落ちてきたかの目安に使う。
+        /// ★Renderer.bounds はアニメーション用に余裕を持つので、輪郭ぴったりではない。
+        ///   「だいたいこのへんが体」という用途にだけ使うこと。
+        /// </summary>
+        public bool TryGetCharacterBounds(out Bounds bounds)
+        {
+            bounds = default;
+            bool any = false;
+            foreach (var shell in _shells)
+            {
+                var src = shell?.Source;
+                if (src == null) continue;
+                if (!any) { bounds = src.bounds; any = true; }
+                else       bounds.Encapsulate(src.bounds);
+            }
+            return any;
+        }
+
         // ストローク状態
         private bool    _hasLast;
         private Vector2 _lastUv;
@@ -224,6 +265,54 @@ namespace Yurufu.Bath.Foam
         }
 
         /// <summary>
+        /// 泡を上から下へ消していく（A4）。
+        ///
+        /// 【やり方】
+        ///   いま付いている泡粒のワールド Y の範囲を測り、
+        ///   その一番上から一番下まで、duration 秒かけて「境界」を下げていく。
+        ///   境界より上にある粒は BathFoamGrains が毎フレーム消す。
+        ///
+        /// 【なぜワールド Y なのか】
+        ///   Head と Body は別々のオブジェクト空間を持つため、object-space Y では
+        ///   同じ高さにならない。ワールド Y なら1本の線で両方を同じ基準で切れる。
+        ///
+        /// ★消し終わったら onFinished が【1回だけ】呼ばれる。
+        /// ★泡が1粒も無い・新方式が動いていない場合は、その場で終わったことにして
+        ///   onFinished を呼ぶ。呼び出し側（お風呂の進行）を止めないため。
+        /// </summary>
+        public void StartRinse(float duration, System.Action onFinished = null)
+        {
+            if (!_created || _grains == null || _picker == null)
+            {
+                Debug.LogWarning("[BathFoam] 新方式が動いていないため、泡を流す演出は行いません（そのまま完了へ進みます）");
+                onFinished?.Invoke();
+                return;
+            }
+
+            _picker.BakeAllForFrame();
+            if (!_grains.TryGetWorldYRange(_picker, out float minY, out float maxY))
+            {
+                Debug.LogWarning("[BathFoam] 泡が1粒もないため、流す演出は行いません（そのまま完了へ進みます）");
+                onFinished?.Invoke();
+                return;
+            }
+
+            // 上端・下端を少しはみ出させる。端の粒が消え残らないようにするため
+            const float Margin = 0.35f;
+            _rinseFromY      = maxY + Margin;
+            _rinseToY        = minY - Margin;
+            _rinseY          = _rinseFromY;
+            _rinseElapsed    = 0f;
+            _rinseDuration   = Mathf.Max(duration, 0.1f);
+            _onRinseFinished = onFinished;
+
+            CurrentPhase = Phase.Rinsing;
+            _grains.RinseBoundaryWorldY = _rinseY;
+
+            Debug.Log($"<color=#00E5FF>[決定]</color> [BathFoam] 泡を流し始めました 上={_rinseFromY:F2} → 下={_rinseToY:F2} 所要={_rinseDuration}秒 粒={_grains.Count}個");
+        }
+
+        /// <summary>
         /// Editor 側の試作と同時に動かないようにするための一時停止。
         /// ★A1 では誰も呼ばない。Runtime 側から Editor 側を探すことは一切しない。
         /// </summary>
@@ -346,6 +435,27 @@ namespace Yurufu.Bath.Foam
             _created = true;
         }
 
+        /// <summary>
+        /// 付いている泡を即座に全部消す。スキップしたときに使う。
+        /// 演出（境界を下げる）は行わず、その場で消す。
+        /// </summary>
+        public void ClearFoamImmediate()
+        {
+            if (!_created) return;
+
+            _onRinseFinished = null;   // 途中だった流す演出のコールバックは捨てる
+            _grains?.Clear();
+
+            for (int i = 0; i < _masks.Count; i++)
+            {
+                _masks[i].Clear();
+                _shells[i].Apply(_masks[i].Current, config);
+            }
+
+            CurrentPhase = Phase.Complete;
+            Debug.Log("<color=#00E5FF>[決定]</color> [BathFoam] 泡を即座に全部消しました（スキップ）");
+        }
+
         /// <summary>作り直さずに中身だけ空へ戻す。</summary>
         private void ResetState()
         {
@@ -355,7 +465,8 @@ namespace Yurufu.Bath.Foam
                 _shells[i].Apply(_masks[i].Current, config);
             }
             _grains?.Clear();
-            _uvSinceGrain = 0f;
+            _uvSinceGrain    = 0f;
+            _onRinseFinished = null;
             EndStroke();
             HideBubbleGroup();
         }
@@ -412,7 +523,45 @@ namespace Yurufu.Bath.Foam
         private void LateUpdate()
         {
             if (!_created) return;
+
+            // ★境界を下げるのは UpdateFollow より先。
+            //   同じフレームのうちに、新しい境界で粒を消せるようにするため。
+            if (CurrentPhase == Phase.Rinsing) AdvanceRinse();
+
             _grains?.UpdateFollow(_picker, config);
+        }
+
+        /// <summary>境界を下へ動かす。下まで届いたら完了にする。</summary>
+        private void AdvanceRinse()
+        {
+            _rinseElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(_rinseElapsed / _rinseDuration);
+
+            // ★2026/8/28 修正：以前は SmoothStep を使っていたが、
+            //   中盤だけ急に速くなり「泡が一瞬で消える」ように見えていた。
+            //   泡が集まっている胴体あたりを、ちょうど中盤が通過するため。
+            //   等速にして、上から下まで同じ速さで消えるようにする。
+            _rinseY = Mathf.Lerp(_rinseFromY, _rinseToY, t);
+
+            if (_grains != null) _grains.RinseBoundaryWorldY = _rinseY;
+
+            if (t < 1f) return;
+
+            // ── 消し終わり ──
+            CurrentPhase = Phase.Complete;
+            if (_grains != null)
+            {
+                _grains.Clear();                                  // 消え残りの保険
+                _grains.RinseBoundaryWorldY = float.PositiveInfinity;
+            }
+
+            // ★先に取り出して null にしてから呼ぶ。中で Dispose されても二重実行にならない
+            var cb = _onRinseFinished;
+            _onRinseFinished = null;
+
+            Debug.Log("<color=#00E5FF>[決定]</color> [BathFoam] 泡を流し終わりました");
+
+            cb?.Invoke();
         }
 
         private void OnDisable() => Dispose();

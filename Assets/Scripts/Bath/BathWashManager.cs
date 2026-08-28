@@ -37,6 +37,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     // お風呂1回あたりの信頼度加点。requirements.md §5「お世話ボタン効果一覧」で +3pt と確定している。
     private const int TrustPerBath = 3;
 
+    // 性格パラメータの表示名。★並び順は ApplyPersonality() の抽選番号と一致させること。
+    // 0=活動性 1=甘えん坊度 2=勤勉さ 3=素直さ 4=感受性（requirements.md §6）
+    private static readonly string[] PersonalityNames =
+        { "活動性", "甘えん坊度", "勤勉さ", "素直さ", "感受性" };
+
     [Header("こすり設定")]
     [SerializeField] private float requiredDistancePerScrub = 80f;
     [SerializeField] private int maxScrubCount = 24;
@@ -76,6 +81,70 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [Tooltip("Bath.unity の BathFoamSystem を結線する。未結線でも旧方式で動く")]
     [SerializeField] private BathFoamController foam;
 
+    [Header("タイトル・リザルト（A5）")]
+    [Tooltip("洗う画面の見出し。Canvas/WashPanel/Title を結線する。\n" +
+             "雲の演出が始まったら隠し、泡を流し終わったら文言を変えて出し直す")]
+    [SerializeField] private GameObject titleRoot;
+
+    [Tooltip("見出しの文字。Canvas/WashPanel/Title/Text (TMP) を結線する")]
+    [SerializeField] private TextMeshProUGUI titleText;
+
+    [Tooltip("泡を流し終わったあとの見出し文言")]
+    [SerializeField] private string finishedTitle = "おふろタイム終了";
+
+    [Tooltip("シャンプーの説明欄。Canvas/WashPanel/ShampooInfoArea を結線する。\n" +
+             "リザルトを出すときに隠す")]
+    [SerializeField] private GameObject shampooInfoArea;
+
+    [Tooltip("リザルトのカード。Canvas/WashPanel/ResultCard を結線する")]
+    [SerializeField] private GameObject resultCard;
+
+    [Tooltip("リザルトの見出し。ResultCard/TitleText を結線する")]
+    [SerializeField] private TextMeshProUGUI resultTitleText;
+
+    [Tooltip("リザルトの中身。ResultCard/ResultText を結線する")]
+    [SerializeField] private TextMeshProUGUI resultText;
+
+    [Header("雲の演出（A3）")]
+    [Tooltip("「流す」を押したときに左上から流れてくる雲。\n" +
+             "Canvas/WashPanel の子に置いた雲の Image を結線する。\n" +
+             "未結線でも雲が出ないだけで、お風呂は最後まで進む")]
+    [SerializeField] private BathCloudAnimator cloud;
+
+    [Header("雫の演出（A4）")]
+    [Tooltip("雲の下から降ってくる雫。★Canvas の外（シーン直下）に置いた GameObject を結線する。\n" +
+             "未結線でも雫が出ないだけで、お風呂は最後まで進む")]
+    [SerializeField] private BathDropletRain droplets;
+
+    [Tooltip("泡を上から下へ消すのにかける秒数。★等速で下がる")]
+    [Range(0.5f, 15f)]
+    [SerializeField] private float rinseDuration = 5f;
+
+    [Tooltip("雫を降らせてから、泡を消し始めるまでの待ち時間（秒）。\n" +
+             "★0 にすると、雫がキャラに届く前に泡が消え始めてしまい、\n" +
+             "  飛沫が床の高さでしか出なくなる。雫の落下時間ぶんだけ待つ")]
+    [Range(0f, 3f)]
+    [SerializeField] private float rainLeadSeconds = 1f;
+
+    [Header("表情（A2.7）")]
+    [Tooltip("キャラが実行時に生成される親。Bath.unity の CharacterDisplayAnchor を結線する。\n" +
+             "★キャラは実行時に生成されるため、Scene ビュー（非Play時）には存在しない")]
+    [SerializeField] private Transform characterAnchor;
+
+    [Tooltip("この進行度を超えたら Relaxed にする（0〜1）。既定 0.5 = 50%\n" +
+             "★洗い中に使う表情は Normal と Relaxed の2つだけ。\n" +
+             "  Happy は A5（お風呂完了）まで取っておく（2026/8/28 決定）")]
+    [Range(0f, 1f)]
+    [SerializeField] private float relaxedThreshold = 0.5f;
+
+    // 表情キー。CharacterFaceController が持つ9種のうち、お風呂で使うのはこの3つ。
+    // ★「Smile」というキーは存在しない。あみまるさんが言う Smile は Happy のこと。
+    private const string FaceKeyNormal  = "Normal";
+    private const string FaceKeyRelaxed = "Relaxed";
+
+    // ★A5（お風呂完了）で使う予定のキー。洗い中には使わない。
+    private const string FaceKeyHappy   = "Happy";
+
     private int _scrubCount;
     private bool _isComplete;
     private bool _inputBlocked;
@@ -98,6 +167,23 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     /// </summary>
     private bool _showerPressed;
 
+    /// <summary>
+    /// レインボーせっけんで上がる性格パラメータの番号（0〜4）。
+    /// ★お風呂を始めるときに1回だけ抽選して覚える。
+    ///   リザルトに出す内容と、実際にセーブへ書く内容を必ず一致させるため。
+    ///   表示のときと保存のときで別々に抽選すると、画面と結果が食い違う。
+    /// </summary>
+    private int _rainbowPickedIndex = -1;
+
+    /// <summary>見出しの元の文言。お風呂を始めるたびにここへ戻す。</summary>
+    private string _originalTitle;
+
+    /// <summary>いま適用している表情キー。同じ表情を毎回入れ直さないための目印。</summary>
+    private string _currentFaceKey;
+
+    /// <summary>表情コンポーネントが見つからない警告を、1回だけ出すための目印。</summary>
+    private bool _faceWarned;
+
     private System.Collections.IEnumerator _sliderCoroutine;
 
     // Screen Space Camera 対応：scrubArea 判定に使うカメラ
@@ -107,6 +193,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     private void Awake()
     {
+        // 見出しの元の文言を覚えておく。お風呂を始めるたびにここへ戻すため
+        if (titleText != null) _originalTitle = titleText.text;
+
         _canvasCamera = ResolveCanvasCamera();
 
         var canvas = GetComponentInParent<Canvas>();
@@ -178,6 +267,22 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         //   ★消すのは見た目だけ。requiredDistancePerScrub / maxScrubCount / UpdateUI() は
         //     一切変えていないので、洗い終わりまでの操作時間はこれまでと同じ。
         if (gaugeArea != null) gaugeArea.SetActive(false);
+
+        // ★A3：前回のお風呂の雲が残らないよう、開始時に必ず隠して初期位置へ戻す
+        cloud?.HideImmediate();
+
+        // ★A4：前回の雫が残らないよう、開始時に消す
+        droplets?.ClearAll();
+
+        // ★A5：リザルトを隠し、見出しと説明欄を元に戻す
+        if (resultCard      != null) resultCard.SetActive(false);
+        if (shampooInfoArea != null) shampooInfoArea.SetActive(true);
+        if (titleRoot       != null) titleRoot.SetActive(true);
+        if (titleText != null && !string.IsNullOrEmpty(_originalTitle)) titleText.text = _originalTitle;
+
+        // ★レインボーせっけんの抽選はここで1回だけ行う。
+        //   リザルトの表示と、実際にセーブへ書く内容を必ず一致させるため。
+        _rainbowPickedIndex = Random.Range(0, PersonalityNames.Length);
 
         // ★A2：「流す」ボタンは Scene 上で active=1 のため、開始時に必ず隠す。
         //   隠さないと、洗う前から画面に出てしまう。
@@ -383,6 +488,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         float pct = (float)_scrubCount / maxScrubCount * 100f;
         Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
+
+        // ★A2.7：洗い進みに応じて表情を変える（Normal → Relaxed → Happy）。
+        //   UpdateUI() は Initialize() と「こすりカウントが増えた瞬間」からしか呼ばれないので、
+        //   毎フレーム処理にはならない。
+        UpdateWashFace(pct * 0.01f);
         if (percentText  != null) percentText.text  = $"{Mathf.RoundToInt(pct)}%";
         if (gaugeSlider  != null)
         {
@@ -423,13 +533,136 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         }
     }
 
+    // ── 表情（A2.7） ──────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// お風呂に入った直後に、状態パラメータに関係なく必ず Normal にする。
+    /// BathSceneManager.Start() から呼ばれる。
+    ///
+    /// 【なぜ固定で上書きしてよいのか】
+    ///   CharacterFaceController.SetExpression() は _overrideExpression に値を入れる作りで、
+    ///   そのあと Start() の RefreshExpression() が走っても固定側が優先される。
+    ///   → 呼ぶ順番がどちらでも Normal のままになる（コードで確認済み）。
+    ///
+    /// 【WashPanel が非アクティブでも呼べる】
+    ///   コルーチンを使っていないため。SetActive(true) を待つ必要はない。
+    /// </summary>
+    public void SetFaceNormalOnEnter()
+    {
+        _currentFaceKey = null;   // 前のお風呂の値を引きずらない
+        ApplyFace(FaceKeyNormal);
+    }
+
+    /// <summary>
+    /// 進行度（0〜1）から表情を決めて適用する。
+    ///
+    /// ★洗い中に使うのは Normal と Relaxed の2つだけ（2026/8/28 決定）。
+    ///   Normal →(relaxedThreshold)→ Relaxed。洗い終わり（100%）も Relaxed のまま。
+    ///   Happy は A5（お風呂完了・リザルト画面）まで取っておく。
+    ///   ＝ 完了したときの Happy を「ごほうび」として際立たせるため。
+    /// </summary>
+    private void UpdateWashFace(float progress01)
+    {
+        string key = progress01 >= relaxedThreshold ? FaceKeyRelaxed : FaceKeyNormal;
+        ApplyFace(key);
+    }
+
+    /// <summary>
+    /// 表情を固定する。同じ表情が続くときは何もしない。
+    ///
+    /// 【なぜ3種類も探すのか】
+    ///   表情の持ち方がキャラで分かれている。
+    ///     ぴよこ / える / ここ / ぱる … CharacterFaceController
+    ///     ぽこ                       … FaceController または PokoFaceController
+    ///   どれが付いているかは実行時に生成されたキャラで決まるので、見つかった順に使う。
+    ///   ★どの経路で動いたかを必ず1行ログに出す（黙って何もしない状態を作らないため）。
+    /// </summary>
+    private void ApplyFace(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        if (_currentFaceKey == key) return;      // 同じ表情なら触らない
+
+        if (characterAnchor == null)
+        {
+            if (!_faceWarned)
+            {
+                _faceWarned = true;
+                Debug.LogWarning("[BathWash] Character Anchor が未結線のため、表情を切り替えられません。\n" +
+                                 "      Hierarchy の Canvas/WashPanel を選び、BathWashManager の \"Character Anchor\" 欄に " +
+                                 "CharacterDisplayAnchor をドラッグしてください");
+            }
+            return;
+        }
+
+        var charFace = characterAnchor.GetComponentInChildren<CharacterFaceController>(true);
+        if (charFace != null)
+        {
+            charFace.SetExpression(key);
+            _currentFaceKey = key;
+            Debug.Log($"<color=#00E5FF>[決定]</color> [BathWash] 表情を {key} にしました（CharacterFaceController）");
+            return;
+        }
+
+        var legacyFace = characterAnchor.GetComponentInChildren<FaceController>(true);
+        if (legacyFace != null)
+        {
+            legacyFace.SetExpression(key);
+            _currentFaceKey = key;
+            Debug.Log($"<color=#00E5FF>[決定]</color> [BathWash] 表情を {key} にしました（FaceController）");
+            return;
+        }
+
+        var pokoFace = characterAnchor.GetComponentInChildren<PokoFaceController>(true);
+        if (pokoFace != null)
+        {
+            pokoFace.SetExpression(key);
+            _currentFaceKey = key;
+            Debug.Log($"<color=#00E5FF>[決定]</color> [BathWash] 表情を {key} にしました（PokoFaceController）");
+            return;
+        }
+
+        if (!_faceWarned)
+        {
+            _faceWarned = true;
+            Debug.LogWarning($"[BathWash] '{characterAnchor.name}' の下に表情コンポーネントが見つかりません。表情は切り替わりません");
+        }
+    }
+
     // ── ボタンハンドラ ────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// スキップ。演出（雲・雫・泡を流す）を全部飛ばして、いっきにリザルトまで進める。
+    ///
+    /// ★清潔値・信頼度・性格の反映は変えない。
+    ///   完了ボタンを押したときの OnComplete() が今までどおり行う。
+    ///   ＝ スキップしても、こすり切った場合と同じ結果になる。
+    /// </summary>
     public void OnSkip()
     {
-        _scrubCount = maxScrubCount;
-        UpdateUI();
-        OnWashComplete();
+        if (_isComplete && _showerPressed) return;   // 連打で二重に走らせない
+
+        _scrubCount    = maxScrubCount;
+        _isComplete    = true;
+        _isDragging    = false;
+        _showerPressed = true;   // 「流す」を押したのと同じ扱いにする
+
+        touchEffect?.StopContinuous();
+        if (hintText     != null) hintText.SetActive(false);
+        if (handCursor   != null) handCursor.gameObject.SetActive(false);
+        if (showerButton != null) showerButton.SetActive(false);
+
+        UpdateUI();   // 進行度を100%にしてUIとセリフを合わせる
+
+        // 演出は出さずに片付ける
+        cloud?.HideImmediate();
+        droplets?.ClearAll();
+
+        if (_newFoamActiveForSession && foam != null) foam.ClearFoamImmediate();
+        else                                          bubblePainter?.ClearAll();
+
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] スキップされました。演出を飛ばしてリザルトを表示します");
+
+        ShowCompleteButton();
     }
 
     private void OnWashComplete()
@@ -478,10 +711,146 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         touchEffect?.StopContinuous();
         if (handCursor != null) handCursor.gameObject.SetActive(false);
 
-        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] 「流す」を押しました（A3〜A5 は未実装のため、暫定で「おふろ完了！」を表示します）");
+        // ★A5：雲の演出が始まるので見出しを隠す
+        if (titleRoot != null) titleRoot.SetActive(false);
 
-        // ★暫定。A5 で「泡が消え終わったら」へ移す
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] 「流す」を押しました。雲 → 雫 → 泡を流す、の順に進みます");
+
+        // ★A3：雲を画面左上から流し、着いたら雫を降らせ始める（A4 へつなぐ）
+        if (cloud != null)
+        {
+            cloud.PlayEnter(BeginRinseSequence);
+        }
+        else
+        {
+            // 黙って何もしない状態を作らない。未結線なら理由を1行残して、雲を飛ばして先へ進む
+            Debug.LogWarning("[BathWash] Cloud が未結線のため、雲の演出は飛ばして泡を流します。\n" +
+                             "      Canvas/WashPanel を選び、BathWashManager の \"Cloud\" 欄に雲の Image を結線してください");
+            BeginRinseSequence();
+        }
+    }
+
+    // ── 流す演出の進行（A4 → A5） ─────────────────────────────────────────────
+
+    /// <summary>
+    /// 雲が定位置に着いたところから呼ばれる。雫を降らせ、泡を上から消し始める。
+    /// </summary>
+    private void BeginRinseSequence()
+    {
+        droplets?.StartRain();
+
+        // ★先に雫を降らせ、キャラに届くころに泡を消し始める。
+        //   同時に始めると、雫が落ちてくる前に境界が下まで行ってしまい、
+        //   飛沫が床の高さでしか出なくなる（2026/8/28 の実機確認で判明）。
+        StartCoroutine(StartRinseAfterLead());
+    }
+
+    private System.Collections.IEnumerator StartRinseAfterLead()
+    {
+        if (rainLeadSeconds > 0f) yield return new WaitForSeconds(rainLeadSeconds);
+
+        if (_newFoamActiveForSession && foam != null)
+        {
+            foam.StartRinse(rinseDuration, OnRinseFinished);
+        }
+        else
+        {
+            // 旧方式のときは泡を上から消す仕組みが無い。
+            // ★黙って止まらないよう、同じ秒数だけ待ってから完了へ進める。
+            Debug.LogWarning("[BathWash] 旧方式のため、泡を上から消す演出は行いません（時間だけ待って完了へ進みます）");
+            yield return new WaitForSeconds(rinseDuration);
+            OnRinseFinished();
+        }
+    }
+
+    /// <summary>
+    /// 泡が消え切ったとき。雫を止め、雲を退散させ、そのあと完了ボタンを出す。
+    /// ★OnComplete() の中身は触らない。ここは「完了ボタンを出す」までが担当。
+    /// </summary>
+    private void OnRinseFinished()
+    {
+        droplets?.StopRain();
+
+        // ★A2.7：完了なので表情を Happy にする（洗い中は Relaxed までに留めてある）
+        ApplyFace(FaceKeyHappy);
+
+        if (cloud != null) cloud.PlayExit(ShowCompleteButton);
+        else               ShowCompleteButton();
+    }
+
+    /// <summary>完了ボタンを出す。雲の退散が終わってから呼ばれる。</summary>
+    private void ShowCompleteButton()
+    {
+        // 表情は Happy。OnRinseFinished でも呼んでいるが、同じ表情なら何もしないので二重でも安全
+        ApplyFace(FaceKeyHappy);
+
+        // ★A5：見出しを「おふろタイム終了」にして出し直す
+        if (titleText != null && !string.IsNullOrEmpty(finishedTitle)) titleText.text = finishedTitle;
+        if (titleRoot != null) titleRoot.SetActive(true);
+
+        // ★A5：シャンプーの説明を隠して、リザルトを出す
+        if (shampooInfoArea != null) shampooInfoArea.SetActive(false);
+        BuildResultTexts();
+        if (resultCard != null) resultCard.SetActive(true);
+
         if (completeButton != null) completeButton.SetActive(true);
+
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] お風呂の演出が終わりました。リザルトと完了ボタンを表示します");
+    }
+
+    /// <summary>
+    /// リザルトの文言を組み立てる。
+    ///
+    /// ★ここで出す数字は、OnComplete() が実際にセーブへ書く数字と同じ元から取っている。
+    ///   （清潔値は GetCleanAmount()、信頼度は TrustPerBath、性格は _rainbowPickedIndex）
+    ///   表示用に別計算を作らないこと。作ると必ずズレる。
+    ///
+    /// ★未対応：清潔値が 100 で頭打ちになる場合、実際の増分は表示より少なくなる。
+    ///   これは S-2（清潔値の実増分を表示に使う）で直す。いまは回復量をそのまま出している。
+    /// </summary>
+    private void BuildResultTexts()
+    {
+        string charName = CharacterNames.ResolveDisplayName(SaveManager.Instance?.Data);
+        if (string.IsNullOrEmpty(charName)) charName = "この子";
+
+        if (resultTitleText != null)
+            resultTitleText.text = $"{charName}がピカピカになったよ";
+
+        if (resultText == null) return;
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"きれい度　　＋{Mathf.RoundToInt(GetCleanAmount())}");
+        sb.Append($"しんらい度　＋{TrustPerBath}pt");
+
+        string personality = GetPersonalityResultLine();
+        if (!string.IsNullOrEmpty(personality))
+        {
+            sb.AppendLine();
+            sb.Append(personality);
+        }
+
+        resultText.text = sb.ToString();
+    }
+
+    /// <summary>
+    /// シャンプーごとの性格パラメータ変化を1行で返す。変化が無いシャンプーは null。
+    /// ★ApplyPersonality() と同じ分岐にそろえてある。片方だけ直さないこと。
+    /// </summary>
+    private string GetPersonalityResultLine()
+    {
+        switch (_shampooId)
+        {
+            case "ohisama":
+                return "甘えん坊度　＋2";
+            case "hoshizora":
+                return "勤勉さ　　　＋2";
+            case "rainbow":
+                int idx = (_rainbowPickedIndex >= 0 && _rainbowPickedIndex < PersonalityNames.Length)
+                    ? _rainbowPickedIndex : 0;
+                return $"{PersonalityNames[idx]}　＋1";
+            default:
+                return null;   // せっけんは性格が変わらない
+        }
     }
 
     public void OnComplete()
@@ -555,7 +924,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 save.personalityDiligence = Mathf.Clamp(save.personalityDiligence + 2, -100, 100);
                 break;
             case "rainbow":
-                int idx = Random.Range(0, 5);
+                // ★Initialize() で抽選した番号を使う。ここで引き直すとリザルト表示とズレる
+                int idx = (_rainbowPickedIndex >= 0 && _rainbowPickedIndex < PersonalityNames.Length)
+                    ? _rainbowPickedIndex : Random.Range(0, PersonalityNames.Length);
                 switch (idx)
                 {
                     case 0: save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + 1, -100, 100); break;

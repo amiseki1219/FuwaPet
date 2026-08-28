@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0116c65af9f544c348e625dcb7fed1b7
+guid: 2e367540f52a840a589fc45760035a64
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4026771170628485156
-    second: SelectFrame_0
+      213: -4380970862669982859
+    second: Group 276_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SelectFrame_0
+      name: Group 276_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 254
-        height: 308
+        width: 180
+        height: 264
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 42048118b07f1e730800000000000000
-      internalID: 4026771170628485156
+      spriteID: 5731837363aa333c0800000000000000
+      internalID: -4380970862669982859
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d87e77c202f7e45479191efc4c05d075
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SelectFrame_0: 4026771170628485156
+      Group 276_0: -4380970862669982859
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

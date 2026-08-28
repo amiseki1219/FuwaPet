@@ -122,6 +122,13 @@ public class BathSceneManager : MonoBehaviour
         OnSelectShampoo("normal");
         if (goNextButton != null) goNextButton.onClick.AddListener(OnGoNext);
         RefreshWallet();
+
+        // ★A2.7：お風呂に入った時点の表情は、状態パラメータに関係なく必ず Normal にする。
+        //   （おなかが減っていて Sad が出ている状態でお風呂に来ても、Normal から始める）
+        //   実処理は BathWashManager 側に置いている。洗い中の表情変化と同じ場所にまとめ、
+        //   表情を触る箇所が2つに分かれないようにするため。
+        //   ★WashPanel は非アクティブだが、コンポーネントのメソッド呼び出しは問題なく動く。
+        bathWashManager?.SetFaceNormalOnEnter();
     }
 
     private void OnGoNext()

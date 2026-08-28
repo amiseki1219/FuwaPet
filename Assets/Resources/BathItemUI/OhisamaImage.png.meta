@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e87f6810a9f104c679d72e86848c4041
+guid: 266b8e279a73f4a19a94c03645dee25b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1399725893816511699
-    second: Fill_0
+      213: 5637656555045473205
+    second: ohisamaimage_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fill_0
+      name: ohisamaimage_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 403
-        height: 35
+        width: 226
+        height: 294
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3dc69dbc843dc6310800000000000000
-      internalID: 1399725893816511699
+      spriteID: 5bb432964cafc3e40800000000000000
+      internalID: 5637656555045473205
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Fill_0: 1399725893816511699
+      ohisamaimage_0: 5637656555045473205
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
