@@ -274,25 +274,12 @@ public class CareSceneManager : MonoBehaviour
         SetSpeechBubble();
     }
 
-    private string ResolveCharName()
-    {
-        if (!string.IsNullOrEmpty(_save.petNickname))
-            return _save.petNickname;
-
-        string charId = !string.IsNullOrEmpty(_save.selectedCharacterId)
-            ? _save.selectedCharacterId
-            : _save.characterId;
-
-        return charId switch
-        {
-            "poko" => "ぽこ",
-            "eru"  => "える",
-            "koko" => "ここ",
-            "paru" => "ぱる",
-            "piyoko" => "ぴよこ",
-            _      => _save.petName ?? ""
-        };
-    }
+    /// <summary>
+    /// 画面に出すキャラ名を返す。
+    /// ★2026/8/28：キャラID→日本語名の対応表が4箇所に散っていたため、
+    ///   CharacterNames へ集約した。優先順位（ニックネーム → 日本語名 → petName）は変えていない。
+    /// </summary>
+    private string ResolveCharName() => CharacterNames.ResolveDisplayName(_save);
 
     private void SetWallet()
     {
