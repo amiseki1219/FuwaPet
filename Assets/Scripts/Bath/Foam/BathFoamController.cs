@@ -37,6 +37,13 @@ namespace Yurufu.Bath.Foam
         /// <summary>Phase A1 の対象はこの2つだけ。Eye / Mouth / Cheek / Hair / Arm / Leg は作らない。</summary>
         private static readonly string[] TargetNames = { "Head", "Body" };
 
+        /// <summary>
+        /// 1フレームに置ける泡粒の上限。
+        /// 指を画面の端から端へ一気に振ったとき、1フレームで grainMaxCount を
+        /// 使い切ってしまわないための保険。見た目が足りなければ増やしてよい。
+        /// </summary>
+        private const int MaxGrainsPerFrame = 8;
+
         [Header("対象")]
         [Tooltip("キャラが実行時に生成される親。Bath.unity の CharacterDisplayAnchor を入れる")]
         [SerializeField] private Transform characterAnchor;
@@ -158,14 +165,42 @@ namespace Yurufu.Bath.Foam
             _shells[hit.TargetIndex].Apply(_masks[hit.TargetIndex].Current, config);
 
             // ── 泡粒を置く ──
-            // ストロークの最初は必ず1個。以降は UV 上を grainDensity ぶん進むごとに1個
+            // ストロークの最初は必ず1個。以降は UV 上を grainDensity ぶん進むごとに1個。
+            //
+            // ★2026/8/28 修正：ここは以前 if 文で「1フレームに最大1個」だった。
+            //   Paint() は BathWashManager.Update() から1フレームに1回しか呼ばれないため、
+            //   フレームレートが低い端末ほど1フレームの移動距離が大きくなり、
+            //   溜まった距離を _uvSinceGrain = 0f で捨てて1個しか置いていなかった。
+            //   → エディタ（高フレームレート）では泡が多く、iOS 実機では明らかに少ない、
+            //     という差が出ていた（2026/8/28 に実機ビルドで判明）。
+            //   while にして「進んだ距離ぶんだけ」置き、余りは繰り越すことで、
+            //   フレームレートに関係なく「同じ距離こすったら同じ数」になる。
+            //
+            //   ※粒は同じヒット点に置かれるが、BathFoamGrains.Add() が接平面上へ
+            //     ランダムに散らすため、完全には重ならない。
+            //
+            //   ※進行度（BathWashManager._scrubCount）は元から引き算で余りを繰り越しており、
+            //     フレームレートの影響を受けない。だから「洗い終わる時間は同じなのに泡だけ少ない」
+            //     という症状になっていた。
             if (newStroke) _uvSinceGrain = config.grainDensity;
             else           _uvSinceGrain += Vector2.Distance(from, hit.Uv);
 
-            if (_grains != null && _uvSinceGrain >= config.grainDensity)
+            if (_grains != null)
             {
-                _uvSinceGrain = 0f;
-                _grains.Add(hit, config);
+                // grainDensity が 0 になると無限ループになるので、必ず下限を入れる
+                float step = Mathf.Max(config.grainDensity, 1e-4f);
+
+                int placed = 0;
+                while (_uvSinceGrain >= step && placed < MaxGrainsPerFrame)
+                {
+                    _uvSinceGrain -= step;          // ★余りを捨てずに繰り越す
+                    _grains.Add(hit, config);
+                    placed++;
+                }
+
+                // 上限で打ち切ったときは、残りを持ち越さない。
+                // 持ち越すと次のフレーム以降も上限まで置き続け、指を止めた後も泡が増え続けてしまう。
+                if (placed >= MaxGrainsPerFrame) _uvSinceGrain = 0f;
             }
 
             _hasLast    = true;
