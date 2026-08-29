@@ -195,6 +195,16 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private bool _showerPressed;
 
     /// <summary>
+    /// お風呂の結果（清潔値・信頼度・性格・bathCountToday）を、もうセーブへ書いたかどうか。
+    ///
+    /// ★S-5（2026/8/29 決定）：確定は「リザルトが出た瞬間」に行う。
+    ///   完了ボタンを押さずにアプリを落としても結果が入るようにするため。
+    ///   このフラグが二重加算を防ぐ。以前は OnComplete() に連打ガードが無く、
+    ///   同じフレームで2回押されると bathCountToday が2回増える穴があった。
+    /// </summary>
+    private bool _resultCommitted;
+
+    /// <summary>
     /// レインボーせっけんで上がる性格パラメータの番号（0〜4）。
     /// ★お風呂を始めるときに1回だけ抽選して覚える。
     ///   リザルトに出す内容と、実際にセーブへ書く内容を必ず一致させるため。
@@ -285,6 +295,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         StartCoroutine(UnblockInputNextFrame());
 
         _showerPressed = false;
+
+        // ★S-5：新しいお風呂を始めるので、結果はまだ未確定に戻す。
+        //   ここを忘れると2回目のお風呂で結果が入らなくなる
+        _resultCommitted = false;
 
         if (completeButton != null) completeButton.SetActive(false);
         if (hintText != null) hintText.SetActive(true);
@@ -956,9 +970,20 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         finishEffect.Play(_shampooId, null);
     }
 
-    /// <summary>完了ボタンを出す。完了演出が終わってから呼ばれる。</summary>
+    /// <summary>
+    /// リザルトと完了ボタンを出す。
+    ///
+    /// ★通常完了ルート（OnRinseFinished）と スキップルート（OnSkip）の【唯一の合流点】。
+    ///   そのため S-5（2026/8/29 決定）の「リザルトが出た瞬間に結果を確定させる」処理は
+    ///   ここ1箇所に置いている。2箇所に分けると必ず片方が取り残される。
+    /// </summary>
     private void ShowCompleteButton()
     {
+        // ★S-5：画面に「キレイ ＋60pt」と出す【前】にセーブへ書く。
+        //   こうしておけば、完了ボタンを押さずにアプリを落としても結果は残る。
+        //   表示より先に書くので「画面に出た数字は保存済み」と言い切れる。
+        CommitBathResult();
+
         // 表情は Happy。OnRinseFinished でも呼んでいるが、同じ表情なら何もしないので二重でも安全
         ApplyFace(FaceKeyHappy);
 
@@ -991,7 +1016,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     /// <summary>
     /// リザルトの文言を組み立てる。
     ///
-    /// ★ここで出す数字は、OnComplete() が実際にセーブへ書く数字と同じ元から取っている。
+    /// ★ここで出す数字は、CommitBathResult() が実際にセーブへ書く数字と同じ元から取っている。
     ///   （清潔値は GetCleanAmount()、信頼度は TrustPerBath、性格は _rainbowPickedIndex）
     ///   表示用に別計算を作らないこと。作ると必ずズレる。
     ///
@@ -1043,8 +1068,35 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         }
     }
 
+    /// <summary>
+    /// 完了ボタン（CompleteButton）の OnClick から呼ばれる。Bath.unity の結線は変えていない。
+    ///
+    /// ★S-5（2026/8/29 決定）以降、ここは【画面を移すだけ】になった。
+    ///   結果の確定は ShowCompleteButton() → CommitBathResult() で既に済んでいる。
+    ///   下の CommitBathResult() は保険。将来ここを通らない経路ができても取りこぼさないため。
+    ///   確定済みなら先頭のガードで弾かれるので、二重加算にはならない。
+    /// </summary>
     public void OnComplete()
     {
+        CommitBathResult();
+        SceneManager.LoadScene("Care");
+    }
+
+    /// <summary>
+    /// お風呂の結果をセーブへ書く。★1回のお風呂につき1回だけ実行される。
+    ///
+    /// ★呼ばれる場所は ShowCompleteButton()（リザルトを出す直前）と OnComplete()（保険）の2つ。
+    ///   通常完了もスキップも ShowCompleteButton() を通るので、実際はそこで確定する。
+    ///
+    /// ★ここで書く数字は BuildResultTexts() が画面に出す数字と同じ元から取っている。
+    ///   （清潔値は GetCleanAmount()、信頼度は TrustPerBath、性格は _rainbowPickedIndex）
+    ///   保存用に別計算を作らないこと。作ると画面と結果が必ずズレる。
+    /// </summary>
+    private void CommitBathResult()
+    {
+        // ★二重加算の防止。連打・保険呼び出し・スキップ経由のどれでも1回に抑える
+        if (_resultCommitted) return;
+
         var save = SaveManager.Instance?.Data;
         if (save == null) return;
 
@@ -1064,7 +1116,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         else
         {
             // Bath.unity には GameContext が無いため、単独再生時のみここに来る。
-            Debug.LogWarning("[OnComplete] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
+            Debug.LogWarning("[BathWash] GameContext が無いため清潔値を SaveData へ直接書き込んだ。エディタ単独再生時のみ発生する想定。");
             save.clean = Mathf.Clamp(save.clean + cleanAmount, 0f, 100f);
             save.trust += TrustPerBath;   // 単独再生時は PetStatus を経由できないので SaveData へ直接
         }
@@ -1083,7 +1135,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         //   2026/8/28：ログに trust が入っておらず、信頼度が反映されたかを
         //   Console だけでは確認できなかったため追加した。
         int trustForLog = ctx != null ? ctx.PetStatus.Trust : save.trust;
-        Debug.Log($"[OnComplete] clean={cleanForLog} cleanAmount={cleanAmount} trust={trustForLog} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
+        Debug.Log($"[BathWash] 確定内容 clean={cleanForLog} cleanAmount={cleanAmount} trust={trustForLog} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
 
         // 保存は1回だけ。SavePetStatus() が SaveToSave() → SaveManager.Save() まで行う。
         if (ctx != null) ctx.SavePetStatus();
@@ -1091,7 +1143,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         BathJustCompleted = true;
         BathJustCleanAmount = cleanAmount;
-        SceneManager.LoadScene("Care");
+
+        // ★ここまで来たら確定済み。以降の呼び出しは先頭のガードで弾かれる
+        _resultCommitted = true;
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] お風呂の結果を確定してセーブしました（リザルト表示時。完了ボタンより前）");
     }
 
     // ── プライベートヘルパー ──────────────────────────────────────────────────
