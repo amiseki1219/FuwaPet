@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1d4672b19d6584074b46f3779ecb3709
+guid: 73d8eb10f266541a69ff324491ab48b3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2605857353871235319
-    second: Ichigo_0
+      213: -4873864774029139259
+    second: "\u8679_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ichigo_0
+      name: "\u8679_0"
       rect:
         serializedVersion: 2
-        x: 50
-        y: 55
-        width: 155
-        height: 155
+        x: 78
+        y: 0
+        width: 1060
+        height: 1083
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9076a270b8226dbd0800000000000000
-      internalID: -2605857353871235319
+      spriteID: 5c224b49fcd8c5cb0800000000000000
+      internalID: -4873864774029139259
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ichigo_0: -2605857353871235319
+      "\u8679_0": -4873864774029139259
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
