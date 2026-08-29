@@ -46,6 +46,15 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [Header("こすり設定")]
     [SerializeField] private float requiredDistancePerScrub = 80f;
     [SerializeField] private int maxScrubCount = 24;
+
+    [Tooltip("泡がこれ以上増えなくなってから、あと何ピクセルこすったら「洗い終わり」にするか。\n" +
+             "★泡は grainMaxCount（既定400粒）で頭打ちになるが、進行度はそれとは別に数えている。\n" +
+             "  そのため「見た目が変わらないのに擦り続ける」時間ができていた。\n" +
+             "  400 は Required Distance Per Scrub(50) の8回ぶん。\n" +
+             "  0 にするとこの判定を使わず、今までどおり Max Scrub Count まで擦ることになる。\n" +
+             "★新方式（泡シェル）のときだけ効く。旧方式には泡粒が無いため")]
+    [Range(0f, 3000f)]
+    [SerializeField] private float noFoamDistanceToFinish = 400f;
     [SerializeField] private Vector2 particleOffset = Vector2.zero;
     [SerializeField] private RectTransform scrubArea;
 
@@ -127,6 +136,13 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [Range(0f, 3f)]
     [SerializeField] private float rainLeadSeconds = 1f;
 
+    [Header("完了演出（A5.5）")]
+    [Tooltip("雲が退散したあとに出す、シャンプー別の完了演出（虹・キラキラ・流れ星）。\n" +
+             "★Canvas の外（シーン直下）に置いた FinishEffect を結線する。\n" +
+             "  Overlay の Canvas の中に置くと、キャラより手前に描かれてしまうため。\n" +
+             "  未結線でも演出が出ないだけで、リザルトまで進む")]
+    [SerializeField] private BathFinishEffect finishEffect;
+
     [Header("表情（A2.7）")]
     [Tooltip("キャラが実行時に生成される親。Bath.unity の CharacterDisplayAnchor を結線する。\n" +
              "★キャラは実行時に生成されるため、Scene ビュー（非Play時）には存在しない")]
@@ -146,6 +162,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     // ★A5（お風呂完了）で使う予定のキー。洗い中には使わない。
     private const string FaceKeyHappy   = "Happy";
 
+    // Animator のトリガー名。表情キーとたまたま同じ文字列だが【別物】なので定数を分けてある。
+    // 表情キー = 目や口の画像の差し替え / Animator トリガー = 体のポーズのアニメーション。
+    private const string AnimTriggerHappy = "Happy";
+
     private int _scrubCount;
     private bool _isComplete;
     private bool _inputBlocked;
@@ -153,6 +173,12 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private Vector2 _lastTouchPos;
     private float _accumulatedDistance;
     private string _shampooId;
+
+    /// <summary>前に見たときの泡粒の数。増えたかどうかを比べるための目印。</summary>
+    private int _lastGrainCount;
+
+    /// <summary>泡が増えないまま、こすった距離の合計。泡が増えたら 0 に戻す。</summary>
+    private float _noFoamDistance;
 
     /// <summary>
     /// このお風呂で新方式の泡を使うか。
@@ -250,6 +276,8 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         _inputBlocked        = true;
         _isDragging          = false;
         _accumulatedDistance = 0f;
+        _lastGrainCount      = 0;
+        _noFoamDistance      = 0f;
 
         // canvas camera を再取得（Awake後に別 Canvas に移動した場合のため）
         _canvasCamera = ResolveCanvasCamera();
@@ -274,6 +302,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         // ★A4：前回の雫が残らないよう、開始時に消す
         droplets?.ClearAll();
+
+        // ★A5.5：前回の完了演出（虹・キラキラ・流れ星）が残らないよう、開始時に片付ける
+        finishEffect?.ClearAll();
 
         // ★A5：リザルトを隠し、見出しと説明欄を元に戻す
         if (resultCard      != null) resultCard.SetActive(false);
@@ -335,6 +366,12 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] このお風呂は【旧方式：スプライトの泡（球方式）】で動きます（Use New Foam が OFF）");
 
             bubblePainter?.Begin(shampooId);
+
+            // ★旧方式には泡粒が無いので「泡が増えなくなったら終わり」の判定は使えない。
+            //   黙って挙動が変わる状態を作らないよう、その旨を1行残す
+            if (noFoamDistanceToFinish > 0f)
+                Debug.Log($"[BathWash] 旧方式のため、「泡が増えなくなったら終わり」の判定は使いません" +
+                          $"（Max Scrub Count {maxScrubCount} まで擦る必要があります）");
         }
     }
 
@@ -431,8 +468,63 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             UpdateUI();
 
             if (_scrubCount >= maxScrubCount)
+            {
                 OnWashComplete();
+                return;
+            }
         }
+
+        // ④ ★泡がこれ以上増えないなら、進行度が満タンでなくても洗い終わりにする
+        CheckFoamStalled(dist);
+    }
+
+    /// <summary>
+    /// 「泡がもう増えていない」状態が続いたら、その場で洗い終わりにする。
+    ///
+    /// 【なぜ必要か】2026/8/29
+    ///   進行度（_scrubCount）と泡粒の数は、互いを一切参照していない（CLAUDE.md ⑫）。
+    ///   泡粒は grainMaxCount（既定400）で頭打ちになるが、進行度はまだ足りないため、
+    ///   「画面の見た目が何も変わらないのに擦り続ける」時間ができていた。
+    ///
+    /// 【判定のしかた】
+    ///   泡が1粒でも増えたら距離をリセットし、増えないあいだだけ距離を足していく。
+    ///   noFoamDistanceToFinish を超えたら、そこで「流す」ボタンを出す。
+    ///   ＝「まだ泡がつく場所が残っている」あいだは、今までどおり続く。
+    ///
+    /// 【旧方式では動かない】
+    ///   旧方式（BathBubblePainter）には泡粒という概念が無い。
+    ///   その場合はこの判定を使わないことを、Initialize() で1行ログに出している。
+    /// </summary>
+    private void CheckFoamStalled(float dist)
+    {
+        if (_isComplete) return;                       // すでに終わっているなら何もしない
+        if (!_newFoamActiveForSession || foam == null) return;   // 旧方式は対象外
+        if (noFoamDistanceToFinish <= 0f) return;      // 0 なら判定そのものを使わない
+
+        int grains = foam.GrainCount;
+
+        if (grains > _lastGrainCount)
+        {
+            // 泡が増えた ＝ まだ塗る場所がある。やり直し
+            _lastGrainCount = grains;
+            _noFoamDistance = 0f;
+            return;
+        }
+
+        _noFoamDistance += dist;
+        if (_noFoamDistance < noFoamDistanceToFinish) return;
+
+        // ★どれだけ無駄に擦っていたかが分かるよう、進行度を書き換える前に記録しておく
+        int scrubBefore = _scrubCount;
+
+        _scrubCount = maxScrubCount;   // 進行度は満タン扱いにそろえる（表示のズレを作らない）
+        UpdateUI();
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [BathWash] 泡がこれ以上増えないので、こすり終わりにしました" +
+                  $"（進行度 {scrubBefore}/{maxScrubCount} ・ 泡粒 {grains}個 ・ " +
+                  $"泡が増えないまま擦った距離 {noFoamDistanceToFinish}px）");
+
+        OnWashComplete();
     }
 
     // ── エフェクト追従（毎フレーム共通処理） ──────────────────────────────────
@@ -657,6 +749,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         // 演出は出さずに片付ける
         cloud?.HideImmediate();
         droplets?.ClearAll();
+        finishEffect?.ClearAll();   // ★A5.5：スキップでは完了演出も出さない
 
         if (_newFoamActiveForSession && foam != null) foam.ClearFoamImmediate();
         else                                          bubblePainter?.ClearAll();
@@ -775,11 +868,95 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         // ★A2.7：完了なので表情を Happy にする（洗い中は Relaxed までに留めてある）
         ApplyFace(FaceKeyHappy);
 
-        if (cloud != null) cloud.PlayExit(ShowCompleteButton);
-        else               ShowCompleteButton();
+        // ★A5.5：ポーズも Happy にする。
+        //   表情（目・口の画像）とアニメーション（体の動き）は別物なので、両方呼ぶ必要がある。
+        PlayHappyAction();
+
+        // ★A5.5（2026/8/29 変更）：リザルトと完了ボタンを【ここで先に】出す。
+        //   以前は完了演出が終わってから出していたため、
+        //   「雲の退散(1秒) ＋ 完了演出(2秒)」のあいだ、画面にキャラとキラキラしか無い状態が
+        //   約2.5秒続いていた（動画で確認）。Happy のポーズを見せている間も
+        //   見出し・リザルト・完了ボタンが出ているほうが自然なので、順番を入れ替えた。
+        ShowCompleteButton();
+
+        // ★A5.5（2026/8/29 変更その2）：完了演出も【同じタイミング】で始める。
+        //   以前は雲の退散（1秒）を待ってから演出を出していたが、
+        //   「UI が出てから演出が始まるまでが遅い」ため、並行させることにした。
+        //   雲は上のほうを右へ抜けていくだけなので、星や虹と重なっても邪魔にならない。
+        PlayFinishEffect();
+
+        // 雲の退散は演出と並行して進める。終わりを待つ必要がなくなったのでコールバックは渡さない
+        cloud?.PlayExit();
     }
 
-    /// <summary>完了ボタンを出す。雲の退散が終わってから呼ばれる。</summary>
+    /// <summary>
+    /// 完了演出で Happy のポーズを再生する。
+    ///
+    /// 【なぜ Animator を直接触るのか】
+    ///   Care 画面には CareCharacterActionController.PlayHappy() があるが、
+    ///   あのコンポーネントは Care.unity にしか置かれていない（2026/8/28 確認）。
+    ///   Bath では Animator を直接動かすしかない。
+    ///
+    /// 【なぜ先にパラメータの有無を調べるのか】
+    ///   Animator に無いトリガー名で SetTrigger を呼ぶと Unity が警告を出す。
+    ///   ぴよこ / ここ / える / ぱる には Happy があるが、ぽこの Animator にはまだ無い。
+    ///   （ぽこは他4体と同じ作りに作り直す予定。それまでの間 Console を汚さないための確認）
+    ///
+    /// ★動いた／動かなかったのどちらでも、理由を1行ログに残す。
+    /// </summary>
+    private void PlayHappyAction()
+    {
+        // characterAnchor が未結線のときは ApplyFace 側で既に警告を出しているので、ここでは黙って抜ける
+        if (characterAnchor == null) return;
+
+        var animator = characterAnchor.GetComponentInChildren<Animator>(true);
+        if (animator == null)
+        {
+            Debug.LogWarning("[BathWash] キャラに Animator が見つからないため、Happy のポーズは再生しません");
+            return;
+        }
+
+        if (!HasTrigger(animator, AnimTriggerHappy))
+        {
+            Debug.Log($"[BathWash] この子の Animator に '{AnimTriggerHappy}' が無いため、ポーズは変えません（表情だけ Happy になります）");
+            return;
+        }
+
+        animator.SetTrigger(AnimTriggerHappy);
+        Debug.Log($"<color=#00E5FF>[決定]</color> [BathWash] Happy のポーズを再生しました（{animator.name}）");
+    }
+
+    /// <summary>Animator にそのトリガーがあるか調べる。無い名前で SetTrigger を呼ばないため。</summary>
+    private static bool HasTrigger(Animator animator, string triggerName)
+    {
+        foreach (var p in animator.parameters)
+            if (p.type == AnimatorControllerParameterType.Trigger && p.name == triggerName) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// 雲が退散し終わったところから呼ばれる。シャンプー別の完了演出（虹・星）を出す。
+    ///
+    /// ★リザルトと完了ボタンは OnRinseFinished() で【すでに出している】。ここは演出だけ。
+    ///   演出の終わりを待ってリザルトを出す作りではないので、
+    ///   未結線でも「演出が出ないだけ」で、お風呂は最後まで進む。
+    /// </summary>
+    private void PlayFinishEffect()
+    {
+        if (finishEffect == null)
+        {
+            Debug.LogWarning("[BathWash] Finish Effect が未結線のため、完了演出は出ません。\n" +
+                             "      （リザルトと完了ボタンはすでに表示済みなので、お風呂は最後まで進みます）\n" +
+                             "      Canvas/WashPanel を選び、BathWashManager の \"Finish Effect\" 欄に " +
+                             "シーン直下の FinishEffect をドラッグしてください");
+            return;
+        }
+
+        // ★終わりを待つ必要がないので、コールバックは渡さない
+        finishEffect.Play(_shampooId, null);
+    }
+
+    /// <summary>完了ボタンを出す。完了演出が終わってから呼ばれる。</summary>
     private void ShowCompleteButton()
     {
         // 表情は Happy。OnRinseFinished でも呼んでいるが、同じ表情なら何もしないので二重でも安全
@@ -899,7 +1076,14 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         ApplyPersonality(save);
 
         float cleanForLog = ctx != null ? ctx.PetStatus.Clean : save.clean;
-        Debug.Log($"[OnComplete] clean={cleanForLog} cleanAmount={cleanAmount} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
+
+        // 信頼度も清潔値と同じく、書き込んだ場所から読み直す。
+        // GameContext があるときは PetStatus が正、無いときは SaveData が正。
+        // ★書き込み先と違う場所から読むと、ログの数字と実際の保存値がずれる。
+        //   2026/8/28：ログに trust が入っておらず、信頼度が反映されたかを
+        //   Console だけでは確認できなかったため追加した。
+        int trustForLog = ctx != null ? ctx.PetStatus.Trust : save.trust;
+        Debug.Log($"[OnComplete] clean={cleanForLog} cleanAmount={cleanAmount} trust={trustForLog} bathCountToday={save.bathCountToday} lastBathDate={save.lastBathDate} shampooId={_shampooId} activity={save.personalityActivity} dependency={save.personalityDependency} diligence={save.personalityDiligence} honesty={save.personalityHonesty} sensitivity={save.personalitySensitivity}");
 
         // 保存は1回だけ。SavePetStatus() が SaveToSave() → SaveManager.Save() まで行う。
         if (ctx != null) ctx.SavePetStatus();

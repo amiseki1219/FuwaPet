@@ -107,6 +107,20 @@ namespace Yurufu.Bath.Foam
         public float RinseBoundaryWorldY => CurrentPhase == Phase.Rinsing ? _rinseY : float.PositiveInfinity;
 
         /// <summary>
+        /// いま体についている泡粒の数。まだ作っていなければ 0。
+        ///
+        /// 【何に使うか】2026/8/29 追加
+        ///   BathWashManager が「泡がこれ以上増えないか」を見るために読む。
+        ///   泡粒は grainMaxCount（既定400）で頭打ちになるが、進行度（_scrubCount）は
+        ///   それとは別に数えているため、泡が増えなくなってからも
+        ///   「流す」ボタンが出るまで擦り続ける時間ができていた。
+        ///   その無駄を無くすための判定材料。
+        ///
+        /// ★読み取り専用。ここから泡を操作はしない。
+        /// </summary>
+        public int GrainCount => _grains != null ? _grains.Count : 0;
+
+        /// <summary>
         /// キャラのだいたいの範囲（ワールド）。雫が体の位置に落ちてきたかの目安に使う。
         /// ★Renderer.bounds はアニメーション用に余裕を持つので、輪郭ぴったりではない。
         ///   「だいたいこのへんが体」という用途にだけ使うこと。
