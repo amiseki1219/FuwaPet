@@ -400,8 +400,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log($"[BathWash] OnPointerDown pos={eventData.position} isComplete={_isComplete} scrubCount={_scrubCount} blocked={_inputBlocked}");
-
         if (_isComplete || _scrubCount >= maxScrubCount || _inputBlocked) return;
 
         _isDragging          = true;
@@ -409,14 +407,11 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         _accumulatedDistance = 0f;
 
         bool inArea = IsInScrubArea(eventData.position);
-        Debug.Log($"[BathWash] OnPointerDown: inArea={inArea} cam={_canvasCamera?.name ?? "null"}");
-
         UpdateFollowEffects(eventData.position, show: inArea);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log($"[BathWash] OnPointerUp pos={eventData.position} scrubCount={_scrubCount}");
         _isDragging = false;
         // 指を離したら、泡を置く線をいったん切る
         if (_newFoamActiveForSession) foam.EndStroke(); else bubblePainter?.EndStroke();
@@ -453,8 +448,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         bool inArea = IsInScrubArea(currentPos);
 
-        Debug.Log($"[BathWash] Update: pos={currentPos} inArea={inArea} scrub={_scrubCount}");
-
         // ① エフェクトは scrubArea 内のときだけ表示する
         UpdateFollowEffects(currentPos, show: inArea);
 
@@ -478,7 +471,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         {
             _accumulatedDistance -= requiredDistancePerScrub;
             _scrubCount++;
-            Debug.Log($"[BathWash] ★ scrubCount++ = {_scrubCount}");
             UpdateUI();
 
             if (_scrubCount >= maxScrubCount)
@@ -584,9 +576,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         Vector2 localPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             scrubArea, screenPos, _canvasCamera, out localPos);
-        bool result = scrubArea.rect.Contains(localPos);
-        Debug.Log($"[BathWash] IsInScrubArea: screen={screenPos} cam={_canvasCamera?.name ?? "null"} local={localPos} rect={scrubArea.rect} result={result}");
-        return result;
+        // ★D-2（2026/8/29）：ここは Update() から毎フレーム呼ばれる。
+        //   経過を出すログを置くと Console が 999+ で埋まって他が読めなくなるため置かない。
+        //   上の scrubArea が null の警告だけは、結線ミスを知らせるので残してある。
+        return scrubArea.rect.Contains(localPos);
     }
 
     // ── UI更新 ────────────────────────────────────────────────────────────────
@@ -594,7 +587,6 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private void UpdateUI()
     {
         float pct = (float)_scrubCount / maxScrubCount * 100f;
-        Debug.Log($"[BathWash] UpdateUI: scrubCount={_scrubCount} pct={pct:F1}%");
 
         // ★A2.7：洗い進みに応じて表情を変える（Normal → Relaxed → Happy）。
         //   UpdateUI() は Initialize() と「こすりカウントが増えた瞬間」からしか呼ばれないので、

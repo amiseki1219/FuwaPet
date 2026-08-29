@@ -129,16 +129,12 @@ public class CareSceneManager : MonoBehaviour
     {
         // 効果の有無に関わらず、ねんねから戻ったら演出は出す。
         // SleepJustCompleted はクールダウン中に立たないので、こちらを見る
-        Debug.Log($"[Care][確認用] Awake SleepReturning={SleepSceneManager.SleepReturning} " +
-                  $"SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
-                  $"irisReveal={(irisReveal != null ? irisReveal.name : "★未結線")}");
-
         if (SleepSceneManager.SleepReturning)
         {
             SleepSceneManager.SleepReturning = false;
             _suppressSpeech = true;   // 幕が開くまで吹き出しを出さない
             if (irisReveal != null) irisReveal.PlayReveal();
-            else Debug.LogWarning("[Care][確認用] irisReveal が未結線なのでアイリス演出は出ません");
+            else Debug.LogWarning("[Care] irisReveal が未結線なのでアイリス演出は出ません");
         }
     }
 
@@ -195,9 +191,6 @@ public class CareSceneManager : MonoBehaviour
         // ただしお風呂と違って、すぐには出さない。
         // 戻った直後は画面が幕で覆われていて、通知も吹き出しも見えないため、
         // アイリスが開ききってから出す。
-        Debug.Log($"[Care][確認用] Start SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
-                  $"energyAmount={SleepSceneManager.SleepJustEnergyAmount}");
-
         if (SleepSceneManager.SleepJustCompleted)
         {
             SleepSceneManager.SleepJustCompleted = false;
@@ -206,7 +199,7 @@ public class CareSceneManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[Care][確認用] SleepJustCompleted が false なので、ねんねの結果表示は出しません");
+            Debug.Log("[Care] SleepJustCompleted が false なので、ねんねの結果表示は出しません");
         }
     }
 
@@ -220,7 +213,6 @@ public class CareSceneManager : MonoBehaviour
             ? sleepResultDelay
             : (irisReveal != null ? irisReveal.TotalDuration : 0f);
 
-        Debug.Log($"[Care][確認用] ねんねの結果表示を {wait} 秒後に出します");
         if (wait > 0f) yield return new WaitForSeconds(wait);
 
         ShowNotice($"ねんね完了！{ParamNames.Energy} {ParamNames.Pt(energyAmount)}");
@@ -232,7 +224,7 @@ public class CareSceneManager : MonoBehaviour
         _overrideSpeech = PickWakeUpMessage();
         SetSpeechBubble();
 
-        Debug.Log($"<color=#00E5FF>[決定]</color> [Care][確認用] ねんねの結果を表示しました 元気+{energyAmount} " +
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Care] ねんねの結果を表示しました 元気+{energyAmount} " +
                   $"notice={(noticePanelRect != null ? "OK" : "★未結線")} " +
                   $"energyPopup={(energyPopup != null ? "OK" : "★未結線")} " +
                   $"吹き出し={(speechBubbleText != null ? "OK" : "★未結線")}");
@@ -427,7 +419,13 @@ public class CareSceneManager : MonoBehaviour
                                        speech = "今日も元気だよ！";
         else                           speech = "一緒にいられて嬉しいな";
 
-        Debug.Log($"[Care][確認用] 吹き出し「{speech}」 root={(speechBubbleRoot != null ? "OK" : "★未結線")} text={(speechBubbleText != null ? "OK" : "★未結線")}");
+        // ★D-2（2026/8/29）：毎回「root=OK text=OK」と出していたログをやめ、
+        //   結線が抜けているときだけ知らせる形にした。正常時は何も出さない。
+        if (speechBubbleRoot == null || speechBubbleText == null)
+        {
+            Debug.LogWarning($"[Care] 吹き出しの結線が足りません root={(speechBubbleRoot != null ? "OK" : "★未結線")} " +
+                             $"text={(speechBubbleText != null ? "OK" : "★未結線")}");
+        }
 
         if (speechBubbleRoot != null) speechBubbleRoot.SetActive(true);
         if (speechBubbleText != null)

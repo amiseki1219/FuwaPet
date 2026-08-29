@@ -29,7 +29,7 @@ public class SaveData
     // --- お財布 ---
     public int coinCount = 300;       // 無償コイン
     public int lunaStoneCount = 50;   // 有償ルナ・ストーン
-    public int trust = 0;            // なかよし度
+    public int trust = 0;            // 信頼度（画面表示も「信頼度」。requirements.md §5 の対応表が正本）
 
     // --- アイテムのポケット ---
     public int cloudCandyCount = 0;    // くもキャンディ
