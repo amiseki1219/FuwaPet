@@ -738,11 +738,18 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     // ── ボタンハンドラ ────────────────────────────────────────────────────────
 
     /// <summary>
-    /// スキップ。演出（雲・雫・泡を流す）を全部飛ばして、いっきにリザルトまで進める。
+    /// スキップ。「流す」演出（雲・雫・泡が上から消えるところ）を飛ばして、いっきにリザルトへ進める。
     ///
-    /// ★清潔値・信頼度・性格の反映は変えない。
-    ///   完了ボタンを押したときの OnComplete() が今までどおり行う。
-    ///   ＝ スキップしても、こすり切った場合と同じ結果になる。
+    /// ★飛ばすのは「流す」演出だけ。完了演出（虹・降る星・キラキラ）と
+    ///   Happy の表情・ポーズは【出す】（2026/8/29 変更）。
+    ///   以前は完了演出も消していたが、リザルト画面が寂しく、
+    ///   通常ルートと見た目が食い違っていたため。
+    ///   スキップは「洗う作業を早く終わらせる」ためのもので、
+    ///   「ピカピカになったお祝い」まで省くものではない、という整理。
+    ///
+    /// ★清潔値・信頼度・性格の反映は、通常ルートと完全に同じ。
+    ///   下の ShowCompleteButton() が CommitBathResult() を呼ぶため、
+    ///   この時点でセーブへ書き込まれる（S-5・2026/8/29）。
     /// </summary>
     public void OnSkip()
     {
@@ -760,17 +767,24 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         UpdateUI();   // 進行度を100%にしてUIとセリフを合わせる
 
-        // 演出は出さずに片付ける
+        // ★「流す」演出は出さずに片付ける。雲と雫はスキップでは出さない
         cloud?.HideImmediate();
         droplets?.ClearAll();
-        finishEffect?.ClearAll();   // ★A5.5：スキップでは完了演出も出さない
 
+        // 泡は一気に消す（上から順に消える演出は飛ばす）
         if (_newFoamActiveForSession && foam != null) foam.ClearFoamImmediate();
         else                                          bubblePainter?.ClearAll();
 
-        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] スキップされました。演出を飛ばしてリザルトを表示します");
+        Debug.Log("<color=#00E5FF>[決定]</color> [BathWash] スキップされました。雲と雫は飛ばし、完了演出とリザルトを出します");
 
-        ShowCompleteButton();
+        // ★2026/8/29：ここから下は OnRinseFinished() と同じ並び。
+        //   通常ルートと見た目をそろえるため、順番も意図的に合わせている。
+        //   片方だけ直すと必ず食い違うので、変えるときは両方を見ること。
+        ApplyFace(FaceKeyHappy);   // 表情（目・口の画像）
+        PlayHappyAction();         // ポーズ（Animator）。表情とは別物なので両方呼ぶ
+
+        ShowCompleteButton();      // 中で CommitBathResult() が走り、結果が確定する
+        PlayFinishEffect();        // 虹・降る星・キラキラ。Care へ移るまで出続ける
     }
 
     private void OnWashComplete()
