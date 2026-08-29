@@ -85,7 +85,9 @@ public class CareSceneManager : MonoBehaviour
 
     private const int MaxNadePerDay = 10;
     private const int MaxPlayPerDay = 5;
-    private const int MaxBathPerDay = 2;
+    // ★S-4（2026/8/29）：お風呂の上限は BathSceneManager.MaxBathPerDay に一元化した。
+    //   ここに同じ値を持つと、片方だけ直したときに Care と Bath で判定が食い違う。
+    //   ねんねのクールダウンを SleepSceneManager に寄せているのと同じ考え方。
 
     private PetStatus _status;
     private SaveData _save;
@@ -507,7 +509,7 @@ public class CareSceneManager : MonoBehaviour
     public void OnBtnBath()
     {
         ResetDailyCountIfNeeded();
-        if (_save.bathCountToday >= MaxBathPerDay) { ShowNotice($"今日のお風呂は{MaxBathPerDay}回までだよ！"); return; }
+        if (_save.bathCountToday >= BathSceneManager.MaxBathPerDay) { ShowNotice($"今日のお風呂は{BathSceneManager.MaxBathPerDay}回までだよ！"); return; }
         GoToScene("Bath");
     }
 

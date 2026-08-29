@@ -166,7 +166,8 @@ public class BathTouchEffect : MonoBehaviour
     /// なぜ外に出すのか:
     ///   体に付く泡（BubbleController）にも同じ色を使いたいため。
     ///   色の設定を2箇所に持つと必ずズレるので、Inspector の設定を正として
-    ///   ここから読み取る形にした（お風呂の MaxBathPerDay が2箇所にある問題の再発防止）。
+    ///   ここから読み取る形にした（お風呂の MaxBathPerDay が2箇所にあった問題の再発防止。
+    ///   MaxBathPerDay 自体は 2026/8/29 に BathSceneManager.MaxBathPerDay へ一元化済み）。
     ///
     /// 見つからない・未設定のときは null を返す。呼び出し側は「色を変えない」を選ぶこと。
     /// </summary>

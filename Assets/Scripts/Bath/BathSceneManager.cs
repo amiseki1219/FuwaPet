@@ -106,9 +106,15 @@ public class BathSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI effortText;
 
-    // 1日のお風呂上限。CareSceneManager.MaxBathPerDay と同じ値を持たせている。
-    // ※ 定数が2箇所にあるのは暫定。日付リセットの整理とあわせて後で一元化する
-    private const int MaxBathPerDay = 2;
+    /// <summary>
+    /// 1日のお風呂上限（requirements.md §5 お世話ボタン効果一覧）。Care 側もこれを参照する。
+    ///
+    /// ★S-4（2026/8/29）：以前は CareSceneManager にも同じ定数があり、2箇所に散っていた。
+    ///   片方だけ書き換えると「Care は入れると言うのに Bath が黙って弾く」状態になる
+    ///   （Bath 側は Debug.LogWarning だけで画面には何も出ないため、原因が分かりにくい）。
+    ///   ねんねの SleepSceneManager.CooldownHours と同じ形にそろえ、ここを唯一の出所にした。
+    /// </summary>
+    public const int MaxBathPerDay = 2;
 
     private string _selectedId = "normal";
     private Coroutine _coinCoroutine;

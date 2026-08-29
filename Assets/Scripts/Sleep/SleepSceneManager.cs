@@ -30,9 +30,10 @@ using Game.Core;
 ///   保存処理を1箇所にまとめられる。
 ///
 /// 【クールダウン判定をこのクラスに置いている理由】
-///   お風呂は MaxBathPerDay が CareSceneManager と BathSceneManager の2箇所にあり、
-///   requirements.md にも「一元化する」と課題が残っている。同じことを繰り返さないため、
+///   判定や定数を2箇所に持つと、片方だけ直したときに画面ごとに答えが食い違う。
 ///   ねんねはここ1箇所に置き、Care 側は SleepSceneManager.GetRemainingCooldown() を呼ぶ。
+///   ※お風呂の MaxBathPerDay も以前は2箇所にあったが、2026/8/29（S-4）に
+///     BathSceneManager.MaxBathPerDay へ一元化し、この形にそろえた。
 ///
 /// 【まだ入っていないもの】
 ///   ・「カチッ」の効果音   → プロジェクトに音源も再生の仕組みも無い。SE 基盤ができてから
