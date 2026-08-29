@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -117,8 +116,6 @@ public class BathSceneManager : MonoBehaviour
     public const int MaxBathPerDay = 2;
 
     private string _selectedId = "normal";
-    private Coroutine _coinCoroutine;
-    private Coroutine _lunaStoneCoroutine;
 
     private void Start()
     {
@@ -198,6 +195,14 @@ public class BathSceneManager : MonoBehaviour
         bathWashManager?.Initialize(_selectedId);
     }
 
+    /// <summary>
+    /// 画面上部の所持コイン・ルナストーンの表示を最新にする。
+    ///
+    /// ★2026/8/29：0.5秒かけて数字を動かすアニメーションを削除した。
+    ///   OnGoNext() は RefreshWallet() を呼んだ直後に SelectPanel を非アクティブにするため、
+    ///   このアニメーションは1フレームも表示されていなかった。
+    ///   Care 側の SetWallet() も同じ形にそろえてある。
+    /// </summary>
     private void RefreshWallet()
     {
         int coin = GameData.Instance != null ? GameData.Instance.Coin
@@ -205,31 +210,8 @@ public class BathSceneManager : MonoBehaviour
         int luna = GameData.Instance != null ? GameData.Instance.LunaStone
                  : SaveManager.Instance?.Data?.lunaStoneCount ?? 0;
 
-        if (coinText != null)
-        {
-            int from = int.TryParse(coinText.text, out int parsedCoin) ? parsedCoin : coin;
-            if (_coinCoroutine != null) StopCoroutine(_coinCoroutine);
-            _coinCoroutine = StartCoroutine(AnimateCoinText(coinText, from, coin, 0.5f));
-        }
-        if (lunaText != null)
-        {
-            int from = int.TryParse(lunaText.text, out int parsedLuna) ? parsedLuna : luna;
-            if (_lunaStoneCoroutine != null) StopCoroutine(_lunaStoneCoroutine);
-            _lunaStoneCoroutine = StartCoroutine(AnimateCoinText(lunaText, from, luna, 0.5f));
-        }
-    }
-
-    private IEnumerator AnimateCoinText(TextMeshProUGUI text, int fromValue, int toValue, float duration)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            text.text = Mathf.RoundToInt(Mathf.Lerp(fromValue, toValue, t)).ToString();
-            yield return null;
-        }
-        text.text = toValue.ToString();
+        if (coinText != null) coinText.text = coin.ToString();
+        if (lunaText != null) lunaText.text = luna.ToString();
     }
 
     private void SetRandomSpeechBubble()

@@ -103,8 +103,6 @@ public class CareSceneManager : MonoBehaviour
     /// 隠さないと、幕の裏で通常のコメントが出て、開いたあとに差し替わる二段階になってしまう。
     /// </summary>
     private bool _suppressSpeech;
-    private Coroutine _coinCoroutine;
-    private Coroutine _lunaStoneCoroutine;
     private Coroutine _typewriterCoroutine;
     private float _originalNoticeX;
 
@@ -283,33 +281,16 @@ public class CareSceneManager : MonoBehaviour
     /// </summary>
     private string ResolveCharName() => CharacterNames.ResolveDisplayName(_save);
 
+    /// <summary>
+    /// 画面上部の所持コイン・ルナストーンの表示を最新にする。
+    ///
+    /// ★2026/8/29：0.5秒かけて数字を動かすアニメーションを削除した（あみまるさんの指示）。
+    ///   Bath 側の RefreshWallet() も同じ形にそろえてある。
+    /// </summary>
     private void SetWallet()
     {
-        if (coinText != null)
-        {
-            int from = int.TryParse(coinText.text, out int parsed) ? parsed : GameData.Instance.Coin;
-            if (_coinCoroutine != null) StopCoroutine(_coinCoroutine);
-            _coinCoroutine = StartCoroutine(AnimateCoinText(coinText, from, GameData.Instance.Coin, 0.5f));
-        }
-        if (lunaStoneText != null)
-        {
-            int from = int.TryParse(lunaStoneText.text, out int parsed) ? parsed : GameData.Instance.LunaStone;
-            if (_lunaStoneCoroutine != null) StopCoroutine(_lunaStoneCoroutine);
-            _lunaStoneCoroutine = StartCoroutine(AnimateCoinText(lunaStoneText, from, GameData.Instance.LunaStone, 0.5f));
-        }
-    }
-
-    private IEnumerator AnimateCoinText(TextMeshProUGUI text, int fromValue, int toValue, float duration)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            text.text = Mathf.RoundToInt(Mathf.Lerp(fromValue, toValue, t)).ToString();
-            yield return null;
-        }
-        text.text = toValue.ToString();
+        if (coinText      != null) coinText.text      = GameData.Instance.Coin.ToString();
+        if (lunaStoneText != null) lunaStoneText.text = GameData.Instance.LunaStone.ToString();
     }
 
     private void SetTrustLevel()
