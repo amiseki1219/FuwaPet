@@ -1026,8 +1026,9 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     ///   （清潔値は GetCleanAmount()、信頼度は TrustPerBath、性格は _rainbowPickedIndex）
     ///   表示用に別計算を作らないこと。作ると必ずズレる。
     ///
-    /// ★未対応：清潔値が 100 で頭打ちになる場合、実際の増分は表示より少なくなる。
-    ///   これは S-2（清潔値の実増分を表示に使う）で直す。いまは回復量をそのまま出している。
+    /// ★清潔値が 100 で頭打ちになる場合でも、表示は「＋60pt」のまま出す。これで正しい。
+    ///   実際の増分（例：清潔95 → +5）を出すと損をした感じになり、
+    ///   「罪悪感を煽らない」方針に反するため（requirements.md §5「上限100の扱い」で確定・2026/8/28）。
     /// </summary>
     private void BuildResultTexts()
     {
