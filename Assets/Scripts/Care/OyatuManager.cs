@@ -60,6 +60,23 @@ public class OyatuManager : MonoBehaviour
     [SerializeField] private Color selectedTabColor;   // FFD3D1
     [SerializeField] private Color unselectedTabColor; // FCEBD6
 
+    [Tooltip("「※ノーマルおやつは1日6回まであげられるよ」の案内文（NaviText）。\n" +
+             "★ノーマルおやつのタブでだけ出す。マイおやつのタブでは隠す。\n" +
+             "  未結線でも動く（出しっぱなしになるだけ）")]
+    [SerializeField] private GameObject naviText;
+
+    [Header("ボタンの自動生成（U-14・2026/8/30）")]
+    [Tooltip("Assets/Prefabs/Oyatu/OyatuButton.prefab を結線する。\n" +
+             "★これを結線すると、ボタンは AllOyatu から自動で並べられる。\n" +
+             "  未結線のときは Scene に手で置いたボタンがそのまま使われる（従来どおり）")]
+    [SerializeField] private OyatuButtonView oyatuButtonPrefab;
+
+    [Tooltip("無償おやつのボタンを並べる先。ふつうは Free Oyatu Panel と同じでよい")]
+    [SerializeField] private Transform freeButtonRoot;
+
+    [Tooltip("有償おやつのボタンを並べる先。★Scroll View の Content を結線する")]
+    [SerializeField] private Transform paidButtonRoot;
+
     [Header("選択中おやつ表示（SelectOyatuPanel）")]
     [SerializeField] private RawImage selectOyatuImage;
     [SerializeField] private TextMeshProUGUI selectOyatuName;
@@ -106,6 +123,15 @@ public class OyatuManager : MonoBehaviour
 
     private OyatuData _selectedOyatu;
 
+    /// <summary>
+    /// 実行時に並べたボタン。id から引けるようにしておく。
+    /// ★Prefab が未結線のときは空のまま。その場合は Scene に手で置いたボタンが使われる。
+    /// </summary>
+    private readonly Dictionary<string, OyatuButtonView> _buttons = new();
+
+    /// <summary>ボタンを1度でも並べたか。二重に並べないための目印。</summary>
+    private bool _buttonsBuilt;
+
     // ── 初期化 ──────────────────────────────────────────────────────────────────
 
     private void Start()
@@ -113,6 +139,63 @@ public class OyatuManager : MonoBehaviour
         if (freeTabImage != null)   freeTabImage.color = selectedTabColor;
         if (paidTabImage != null)   paidTabImage.color = unselectedTabColor;
         if (closeButton  != null)   closeButton.onClick.AddListener(HidePanel);
+
+        BuildButtons();
+    }
+
+    /// <summary>
+    /// AllOyatu からおやつボタンを並べる。★U-14（2026/8/30）
+    ///
+    /// 【なぜコードで並べるのか】
+    ///   以前は9個のボタンを Scene に手で置き、名前と価格を手打ちしていた。
+    ///   そのため AllOyatu の価格を直しても画面は古いままという食い違いが起きていた。
+    ///   おやつを増やすときも「ボタンを作る／対応表に足す／AllOyatu に足す」の3箇所が必要だった。
+    ///   → AllOyatu だけを正とし、そこからボタンを作る。増やすときは AllOyatu に1行足すだけ。
+    ///
+    /// 【未結線でも壊さない】
+    ///   Prefab か並べ先が未結線なら、何もせずに戻る。
+    ///   Scene に手で置いたボタンがそのまま動く（従来どおり）。
+    ///   ★どちらで動いたかは必ず1行ログに出す。黙って挙動が変わらないようにするため。
+    /// </summary>
+    private void BuildButtons()
+    {
+        if (_buttonsBuilt) return;
+
+        if (oyatuButtonPrefab == null || freeButtonRoot == null || paidButtonRoot == null)
+        {
+            Debug.LogWarning("<color=#00E5FF>[決定]</color> [Care] おやつボタンは【Scene に手で置いたもの】を使います" +
+                             "（OyatuManager の Oyatu Button Prefab / Free Button Root / Paid Button Root のいずれかが未結線）", this);
+            return;
+        }
+
+        _buttonsBuilt = true;
+
+        // 並べ先に残っている古いボタンを消す。Scene の手置きぶんと二重に出さないため
+        ClearChildren(freeButtonRoot);
+        ClearChildren(paidButtonRoot);
+
+        var save = SaveManager.Instance?.Data;
+
+        foreach (var data in AllOyatu)
+        {
+            var root = data.isFree ? freeButtonRoot : paidButtonRoot;
+            var view = Instantiate(oyatuButtonPrefab, root);
+            view.Bind(data, OyatuInventory.Get(save, data.id), OnSelectOyatu);
+            _buttons[data.id] = view;
+        }
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Care] おやつボタンを {AllOyatu.Count} 個【自動生成】しました" +
+                  $"（無償 {AllOyatu.FindAll(o => o.isFree).Count} / 有償 {AllOyatu.FindAll(o => !o.isFree).Count}）", this);
+    }
+
+    private static void ClearChildren(Transform root)
+    {
+        for (int i = root.childCount - 1; i >= 0; i--)
+        {
+            var child = root.GetChild(i).gameObject;
+            if (Application.isPlaying) Destroy(child);
+            else                       DestroyImmediate(child);
+        }
     }
 
     // ── パネル開閉 ──────────────────────────────────────────────────────────────
@@ -122,6 +205,7 @@ public class OyatuManager : MonoBehaviour
         gameObject.SetActive(true);
         OnTabFree();
         OnSelectOyatu("niboshi");
+        RefreshStockTexts();   // ★U-9：所持数の表示を最新にする
     }
 
     public void HidePanel()
@@ -139,6 +223,9 @@ public class OyatuManager : MonoBehaviour
         if (paidOyatuPanel != null) paidOyatuPanel.SetActive(false);
         if (freeTabImage != null)   freeTabImage.color = selectedTabColor;
         if (paidTabImage != null)   paidTabImage.color = unselectedTabColor;
+
+        // ★1日6回の上限は【無償おやつだけ】の話なので、こちらのタブでだけ案内を出す
+        if (naviText != null) naviText.SetActive(true);
     }
 
     public void OnTabMy()
@@ -147,6 +234,9 @@ public class OyatuManager : MonoBehaviour
         if (paidOyatuPanel != null) paidOyatuPanel.SetActive(true);
         if (freeTabImage != null)   freeTabImage.color = unselectedTabColor;
         if (paidTabImage != null)   paidTabImage.color = selectedTabColor;
+
+        // ★マイおやつには1日6回の上限が無いので、案内文は隠す
+        if (naviText != null) naviText.SetActive(false);
     }
 
     // ── おやつ選択 ──────────────────────────────────────────────────────────────
@@ -156,6 +246,10 @@ public class OyatuManager : MonoBehaviour
         _selectedOyatu = AllOyatu.Find(o => o.id == oyatuId);
         if (_selectedOyatu == null) return;
 
+        // 自動生成したボタン
+        foreach (var kv in _buttons) kv.Value.SetSelected(kv.Key == oyatuId);
+
+        // Scene に手で置いたボタン（Prefab 未結線のときの経路）
         UpdateSelectBadgesInPanel(freeOyatuPanel, oyatuId);
         UpdateSelectBadgesInPanel(paidOyatuPanel, oyatuId);
 
@@ -196,21 +290,35 @@ public class OyatuManager : MonoBehaviour
             }
         }
 
-        // コイン / ルナストーン消費
-        if (_selectedOyatu.coinCost > 0)
+        // ★U-9（2026/8/30）：在庫があれば在庫を優先して使う。コインもルナも減らさない。
+        //   在庫はパズル（あそぶ画面）の報酬などで増える。
+        //   在庫が無いときだけ、今までどおり その場で買って食べる。
+        //   ★どちらの経路で消費したかは必ず1行ログに出す（黙って挙動が変わらないようにするため）。
+        bool usedFromStock = OyatuInventory.TryUse(save, _selectedOyatu.id);
+
+        if (usedFromStock)
         {
-            if (!GameData.Instance.UseCoin(_selectedOyatu.coinCost))
-            {
-                careManager?.ShowNotice("コインが足りないよ…！");
-                return;
-            }
+            Debug.Log($"<color=#00E5FF>[決定]</color> [Care] 在庫から {_selectedOyatu.displayName} を1つ使いました" +
+                      $"（残り {OyatuInventory.Get(save, _selectedOyatu.id)}個・コインは消費していません）");
         }
-        else if (_selectedOyatu.lunaCost > 0)
+        else
         {
-            if (!GameData.Instance.UseLunaStone(_selectedOyatu.lunaCost))
+            // コイン / ルナストーン消費
+            if (_selectedOyatu.coinCost > 0)
             {
-                careManager?.ShowNotice("ルナストーンが足りないよ…！");
-                return;
+                if (!GameData.Instance.UseCoin(_selectedOyatu.coinCost))
+                {
+                    careManager?.ShowNotice("コインが足りないよ…！");
+                    return;
+                }
+            }
+            else if (_selectedOyatu.lunaCost > 0)
+            {
+                if (!GameData.Instance.UseLunaStone(_selectedOyatu.lunaCost))
+                {
+                    careManager?.ShowNotice("ルナストーンが足りないよ…！");
+                    return;
+                }
             }
         }
 
@@ -251,6 +359,7 @@ public class OyatuManager : MonoBehaviour
 
         careManager?.ShowNotice($"{_selectedOyatu.displayName}をあげたよ！");
         careManager?.RefreshAll();
+        RefreshStockTexts();   // ★U-9：使ったぶんを表示へ反映する
         HidePanel();
         // ぽこは carePokoController、それ以外は careCharacterAction が担当する。
         // 担当でないほうは中で何もしないので、両方呼んでよい
@@ -274,6 +383,13 @@ public class OyatuManager : MonoBehaviour
         if (data.personalitySensitivity != 0) save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + data.personalitySensitivity, -100, 100);
     }
 
+    /// <summary>
+    /// そのおやつの所持数を返す。おやつパネルの在庫表示から呼ぶ想定。
+    /// ★実体は OyatuInventory。ここは画面から呼びやすくするための入口。
+    /// </summary>
+    public int GetStock(string oyatuId)
+        => OyatuInventory.Get(SaveManager.Instance?.Data, oyatuId);
+
     private void ResetFreeCountIfNewDay(SaveData save)
     {
         // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
@@ -282,6 +398,48 @@ public class OyatuManager : MonoBehaviour
         {
             save.freeOyatuCountToday = 0;
             save.lastFreeOyatuDate   = today;
+        }
+    }
+
+    /// <summary>
+    /// 各おやつボタンの「あと○こ」表示を更新する。★U-9（2026/8/30）
+    ///
+    /// 【結線が要らない理由】
+    ///   SelectBadge と同じで、ボタンの子から名前で探す方式にしてある。
+    ///   おやつが増えても ButtonNameToId に1行足すだけで済み、
+    ///   Inspector の結線を増やさなくてよい。
+    ///
+    /// 【置き場所】各ボタンの下の "Stock/StockText"（TextMeshProUGUI）。
+    ///   見つからないボタンは黙って飛ばす（まだ作っていない場合があるため）。
+    /// </summary>
+    private void RefreshStockTexts()
+    {
+        var save = SaveManager.Instance?.Data;
+        if (save == null) return;
+
+        // 自動生成したボタン
+        foreach (var kv in _buttons) kv.Value.SetStock(OyatuInventory.Get(save, kv.Key));
+
+        // Scene に手で置いたボタン（Prefab 未結線のときの経路）
+        RefreshStockTextsInPanel(freeOyatuPanel, save);
+        RefreshStockTextsInPanel(paidOyatuPanel, save);
+    }
+
+    private void RefreshStockTextsInPanel(GameObject panel, SaveData save)
+    {
+        if (panel == null) return;
+
+        foreach (var btn in panel.GetComponentsInChildren<Button>(true))
+        {
+            if (!ButtonNameToId.TryGetValue(btn.gameObject.name, out string id)) continue;
+
+            var t = btn.transform.Find("Stock/StockText");
+            if (t == null) continue;
+
+            var label = t.GetComponent<TextMeshProUGUI>();
+            if (label == null) continue;
+
+            label.text = $"あと{OyatuInventory.Get(save, id)}こ";
         }
     }
 

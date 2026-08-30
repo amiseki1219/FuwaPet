@@ -107,6 +107,13 @@ public class SaveData
     public int freeOyatuCountToday = 0;
     public string lastFreeOyatuDate = "";
 
+    // --- おやつの所持数（在庫）★2026/8/30 追加（U-9） ---
+    // パズルの報酬でもらったおやつを貯めておく。
+    // ★出し入れは Assets/Scripts/Common/OyatuInventory.cs を通すこと。
+    //   JsonUtility はコンストラクタを呼ばないので、このフィールドが無い古いセーブでは
+    //   null のまま読まれる。直接触ると NullReference になる。
+    public List<OyatuStock> oyatuStocks = new List<OyatuStock>();
+
     // --- お世話回数制限 ---
     public int bathCountToday = 0;
     public string lastBathDate = "";
@@ -162,4 +169,17 @@ public class SaveData
         tutorialQuestsClaimed = new bool[5];
         dailyQuestsClaimed    = new bool[4];
     }
+}
+
+/// <summary>
+/// おやつ1種類ぶんの所持数。★2026/8/30 追加（U-9）
+/// 種類ごとに int を並べるのではなくリストにしてあるのは、
+/// おやつが増えても SaveData の形を変えずに済むようにするため
+/// （roomFurniture / words / diaries と同じ作り）。
+/// </summary>
+[System.Serializable]
+public class OyatuStock
+{
+    public string id;    // OyatuManager の id と同じ文字列（"niboshi" など）
+    public int    count; // 所持数。0 は「持っていない」
 }
