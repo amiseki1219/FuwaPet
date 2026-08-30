@@ -44,6 +44,10 @@ public class RoomFurnitureApplier : MonoBehaviour
              "かべかざりのようにスロットが2つあるカテゴリは、行を2つ作って番号を 0 / 1 にする")]
     [SerializeField] private FurnitureSlotBinding[] slots = new FurnitureSlotBinding[0];
 
+    [Tooltip("時間帯でライトを切り替える担当。Room_Base の WindowViewController。\n" +
+             "★未結線でもシーン内から自動で探すので、ふつうは触らなくてよい")]
+    [SerializeField] private WindowViewController windowView;
+
     [Header("デバッグ")]
     [SerializeField] private bool verboseLog = true;
 
@@ -203,6 +207,9 @@ public class RoomFurnitureApplier : MonoBehaviour
             SetShadowVisible(key, false);   // ★家具が無いのに影だけ残らないようにする
             _currentIds[key] = entry.id;
 
+            // ★U-6：ナイトスタンドを外したら、時間帯ライトの参照も外す
+            if (category == FurnitureCategory.Nightstand) HandOverNightstandLight(null);
+
             if (verboseLog) Debug.Log($"[RoomEdit] {key} ← なし（{entry.id}）", this);
             return true;
         }
@@ -227,6 +234,11 @@ public class RoomFurnitureApplier : MonoBehaviour
         // true にすると「今のワールド座標を維持」してしまい、狙った位置に入らない。
         var instance = Instantiate(entry.prefab, slot, false);
         instance.name = entry.prefab.name; // "(Clone)" を消して Hierarchy を読みやすくする
+
+        // ★U-6（2026/8/30）：ナイトスタンドの中のライトを、時間帯の担当へ渡す。
+        //   ライトは家具 Prefab ごとに別実体なので、置き換えるたびに渡し直す必要がある。
+        if (category == FurnitureCategory.Nightstand)
+            HandOverNightstandLight(instance.GetComponentInChildren<Light>(true));
 
         SetShadowVisible(key, true);   // ★「なし」から戻したときに影も復活させる
 
@@ -261,6 +273,38 @@ public class RoomFurnitureApplier : MonoBehaviour
     }
 
     /// <summary>スロットの子を全部消す。</summary>
+    /// <summary>
+    /// ナイトスタンドの中のライトを WindowViewController へ渡す。
+    ///
+    /// 【なぜ Nightstand だけか】2026/8/30 決定
+    ///   いまライトを持つ家具 Prefab は Nightstand の6つだけ（Default / Poko / Eru / Koko / Paru / Piyoko）。
+    ///   カテゴリを問わず拾う作りにすると、将来 RoomLight などにライトを足したとき、
+    ///   後から置いたほうで上書きされて原因が分からなくなる。対象を絞っておく。
+    ///
+    /// 【どの経路で動いたかを必ず1行ログに出す】
+    ///   黙って何もしない状態を作らないため。
+    /// </summary>
+    private void HandOverNightstandLight(Light light)
+    {
+        if (windowView == null)
+        {
+            // Inspector 未結線でも動くように、シーン内から1回だけ探す
+            windowView = FindFirstObjectByType<WindowViewController>();
+            if (windowView == null)
+            {
+                Debug.LogWarning("[RoomEdit] WindowViewController がシーンに見つからないため、" +
+                                 "ナイトスタンドのライトは時間帯で切り替わりません", this);
+                return;
+            }
+        }
+
+        windowView.SetBookShelfLight(light);
+
+        if (verboseLog)
+            Debug.Log($"<color=#00E5FF>[決定]</color> [RoomEdit] ナイトスタンドのライトを時間帯の担当へ渡しました" +
+                      $"（{(light != null ? light.name : "なし＝家具を外した")}）", this);
+    }
+
     private void ClearSlot(Transform slot)
     {
         for (int i = slot.childCount - 1; i >= 0; i--)

@@ -139,6 +139,38 @@ public class WindowViewController : MonoBehaviour
         SetTimeOfDay(newTime);
     }
 
+    /// <summary>
+    /// いまの時間帯を、もう一度いまのライトへ適用し直す。
+    /// 家具を置き換えたあとに呼ぶ。
+    /// </summary>
+    public void ReapplyCurrentTimeOfDay()
+    {
+        if ((int)_currentTimeOfDay < 0) { CheckAndApplyTimeOfDay(); return; }
+        SetTimeOfDay(_currentTimeOfDay);
+    }
+
+    /// <summary>
+    /// ナイトスタンドのライト（Prefab 内の BookShelfLight）を差し替える。
+    ///
+    /// 【なぜ必要か】2026/8/30（U-6）
+    ///   ライトは家具の Prefab の中にあり、ナイトスタンドの種類ごとに別々の実体を持つ。
+    ///   もようがえで家具を置き換えると Instantiate され直すため、
+    ///   Inspector で1個を結線しておく方式では追従できない（結線した実体は消える）。
+    ///   そこで RoomFurnitureApplier が、家具を置いた直後にここへ渡す。
+    ///
+    /// 【時間帯の判定はここ1箇所のまま】
+    ///   受け取った直後に、いまの時間帯をそのライトへ適用する。
+    ///   呼び出し側は「昼か夜か」を知らなくてよい（CLAUDE.md §18）。
+    ///
+    /// 家具を外したときは null が渡される。
+    /// </summary>
+    public void SetBookShelfLight(Light light)
+    {
+        bookShelfLight = light;
+        if (light == null) return;
+        ReapplyCurrentTimeOfDay();
+    }
+
     public void SetTimeOfDay(TimeOfDay time)
     {
         TimeOfDaySetting setting = time switch
