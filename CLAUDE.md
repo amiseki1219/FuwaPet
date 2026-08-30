@@ -1335,6 +1335,80 @@ Care のトースト「清潔」／お風呂のリザルト「きれい度」／
 
 ---
 
+## §23. お風呂の完了演出の設計（2026/8/29 確定）
+
+`Assets/Scripts/Bath/BathFinishEffect.cs`（891行）の設計方針。
+泡を流し終わったあとに出す「虹・降る星・キラキラ」を担当する。
+
+### ① 位置は「画面座標」で決めて、ワールド座標へ変換する
+
+```
+カメラからの距離を決める → 画面座標（0〜1）で位置を決める
+  → cam.ScreenToWorldPoint でワールド座標に直す → EmitParams で1粒ずつ置く
+```
+
+**ParticleSystem の Shape と Velocity over Lifetime は使わない。**
+
+最初はその2つに任せていたが、「キラキラがキャラの一部にしか出ない」「流れ星がキャラの手前に出る」
+「ほとんど動かない」という結果になった。**Scene 側の設定に結果が左右され、コード側から予測できなかったため。**
+`BathDropletRain`（雫）と同じ方式にそろえてある。
+
+#### カメラからの距離の目安（Bath.unity・2026/8/29 実測）
+
+| 対象 | 距離 | 意味 |
+|---|---|---|
+| キャラ | **12.57** | 基準 |
+| キラキラ | 11.5 | 12.57 より小さい＝キャラの手前 |
+| 降る星 | 13.5 | 12.57 より大きい＝キャラの後ろ |
+
+★カメラは Y 方向に 143.82° 回っている。「画面の右へ動かす」つもりでワールドの +X を足すと
+まったく違う方向へ動く。`cam.transform.right` を使うこと。
+
+### ② PrepareForManualEmit() が、動きに関わるモジュールを実行時に切る
+
+位置も速度も `EmitParams` で渡しているのに、流れ星が指定した速さの 1/4 でしか進まなかった。
+原因は、複製元の ParticleSystem に残っていた `Limit Velocity over Lifetime` の減衰だった。
+
+切るもの:
+
+```
+Shape / Velocity over Lifetime / Limit Velocity over Lifetime
+Force over Lifetime / Inherit Velocity / Noise
+＋ Gravity Modifier を 0、Simulation Speed を 1 に
+```
+
+**★切ったものは必ず `[決定]` ログに出す。黙って直さない。**
+Inspector で1つずつ消してもらう方法は、見落としが出るうえに
+「どれが効いているか」を画面から判断できないため。
+
+### ③ Size over Lifetime と Color over Lifetime は切らない
+
+見た目の演出であり、**ユーザーが Inspector で設定する担当領域**のため。
+ON だった場合は、参考としてログに出すだけにする。
+
+### 量の計算式
+
+```
+キラキラの同時数 ＝ Sparkle Rate Per Second × Sparkle Lifetime × 種類数
+降る星の同時数   ＝ Falling Star Fall Duration ÷ Falling Star Interval
+                    （ただし Max Stars On Screen が上限）
+```
+
+★`Rate` と `Burst` は「1種類あたり」。Sparkle を5種類にすると5倍出る。
+
+### 関連する地雷
+
+- **`Color` 配列の Size を増やすと (0,0,0,0)＝透明 が入る。** その色が選ばれた粒は1つも見えないが、
+  画面には何も出ないため原因が分からない。→ `WarnIfTransparent()` が警告を出す
+- **`Max Particles` を超えた粒は、警告もエラーも無く捨てられる。** 量の調整は `Rate` で行い、
+  `Max Particles` は保険として大きめに置く
+- **Overlay の Canvas の子に ParticleSystem を置かない。** ワールド座標が画面外へ飛ぶ。
+  `FinishEffect` はシーン直下に置いている
+- **Overlay の Canvas は必ず3Dキャラの手前に描かれる。** 「キャラの後ろに虹」は
+  World Space Canvas で実現している
+
+---
+
 ## セキュリティ・プライバシー
 
 
@@ -1604,5 +1678,6 @@ A: v1.0は **2フレーム** で確定。リッチ化は v1.1 以降で検討し
 | 2026/8/4  | レインボーせっけんの性格変化を「全性格+1」→「5つのうちランダムに1つ+1・マイナスなし」に変更 |
 | 2026/8/22 | ガチャを完全に削除（`GatyaBtn` / `Gacha.unity` / `GoToGacha()` / `OnBtnGacha()`）。ひろば(SNS)も同様に削除し、Main 下部ナビは4つ（コレクション/もようがえ/ショップ/クエスト）になった。付録F の「ひろばの枠へガチャを移設・CellSize.x を 140 に」という記述は、ガチャ廃止の決定と矛盾する誤りだったため削除。`BadgeManager` の `gachaBadge` は実際には「もようがえ」ボタンの Badge を指していたため `furnitureBadge` に改名。`SaveData.lastGachaVersion` は互換性のため残した（未使用）|
 | 2026/8/28 | パラメータの表示名を統一（§22追加）：内部名と画面表示名を分離し、対応表を `docs/requirements.md` §5 に新設。清潔→キレイ／活動性→おてんば／甘えん坊度→甘えん坊／勤勉さ→しっかりもの／素直さ→素直／感受性→優しさ。信頼度は例外で変更なし。「機嫌」を廃止し「気分」に統一。画面に出す増減はすべて `＋〇〇pt` に統一（数値がない「全回復」は除く）。表示名は `Assets/Scripts/Common/ParamNames.cs` へ集約。SaveData のフィールド名・コード内コメント・Debug.Log・過去の更新履歴は変更していない |
+| 2026/8/30 | お風呂の完了演出の設計を追記（§23）：位置は画面座標で決めてワールドへ変換する方式（Shape / Velocity over Lifetime に任せない理由と、カメラからの距離の実測値）・PrepareForManualEmit() が動きに関わるモジュールを実行時に切る理由と切ったものを [決定] ログに出す約束・Size/Color over Lifetime は切らない（Inspector 側の担当領域）・量の計算式・Color 配列のアルファ0 と Max Particles の無言切り捨ての地雷 |
 
 
