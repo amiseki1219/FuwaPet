@@ -208,13 +208,12 @@ public class QuestManager : MonoBehaviour
         return true;
     }
 
-    // JST = UTC+9、3:00 AM リセット（バックエンド実装まではローカル判定）
-    public string GetCurrentQuestDay()
-    {
-        DateTime jst = DateTime.UtcNow.AddHours(9);
-        if (jst.Hour < 3) jst = jst.AddDays(-1);
-        return jst.ToString("yyyy-MM-dd");
-    }
+    // JST 3:00 リセット。★S-7（2026/8/30）で計算を GameDate へ移した。
+    //   ここが唯一 JST 基準で、他（回数の上限）は端末ローカル 0:00 だったため、
+    //   毎日 0:00〜3:00 の3時間だけクエストと上限の「今日」が食い違っていた。
+    //   ★このメソッドは public なので、呼び出し側の互換のために残してある（AGENTS.md）。
+    //     中身は GameDate.Today() に委譲するだけで、挙動は変えていない。
+    public string GetCurrentQuestDay() => GameDate.Today();
 
     // ─── UI向け状態取得 ──────────────────────────────────────
 

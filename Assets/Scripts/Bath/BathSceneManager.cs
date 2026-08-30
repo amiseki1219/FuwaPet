@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;   // FormerlySerializedAs（ichigoButton → ohisamaButton の結線引き継ぎ）
 
 public class BathSceneManager : MonoBehaviour
 {
@@ -26,16 +26,20 @@ public class BathSceneManager : MonoBehaviour
             displayName = "せっけん",
             imageName = "NomalImage",
             description = "さっぱりやさしい泡立ち。\n毎日使えるシンプルなせっけん",
-            effectText = "清潔 +40",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(40)}",
             costCoin = 0, costLuna = 0
         },
         new ShampooData
         {
-            id = "ichigo",
-            displayName = "いちごシャンプー",
-            imageName = "IchigoImage",
-            description = "ふんわり甘くてかわいい香り。\n使うたびに甘えん坊になっちゃう？",
-            effectText = "清潔 +60\n甘えん坊度 +2",
+            // ★2026/8/28：内部IDを "ichigo" から "ohisama" へ改名した。
+            //   Bath.unity の BathTouchEffect.shampooSets[].shampooId が先に "ohisama" になっていて
+            //   ID が食い違い、飾りパーティクルが せっけん の設定へ黙って落ちていたため、コード側をそろえた。
+            //   シャンプーIDはセーブデータに保存していないので、既存セーブへの影響はない。
+            id = "ohisama",
+            displayName = "おひさまシャンプー",
+            imageName = "OhisamaImage",
+            description = "おひさまにあたったようないい香り。\n使うたびに甘えん坊になっちゃう？",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n{ParamNames.Dependency} {ParamNames.Pt(2)}",
             costCoin = 0, costLuna = 500
         },
         new ShampooData
@@ -44,7 +48,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "ほしぞらシャンプー",
             imageName = "HoshiImage",
             description = "星空みたいな神秘的な香り。\nコツコツがんばる気持ちが芽生えるかも",
-            effectText = "清潔 +60\n勤勉さ +2",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n{ParamNames.Diligence} {ParamNames.Pt(2)}",
             costCoin = 0, costLuna = 500
         },
         new ShampooData
@@ -53,7 +57,7 @@ public class BathSceneManager : MonoBehaviour
             displayName = "レインボーせっけん",
             imageName = "RainbowImage",
             description = "7色の泡があふれだす！\nどんな変化が起きるかはおたのしみ♪",
-            effectText = "清潔 +60\n性格のどれかが少しアップ",
+            effectText = $"{ParamNames.Clean} {ParamNames.Pt(60)}\n性格のどれかが少しアップ",
             costCoin = 100, costLuna = 0
         },
     };
@@ -87,7 +91,11 @@ public class BathSceneManager : MonoBehaviour
 
     [Header("シャンプーボタン")]
     [SerializeField] private Button nomalButton;
-    [SerializeField] private Button ichigoButton;
+    // ★2026/8/28：ichigoButton から改名。
+    //   FormerlySerializedAs を付けてあるので、Bath.unity 側の結線（OhisamaButton）は
+    //   Unity が自動で引き継ぐ。Inspector での再結線は不要。
+    [FormerlySerializedAs("ichigoButton")]
+    [SerializeField] private Button ohisamaButton;
     [SerializeField] private Button hoshizoraButton;
     [SerializeField] private Button rainbowButton;
 
@@ -97,13 +105,17 @@ public class BathSceneManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI effortText;
 
-    // 1日のお風呂上限。CareSceneManager.MaxBathPerDay と同じ値を持たせている。
-    // ※ 定数が2箇所にあるのは暫定。日付リセットの整理とあわせて後で一元化する
-    private const int MaxBathPerDay = 2;
+    /// <summary>
+    /// 1日のお風呂上限（requirements.md §5 お世話ボタン効果一覧）。Care 側もこれを参照する。
+    ///
+    /// ★S-4（2026/8/29）：以前は CareSceneManager にも同じ定数があり、2箇所に散っていた。
+    ///   片方だけ書き換えると「Care は入れると言うのに Bath が黙って弾く」状態になる
+    ///   （Bath 側は Debug.LogWarning だけで画面には何も出ないため、原因が分かりにくい）。
+    ///   ねんねの SleepSceneManager.CooldownHours と同じ形にそろえ、ここを唯一の出所にした。
+    /// </summary>
+    public const int MaxBathPerDay = 2;
 
     private string _selectedId = "normal";
-    private Coroutine _coinCoroutine;
-    private Coroutine _lunaStoneCoroutine;
 
     private void Start()
     {
@@ -113,6 +125,13 @@ public class BathSceneManager : MonoBehaviour
         OnSelectShampoo("normal");
         if (goNextButton != null) goNextButton.onClick.AddListener(OnGoNext);
         RefreshWallet();
+
+        // ★A2.7：お風呂に入った時点の表情は、状態パラメータに関係なく必ず Normal にする。
+        //   （おなかが減っていて Sad が出ている状態でお風呂に来ても、Normal から始める）
+        //   実処理は BathWashManager 側に置いている。洗い中の表情変化と同じ場所にまとめ、
+        //   表情を触る箇所が2つに分かれないようにするため。
+        //   ★WashPanel は非アクティブだが、コンポーネントのメソッド呼び出しは問題なく動く。
+        bathWashManager?.SetFaceNormalOnEnter();
     }
 
     private void OnGoNext()
@@ -128,7 +147,8 @@ public class BathSceneManager : MonoBehaviour
         var saveForLimit = SaveManager.Instance?.Data;
         if (saveForLimit != null)
         {
-            string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+            // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+            string today = GameDate.Today();
             int bathToday = (saveForLimit.lastBathDate == today) ? saveForLimit.bathCountToday : 0;
             if (bathToday >= MaxBathPerDay)
             {
@@ -176,6 +196,14 @@ public class BathSceneManager : MonoBehaviour
         bathWashManager?.Initialize(_selectedId);
     }
 
+    /// <summary>
+    /// 画面上部の所持コイン・ルナストーンの表示を最新にする。
+    ///
+    /// ★2026/8/29：0.5秒かけて数字を動かすアニメーションを削除した。
+    ///   OnGoNext() は RefreshWallet() を呼んだ直後に SelectPanel を非アクティブにするため、
+    ///   このアニメーションは1フレームも表示されていなかった。
+    ///   Care 側の SetWallet() も同じ形にそろえてある。
+    /// </summary>
     private void RefreshWallet()
     {
         int coin = GameData.Instance != null ? GameData.Instance.Coin
@@ -183,31 +211,8 @@ public class BathSceneManager : MonoBehaviour
         int luna = GameData.Instance != null ? GameData.Instance.LunaStone
                  : SaveManager.Instance?.Data?.lunaStoneCount ?? 0;
 
-        if (coinText != null)
-        {
-            int from = int.TryParse(coinText.text, out int parsedCoin) ? parsedCoin : coin;
-            if (_coinCoroutine != null) StopCoroutine(_coinCoroutine);
-            _coinCoroutine = StartCoroutine(AnimateCoinText(coinText, from, coin, 0.5f));
-        }
-        if (lunaText != null)
-        {
-            int from = int.TryParse(lunaText.text, out int parsedLuna) ? parsedLuna : luna;
-            if (_lunaStoneCoroutine != null) StopCoroutine(_lunaStoneCoroutine);
-            _lunaStoneCoroutine = StartCoroutine(AnimateCoinText(lunaText, from, luna, 0.5f));
-        }
-    }
-
-    private IEnumerator AnimateCoinText(TextMeshProUGUI text, int fromValue, int toValue, float duration)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            text.text = Mathf.RoundToInt(Mathf.Lerp(fromValue, toValue, t)).ToString();
-            yield return null;
-        }
-        text.text = toValue.ToString();
+        if (coinText != null) coinText.text = coin.ToString();
+        if (lunaText != null) lunaText.text = luna.ToString();
     }
 
     private void SetRandomSpeechBubble()
@@ -219,7 +224,7 @@ public class BathSceneManager : MonoBehaviour
     private void SetupButtonListeners()
     {
         if (nomalButton     != null) nomalButton.onClick.AddListener(()     => OnSelectShampoo("normal"));
-        if (ichigoButton    != null) ichigoButton.onClick.AddListener(()    => OnSelectShampoo("ichigo"));
+        if (ohisamaButton   != null) ohisamaButton.onClick.AddListener(()   => OnSelectShampoo("ohisama"));
         if (hoshizoraButton != null) hoshizoraButton.onClick.AddListener(() => OnSelectShampoo("hoshizora"));
         if (rainbowButton   != null) rainbowButton.onClick.AddListener(()   => OnSelectShampoo("rainbow"));
     }
@@ -231,7 +236,7 @@ public class BathSceneManager : MonoBehaviour
     private void ApplyPriceLabels()
     {
         ApplyPriceLabel(nomalButton,     "normal");
-        ApplyPriceLabel(ichigoButton,    "ichigo");
+        ApplyPriceLabel(ohisamaButton,   "ohisama");
         ApplyPriceLabel(hoshizoraButton, "hoshizora");
         ApplyPriceLabel(rainbowButton,   "rainbow");
     }
@@ -280,7 +285,7 @@ public class BathSceneManager : MonoBehaviour
     private void UpdateSelectFrames(string shampooId)
     {
         UpdateFrame(nomalButton,     "normal",     shampooId);
-        UpdateFrame(ichigoButton,    "ichigo",     shampooId);
+        UpdateFrame(ohisamaButton,   "ohisama",    shampooId);
         UpdateFrame(hoshizoraButton, "hoshizora",  shampooId);
         UpdateFrame(rainbowButton,   "rainbow",    shampooId);
     }

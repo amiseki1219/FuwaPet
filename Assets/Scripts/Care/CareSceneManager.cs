@@ -85,7 +85,9 @@ public class CareSceneManager : MonoBehaviour
 
     private const int MaxNadePerDay = 10;
     private const int MaxPlayPerDay = 5;
-    private const int MaxBathPerDay = 2;
+    // ★S-4（2026/8/29）：お風呂の上限は BathSceneManager.MaxBathPerDay に一元化した。
+    //   ここに同じ値を持つと、片方だけ直したときに Care と Bath で判定が食い違う。
+    //   ねんねのクールダウンを SleepSceneManager に寄せているのと同じ考え方。
 
     private PetStatus _status;
     private SaveData _save;
@@ -101,8 +103,6 @@ public class CareSceneManager : MonoBehaviour
     /// 隠さないと、幕の裏で通常のコメントが出て、開いたあとに差し替わる二段階になってしまう。
     /// </summary>
     private bool _suppressSpeech;
-    private Coroutine _coinCoroutine;
-    private Coroutine _lunaStoneCoroutine;
     private Coroutine _typewriterCoroutine;
     private float _originalNoticeX;
 
@@ -129,16 +129,12 @@ public class CareSceneManager : MonoBehaviour
     {
         // 効果の有無に関わらず、ねんねから戻ったら演出は出す。
         // SleepJustCompleted はクールダウン中に立たないので、こちらを見る
-        Debug.Log($"[Care][確認用] Awake SleepReturning={SleepSceneManager.SleepReturning} " +
-                  $"SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
-                  $"irisReveal={(irisReveal != null ? irisReveal.name : "★未結線")}");
-
         if (SleepSceneManager.SleepReturning)
         {
             SleepSceneManager.SleepReturning = false;
             _suppressSpeech = true;   // 幕が開くまで吹き出しを出さない
             if (irisReveal != null) irisReveal.PlayReveal();
-            else Debug.LogWarning("[Care][確認用] irisReveal が未結線なのでアイリス演出は出ません");
+            else Debug.LogWarning("[Care] irisReveal が未結線なのでアイリス演出は出ません");
         }
     }
 
@@ -185,8 +181,8 @@ public class CareSceneManager : MonoBehaviour
         {
             BathWashManager.BathJustCompleted = false;
             int cleanAmount = Mathf.RoundToInt(BathWashManager.BathJustCleanAmount);
-            ShowNotice($"お風呂完了！清潔 +{cleanAmount}");
-            ShowCleanPopup($"+{cleanAmount}");
+            ShowNotice($"お風呂完了！{ParamNames.Clean} {ParamNames.Pt(cleanAmount)}");
+            ShowCleanPopup(ParamNames.Pt(cleanAmount));
             PlayBathCompleteEffect();
         }
 
@@ -195,9 +191,6 @@ public class CareSceneManager : MonoBehaviour
         // ただしお風呂と違って、すぐには出さない。
         // 戻った直後は画面が幕で覆われていて、通知も吹き出しも見えないため、
         // アイリスが開ききってから出す。
-        Debug.Log($"[Care][確認用] Start SleepJustCompleted={SleepSceneManager.SleepJustCompleted} " +
-                  $"energyAmount={SleepSceneManager.SleepJustEnergyAmount}");
-
         if (SleepSceneManager.SleepJustCompleted)
         {
             SleepSceneManager.SleepJustCompleted = false;
@@ -206,7 +199,7 @@ public class CareSceneManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[Care][確認用] SleepJustCompleted が false なので、ねんねの結果表示は出しません");
+            Debug.Log("[Care] SleepJustCompleted が false なので、ねんねの結果表示は出しません");
         }
     }
 
@@ -220,11 +213,10 @@ public class CareSceneManager : MonoBehaviour
             ? sleepResultDelay
             : (irisReveal != null ? irisReveal.TotalDuration : 0f);
 
-        Debug.Log($"[Care][確認用] ねんねの結果表示を {wait} 秒後に出します");
         if (wait > 0f) yield return new WaitForSeconds(wait);
 
-        ShowNotice($"ねんね完了！元気 +{energyAmount}");
-        energyPopup?.Show($"+{energyAmount}");
+        ShowNotice($"ねんね完了！{ParamNames.Energy} {ParamNames.Pt(energyAmount)}");
+        energyPopup?.Show(ParamNames.Pt(energyAmount));
 
         // ここで初めて吹き出しを出す。
         // 機嫌などの通常の判定は SetSpeechBubble() の中で今までどおり動く
@@ -232,7 +224,7 @@ public class CareSceneManager : MonoBehaviour
         _overrideSpeech = PickWakeUpMessage();
         SetSpeechBubble();
 
-        Debug.Log($"<color=#00E5FF>[決定]</color> [Care][確認用] ねんねの結果を表示しました 元気+{energyAmount} " +
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Care] ねんねの結果を表示しました 元気+{energyAmount} " +
                   $"notice={(noticePanelRect != null ? "OK" : "★未結線")} " +
                   $"energyPopup={(energyPopup != null ? "OK" : "★未結線")} " +
                   $"吹き出し={(speechBubbleText != null ? "OK" : "★未結線")}");
@@ -274,53 +266,23 @@ public class CareSceneManager : MonoBehaviour
         SetSpeechBubble();
     }
 
-    private string ResolveCharName()
-    {
-        if (!string.IsNullOrEmpty(_save.petNickname))
-            return _save.petNickname;
+    /// <summary>
+    /// 画面に出すキャラ名を返す。
+    /// ★2026/8/28：キャラID→日本語名の対応表が4箇所に散っていたため、
+    ///   CharacterNames へ集約した。優先順位（ニックネーム → 日本語名 → petName）は変えていない。
+    /// </summary>
+    private string ResolveCharName() => CharacterNames.ResolveDisplayName(_save);
 
-        string charId = !string.IsNullOrEmpty(_save.selectedCharacterId)
-            ? _save.selectedCharacterId
-            : _save.characterId;
-
-        return charId switch
-        {
-            "poko" => "ぽこ",
-            "eru"  => "える",
-            "koko" => "ここ",
-            "paru" => "ぱる",
-            "piyoko" => "ぴよこ",
-            _      => _save.petName ?? ""
-        };
-    }
-
+    /// <summary>
+    /// 画面上部の所持コイン・ルナストーンの表示を最新にする。
+    ///
+    /// ★2026/8/29：0.5秒かけて数字を動かすアニメーションを削除した（あみまるさんの指示）。
+    ///   Bath 側の RefreshWallet() も同じ形にそろえてある。
+    /// </summary>
     private void SetWallet()
     {
-        if (coinText != null)
-        {
-            int from = int.TryParse(coinText.text, out int parsed) ? parsed : GameData.Instance.Coin;
-            if (_coinCoroutine != null) StopCoroutine(_coinCoroutine);
-            _coinCoroutine = StartCoroutine(AnimateCoinText(coinText, from, GameData.Instance.Coin, 0.5f));
-        }
-        if (lunaStoneText != null)
-        {
-            int from = int.TryParse(lunaStoneText.text, out int parsed) ? parsed : GameData.Instance.LunaStone;
-            if (_lunaStoneCoroutine != null) StopCoroutine(_lunaStoneCoroutine);
-            _lunaStoneCoroutine = StartCoroutine(AnimateCoinText(lunaStoneText, from, GameData.Instance.LunaStone, 0.5f));
-        }
-    }
-
-    private IEnumerator AnimateCoinText(TextMeshProUGUI text, int fromValue, int toValue, float duration)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            text.text = Mathf.RoundToInt(Mathf.Lerp(fromValue, toValue, t)).ToString();
-            yield return null;
-        }
-        text.text = toValue.ToString();
+        if (coinText      != null) coinText.text      = GameData.Instance.Coin.ToString();
+        if (lunaStoneText != null) lunaStoneText.text = GameData.Instance.LunaStone.ToString();
     }
 
     private void SetTrustLevel()
@@ -457,7 +419,13 @@ public class CareSceneManager : MonoBehaviour
                                        speech = "今日も元気だよ！";
         else                           speech = "一緒にいられて嬉しいな";
 
-        Debug.Log($"[Care][確認用] 吹き出し「{speech}」 root={(speechBubbleRoot != null ? "OK" : "★未結線")} text={(speechBubbleText != null ? "OK" : "★未結線")}");
+        // ★D-2（2026/8/29）：毎回「root=OK text=OK」と出していたログをやめ、
+        //   結線が抜けているときだけ知らせる形にした。正常時は何も出さない。
+        if (speechBubbleRoot == null || speechBubbleText == null)
+        {
+            Debug.LogWarning($"[Care] 吹き出しの結線が足りません root={(speechBubbleRoot != null ? "OK" : "★未結線")} " +
+                             $"text={(speechBubbleText != null ? "OK" : "★未結線")}");
+        }
 
         if (speechBubbleRoot != null) speechBubbleRoot.SetActive(true);
         if (speechBubbleText != null)
@@ -520,7 +488,7 @@ public class CareSceneManager : MonoBehaviour
     public void OnBtnBath()
     {
         ResetDailyCountIfNeeded();
-        if (_save.bathCountToday >= MaxBathPerDay) { ShowNotice($"今日のお風呂は{MaxBathPerDay}回までだよ！"); return; }
+        if (_save.bathCountToday >= BathSceneManager.MaxBathPerDay) { ShowNotice($"今日のお風呂は{BathSceneManager.MaxBathPerDay}回までだよ！"); return; }
         GoToScene("Bath");
     }
 
@@ -583,7 +551,8 @@ public class CareSceneManager : MonoBehaviour
 
     private void ResetDailyCountIfNeeded()
     {
-        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+        string today = GameDate.Today();
         if (_save.lastBathDate != today) { _save.bathCountToday = 0; _save.lastBathDate = today; }
         if (_save.lastNadeDate != today) { _save.nadeCountToday = 0; _save.lastNadeDate = today; }
         if (_save.lastPlayDate != today) { _save.playCountToday = 0; _save.lastPlayDate = today; }

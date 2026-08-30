@@ -15,14 +15,8 @@ public class CharaNicknamePanel : MonoBehaviour
     [SerializeField] private TMP_Text nicknameWarningText;     // 警告（初期非表示）
 
     // キャラID → 日本語デフォルト名
-    private static readonly Dictionary<string, string> DefaultNames = new Dictionary<string, string>
-    {
-        { "poko", "ぽこ" },
-        { "eru", "える" },
-        { "koko", "ここ" },
-        { "paru", "ぱる" },
-        { "piyoko", "ぴよこ" },
-    };
+    // ★2026/8/28：キャラID→日本語名の対応表は CharacterNames へ集約した。
+    //   ここにあった DefaultNames は削除。見つからないときの "ぽこ" は呼び出し側で渡している。
 
     // キャラID → Select画像名（Resources/TutorialUI/ 配下）
     private static readonly Dictionary<string, string> SelectImageNames = new Dictionary<string, string>
@@ -171,7 +165,7 @@ public class CharaNicknamePanel : MonoBehaviour
         {
             // デフォルト名を採用
             string id = ResolveSelectedCharacterId();
-            savedValue = DefaultNames.TryGetValue(id, out var dn) ? dn : "ぽこ";
+            savedValue = CharacterNames.GetDefaultName(id, "ぽこ");
         }
         else
         {

@@ -17,11 +17,12 @@ public class OyatuData
     public int energyAmount;          // 元気回復量
     public bool fullRecovery;         // 全パラ回復フラグ
     public int trustAmount;           // 信頼度加算
-    public int personalityActivity;   // やんちゃ変化
-    public int personalityDependency; // あまえんぼ変化
-    public int personalityHonesty;    // やさしさ変化
-    public int personalityDiligence;  // おとなしさ変化
-    public int personalitySensitivity;// たべすき変化
+    // ★内部名が正（CLAUDE.md §22）。括弧内は画面に出す表示名（ParamNames.cs）。
+    public int personalityActivity;   // 活動性（表示名：おてんば）
+    public int personalityDependency; // 甘えん坊度（表示名：甘えん坊）
+    public int personalityHonesty;    // 素直さ（表示名：素直）
+    public int personalityDiligence;  // 勤勉さ（表示名：しっかりもの）
+    public int personalitySensitivity;// 感受性（表示名：優しさ）
     public bool isFree;               // 無償おやつフラグ
 }
 
@@ -32,17 +33,21 @@ public class OyatuManager : MonoBehaviour
     private static readonly List<OyatuData> AllOyatu = new List<OyatuData>
     {
         // ── 無償おやつ ──────────────────────────────────────────────────────────────
-        new OyatuData { id = "niboshi",         displayName = "にぼし",            imageName = "にぼし",        coinCost = 15,  hungerAmount = 10, trustAmount = 3,                                                   isFree = true  },
-        new OyatuData { id = "biscuit",         displayName = "ビスケット",        imageName = "ビスケット",    coinCost = 20,  hungerAmount = 15, trustAmount = 3,                                                   isFree = true  },
-        new OyatuData { id = "carrot",          displayName = "にんじんスティック", imageName = "にんじん",      coinCost = 15,  energyAmount = 10, trustAmount = 3,                                                   isFree = true  },
+        // ★価格は requirements.md §5。3種とも 10🪙 に統一（2026/5/17 決定 → 2026/8/30 にコードへ反映）。
+        //   §7 の「無償おやつ 10🪙×6回＝60🪙」もこの値が前提。
+        new OyatuData { id = "niboshi",         displayName = "にぼし",            imageName = "にぼし",        coinCost = 10,  hungerAmount = 10, energyAmount = 5, trustAmount = 3,                                                   isFree = true  },
+        new OyatuData { id = "biscuit",         displayName = "ビスケット",        imageName = "ビスケット",    coinCost = 10,  hungerAmount = 15, trustAmount = 3,                                                   isFree = true  },
+        new OyatuData { id = "carrot",          displayName = "にんじんスティック", imageName = "にんじん",      coinCost = 10,  energyAmount = 15, trustAmount = 3,                                                   isFree = true  },
 
         // ── 有償おやつ ──────────────────────────────────────────────────────────────
-        new OyatuData { id = "strawberry_cake", displayName = "いちごケーキ",      imageName = "いちごケーキ",  lunaCost = 80,  hungerAmount = 25,  trustAmount = 5,  personalityDependency = 5,                       isFree = false },
-        new OyatuData { id = "pudding",         displayName = "プリン",            imageName = "プリン",        lunaCost = 80,  hungerAmount = 20,  trustAmount = 5,  personalityHonesty = 5,                          isFree = false },
-        new OyatuData { id = "fruit_tart",      displayName = "フルーツタルト",    imageName = "フルーツタルト", lunaCost = 120, hungerAmount = 20,  energyAmount = 20, trustAmount = 5, personalityDiligence = 5,     isFree = false },
-        new OyatuData { id = "macaron",         displayName = "ハートマカロン",    imageName = "マカロン",      lunaCost = 150, hungerAmount = 15,  energyAmount = 15, trustAmount = 5, personalitySensitivity = 5,   isFree = false },
-        new OyatuData { id = "hamburg",         displayName = "特製ハンバーグ",    imageName = "ハンバーグ",    lunaCost = 200, hungerAmount = 100, trustAmount = 35,  personalityActivity = 5,                        isFree = false },
-        new OyatuData { id = "parfait",         displayName = "スペシャルパフェ",  imageName = "パフェ",        lunaCost = 300, fullRecovery = true, trustAmount = 55,
+        // ★価格は requirements.md §5。2026/6/17 の「有償コイン単価10倍」を 2026/8/30 にコードへ反映した。
+        //   シャンプー（BathSceneManager）は先に10倍後の値になっていて、おやつだけ取り残されていた。
+        new OyatuData { id = "strawberry_cake", displayName = "いちごケーキ",      imageName = "いちごケーキ",  lunaCost = 800, hungerAmount = 25,  trustAmount = 5,  personalityDependency = 5,                       isFree = false },
+        new OyatuData { id = "pudding",         displayName = "プリン",            imageName = "プリン",        lunaCost = 800, hungerAmount = 20,  trustAmount = 5,  personalityHonesty = 5,                          isFree = false },
+        new OyatuData { id = "fruit_tart",      displayName = "フルーツタルト",    imageName = "フルーツタルト", lunaCost = 1200, hungerAmount = 20,  energyAmount = 20, trustAmount = 5, personalityDiligence = 5,     isFree = false },
+        new OyatuData { id = "macaron",         displayName = "ハートマカロン",    imageName = "マカロン",      lunaCost = 1500, hungerAmount = 15,  energyAmount = 15, trustAmount = 5, personalitySensitivity = 5,   isFree = false },
+        new OyatuData { id = "hamburg",         displayName = "特製ハンバーグ",    imageName = "ハンバーグ",    lunaCost = 2000, hungerAmount = 100, trustAmount = 35,  personalityActivity = 5,                        isFree = false },
+        new OyatuData { id = "parfait",         displayName = "スペシャルパフェ",  imageName = "パフェ",        lunaCost = 3000, fullRecovery = true, trustAmount = 55,
                         personalityActivity = 3, personalityDependency = 3, personalityDiligence = 3, personalityHonesty = 3, personalitySensitivity = 3,                                                                isFree = false },
     };
 
@@ -257,16 +262,22 @@ public class OyatuManager : MonoBehaviour
 
     private void ApplyPersonality(SaveData save, OyatuData data)
     {
-        if (data.personalityActivity    != 0) save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + data.personalityActivity,    0, 100);
-        if (data.personalityDependency  != 0) save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + data.personalityDependency,  0, 100);
-        if (data.personalityHonesty     != 0) save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + data.personalityHonesty,     0, 100);
-        if (data.personalityDiligence   != 0) save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + data.personalityDiligence,   0, 100);
-        if (data.personalitySensitivity != 0) save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + data.personalitySensitivity, 0, 100);
+        // ★範囲は -100〜+100（requirements.md §6 / SaveData.cs:132-136 のコメント）。
+        //   2026/8/30 まで下限が 0 になっており、マイナス側の性格が有料おやつ1個で 0 へ飛んでいた。
+        //   例：える（甘えん坊度 -50）にいちごケーキ(+5) → Clamp(-45, 0, 100) = 0 で実質 +50 になり、
+        //       「クールな子」「ツンデレな子」などマイナス側の性格が二度と出せなくなっていた。
+        //   ★お風呂側（BathWashManager.ApplyPersonality）は元から -100,100。片方だけ直さないこと。
+        if (data.personalityActivity    != 0) save.personalityActivity    = Mathf.Clamp(save.personalityActivity    + data.personalityActivity,    -100, 100);
+        if (data.personalityDependency  != 0) save.personalityDependency  = Mathf.Clamp(save.personalityDependency  + data.personalityDependency,  -100, 100);
+        if (data.personalityHonesty     != 0) save.personalityHonesty     = Mathf.Clamp(save.personalityHonesty     + data.personalityHonesty,     -100, 100);
+        if (data.personalityDiligence   != 0) save.personalityDiligence   = Mathf.Clamp(save.personalityDiligence   + data.personalityDiligence,   -100, 100);
+        if (data.personalitySensitivity != 0) save.personalitySensitivity = Mathf.Clamp(save.personalitySensitivity + data.personalitySensitivity, -100, 100);
     }
 
     private void ResetFreeCountIfNewDay(SaveData save)
     {
-        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+        string today = GameDate.Today();
         if (save.lastFreeOyatuDate != today)
         {
             save.freeOyatuCountToday = 0;
@@ -298,16 +309,17 @@ public class OyatuManager : MonoBehaviour
 
         if (data.fullRecovery)
         {
-            sb.AppendLine("おなか 全回復");
-            sb.AppendLine("元気 全回復");
+            // 数値がない表示には pt を付けない（requirements.md §5「パラメータの内部名と表示名」）
+            sb.AppendLine($"{ParamNames.Hunger} 全回復");
+            sb.AppendLine($"{ParamNames.Energy} 全回復");
         }
         else
         {
-            if (data.hungerAmount != 0) sb.AppendLine($"おなか +{data.hungerAmount}");
-            if (data.energyAmount != 0) sb.AppendLine($"元気 +{data.energyAmount}");
+            if (data.hungerAmount != 0) sb.AppendLine($"{ParamNames.Hunger} {ParamNames.Pt(data.hungerAmount)}");
+            if (data.energyAmount != 0) sb.AppendLine($"{ParamNames.Energy} {ParamNames.Pt(data.energyAmount)}");
         }
 
-        if (data.trustAmount > 0) sb.AppendLine($"信頼度 +{data.trustAmount}");
+        if (data.trustAmount > 0) sb.AppendLine($"{ParamNames.Trust} {ParamNames.Pt(data.trustAmount)}");
 
         // 性格パラ表示（全て同値なら「全性格パラ」でまとめる）
         int act = data.personalityActivity;
@@ -318,15 +330,15 @@ public class OyatuManager : MonoBehaviour
         bool allSame = act != 0 && act == dep && act == hon && act == dil && act == sen;
         if (allSame)
         {
-            sb.AppendLine($"全性格パラ <color=#FF69B4>+{act}</color>");
+            sb.AppendLine($"全性格パラ <color=#FF69B4>{ParamNames.Pt(act)}</color>");
         }
         else
         {
-            if (act != 0) sb.AppendLine($"活動性 <color=#FF69B4>{(act > 0 ? "+" : "")}{act}</color>");
-            if (dep != 0) sb.AppendLine($"甘えん坊度 <color=#FF69B4>{(dep > 0 ? "+" : "")}{dep}</color>");
-            if (hon != 0) sb.AppendLine($"素直さ <color=#FF69B4>{(hon > 0 ? "+" : "")}{hon}</color>");
-            if (dil != 0) sb.AppendLine($"勤勉さ <color=#FF69B4>{(dil > 0 ? "+" : "")}{dil}</color>");
-            if (sen != 0) sb.AppendLine($"感受性 <color=#FF69B4>{(sen > 0 ? "+" : "")}{sen}</color>");
+            if (act != 0) sb.AppendLine($"{ParamNames.Activity} <color=#FF69B4>{ParamNames.Pt(act)}</color>");
+            if (dep != 0) sb.AppendLine($"{ParamNames.Dependency} <color=#FF69B4>{ParamNames.Pt(dep)}</color>");
+            if (hon != 0) sb.AppendLine($"{ParamNames.Honesty} <color=#FF69B4>{ParamNames.Pt(hon)}</color>");
+            if (dil != 0) sb.AppendLine($"{ParamNames.Diligence} <color=#FF69B4>{ParamNames.Pt(dil)}</color>");
+            if (sen != 0) sb.AppendLine($"{ParamNames.Sensitivity} <color=#FF69B4>{ParamNames.Pt(sen)}</color>");
         }
 
         return sb.ToString().TrimEnd();

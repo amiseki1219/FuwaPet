@@ -163,21 +163,9 @@ public class MainUIManager : MonoBehaviour
     {
         if (petNameText != null)
         {
-            if (!string.IsNullOrEmpty(_save.petNickname))
-                petNameText.text = _save.petNickname;
-            else
-            {
-                string charId = !string.IsNullOrEmpty(_save.selectedCharacterId) ? _save.selectedCharacterId : _save.characterId;
-                petNameText.text = charId switch
-                {
-                    "poko" => "ぽこ",
-                    "eru"  => "える",
-                    "koko" => "ここ",
-                    "paru" => "ぱる",
-                    "piyoko" => "ぴよこ",
-                    _ => _save.petName ?? ""
-                };
-            }
+            // ★2026/8/28：キャラID→日本語名の対応表を CharacterNames へ集約した。
+            //   優先順位（ニックネーム → 日本語名 → petName）は今までと同じ。
+            petNameText.text = CharacterNames.ResolveDisplayName(_save);
         }
 
         // キャラアイコンを設定

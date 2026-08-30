@@ -37,7 +37,8 @@ namespace OyatsuPuzzle
 
         private void RefreshIfNewDay()
         {
-            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            // ★S-7（2026/8/30）：「今日」の基準を GameDate（JST 3:00）に統一した
+            string today = GameDate.Today();
             if (PlayerPrefs.GetString(KeyDate, "") != today)
             {
                 PlayerPrefs.SetString(KeyDate, today);
@@ -48,7 +49,7 @@ namespace OyatsuPuzzle
 
         public void DebugResetPlays()
         {
-            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string today = GameDate.Today();   // ★S-7
             PlayerPrefs.SetString(KeyDate, today);
             PlayerPrefs.SetInt(KeyCount, 0);
             PlayerPrefs.Save();

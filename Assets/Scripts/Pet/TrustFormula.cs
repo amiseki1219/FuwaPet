@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Game.Core
 {
     /// <summary>
-    /// 信頼度（trust / なかよし度）の「累計pt ⇔ レベル」変換を一箇所に集約する静的クラス。
+    /// 信頼度（trust）の「累計pt ⇔ レベル」変換を一箇所に集約する静的クラス。
     /// requirements.md §4「信頼度システム（Lv.100・指数曲線）」を正とする。
     ///
     /// ・最高 Lv.100。Lv.1 の累計必要pt は 0。

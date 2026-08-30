@@ -212,7 +212,7 @@ MonoBehaviour:
   - category: 1
     id: Table_Default
     displayName: "\u304D\u307B\u3093\u306E\u30C6\u30FC\u30D6\u30EB"
-    prefab: {fileID: 244932350929589241, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
+    prefab: {fileID: 2458784170110077751, guid: 7fcdc59ec5b2e4ff69a3a9be3fb42f8f, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 4807429320370600691, guid: 54ed7d734a15e46d9ab51d5ea310613f, type: 3}
     ownedByDefault: 1

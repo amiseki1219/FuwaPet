@@ -5,12 +5,12 @@ using UnityEngine;
 ///
 /// パーティクルシステムを2つ使う:
 ///   touchParticle  … 泡。シャンプーごとに「色だけ」を粒ごとランダムで変える
-///   accentParticle … いちご / 星などの飾り。色を付けずスプライトのまま出す
+///   accentParticle … おひさま / 星などの飾り。色を付けずスプライトのまま出す
 ///
 /// なぜ2つ必要か:
 ///   ParticleSystem の色設定は、そのシステムの全ての粒に一律で掛かる。
-///   1つにまとめると「泡だけ色をランダムにして、いちごは元の色のまま」ができず、
-///   いちごまで緑や青に染まってしまう。役割ごとに分けるのが確実。
+///   1つにまとめると「泡だけ色をランダムにして、おひさまは元の色のまま」ができず、
+///   おひさままで緑や青に染まってしまう。役割ごとに分けるのが確実。
 /// </summary>
 public class BathTouchEffect : MonoBehaviour
 {
@@ -18,25 +18,51 @@ public class BathTouchEffect : MonoBehaviour
     [System.Serializable]
     public class ShampooParticleSet
     {
-        [Tooltip("BathSceneManager の AllShampoo と同じ ID。normal / ichigo / hoshizora / rainbow")]
+        [Tooltip("BathSceneManager の AllShampoo と同じ ID。normal / ohisama / hoshizora / rainbow")]
         public string shampooId;
 
         [Tooltip("泡の色。粒ごとにこの中から1色がランダムで選ばれる（最大8色）")]
         public Color[] bubbleColors;
 
-        [Tooltip("いちご・星などの飾り。空にするとそのシャンプーでは飾りを出さない")]
+        [Tooltip("おひさま・星などの飾り。空にするとそのシャンプーでは飾りを出さない")]
         public Sprite accentSprite;
 
         [Tooltip("飾りの色。白にするとスプライトの色そのまま出る")]
         public Color accentTint = Color.white;
+
+        // ── 2種目以降の飾り（2026/8/28 追加）────────────────────────────
+        // ★なぜ配列で持つのか
+        //   Unity の ParticleSystem は、Texture Sheet Animation に登録するスプライトが
+        //   すべて同じテクスチャから切り出されている必要がある。
+        //   別々の PNG（おひさま と 星 など）は1つの ParticleSystem に混ぜられない。
+        //   → 「PNG 1枚につき ParticleSystem 1つ」になるため、
+        //      BathTouchEffect 側の extraAccentParticles と同じ順番で対応させる。
+        //   3種目・4種目が要るときも、Scene に ParticleSystem を足すだけで済む（コード変更不要）。
+
+        [Tooltip("2種目以降の飾り。BathTouchEffect の Extra Accent Particles と同じ順番で対応する。\n" +
+                 "空の要素、または対応する ParticleSystem が無い番号では、その飾りは出ない")]
+        public Sprite[] extraAccentSprites;
+
+        [Tooltip("2種目以降の飾りの色。要素が足りないぶんは白（スプライトの色そのまま）になる")]
+        public Color[] extraAccentTints;
     }
 
     [Header("パーティクル")]
     [Tooltip("泡を出すパーティクルシステム")]
     [SerializeField] private ParticleSystem touchParticle;
 
-    [Tooltip("いちご・星を出すパーティクルシステム。未結線でも動作する（飾りが出ないだけ）")]
+    [Tooltip("おひさま・星を出すパーティクルシステム。未結線でも動作する（飾りが出ないだけ）")]
     [SerializeField] private ParticleSystem accentParticle;
+
+    // ★2026/8/28 追加。2種目以降の飾り用。
+    //   1つの ParticleSystem には1枚のスプライトしか入れられない（同一テクスチャ制約）ため、
+    //   種類を増やすぶんだけ ParticleSystem を並べる。
+    //   Scene では AccentParticleEffect を複製して AccentParticleEffect2 … と足していく。
+    //   ShampooParticleSet.extraAccentSprites と【同じ順番】で対応する。
+    [Tooltip("2種目以降の飾りを出すパーティクルシステム。\n" +
+             "Scene の AccentParticleEffect を複製して並べる。\n" +
+             "各シャンプーの Extra Accent Sprites と同じ順番で対応する")]
+    [SerializeField] private ParticleSystem[] extraAccentParticles;
 
     // カメラからパーティクルを出すまでの距離（ワールド単位）。
     //
@@ -48,6 +74,14 @@ public class BathTouchEffect : MonoBehaviour
     //
     // 目安: 「カメラからキャラまでの距離」より少しだけ小さい値（＝キャラの手前）にする。
     [SerializeField] private float particleDistance = 10.5f;
+
+    // 指に追従させるか。
+    //
+    // ON  … 指の位置から泡が出る（従来）
+    // OFF … Scene に置いた位置から動かない。キャラのまわりに置いて「漂う泡」にしたいときはこちら。
+    //        こすっている間だけ出る、という制御はそのまま効く。
+    [Tooltip("OFF にすると指を追いかけず、Scene に置いた位置から出続ける")]
+    [SerializeField] private bool followFinger = true;
 
     // ── 泡のスプライト（大きさ違い） ──────────────────────────────────────────
     //
@@ -69,6 +103,12 @@ public class BathTouchEffect : MonoBehaviour
 
     /// <summary>いま選ばれているシャンプーで飾りを出すかどうか。SetShampoo で決まる。</summary>
     private bool _accentEnabled;
+
+    /// <summary>
+    /// 2種目以降の飾りを出すかどうか。extraAccentParticles と同じ長さ・同じ順番。
+    /// SetShampoo で作り直す。シャンプーによって出す種類が違うので、番号ごとに持つ。
+    /// </summary>
+    private bool[] _extraAccentEnabled = new bool[0];
 
     // ── シャンプー切り替え ────────────────────────────────────────────────────
 
@@ -94,8 +134,12 @@ public class BathTouchEffect : MonoBehaviour
         ApplyBubbleSprites();
         ApplyBubbleColors(set);
         ApplyAccent(set);
+        ApplyExtraAccents(set);
 
-        Debug.Log($"<color=#00E5FF>[決定]</color> [Bath] パーティクルを切り替えました shampooId={shampooId} 泡の色={(set.bubbleColors != null ? set.bubbleColors.Length : 0)}色 飾り={(_accentEnabled ? set.accentSprite.name : "なし")}");
+        int extraOn = 0;
+        for (int i = 0; i < _extraAccentEnabled.Length; i++) if (_extraAccentEnabled[i]) extraOn++;
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Bath] パーティクルを切り替えました shampooId={shampooId} 泡の色={(set.bubbleColors != null ? set.bubbleColors.Length : 0)}色 飾り={(_accentEnabled ? set.accentSprite.name : "なし")} 2種目以降={extraOn}個");
     }
 
     /// <summary>ID に一致するセットを探す。見つからなければ normal にフォールバックする。</summary>
@@ -114,6 +158,25 @@ public class BathTouchEffect : MonoBehaviour
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// 指定したシャンプーの「泡の色」を返す。
+    ///
+    /// なぜ外に出すのか:
+    ///   体に付く泡（BubbleController）にも同じ色を使いたいため。
+    ///   色の設定を2箇所に持つと必ずズレるので、Inspector の設定を正として
+    ///   ここから読み取る形にした（お風呂の MaxBathPerDay が2箇所にあった問題の再発防止。
+    ///   MaxBathPerDay 自体は 2026/8/29 に BathSceneManager.MaxBathPerDay へ一元化済み）。
+    ///
+    /// 見つからない・未設定のときは null を返す。呼び出し側は「色を変えない」を選ぶこと。
+    /// </summary>
+    public Color[] GetBubbleColors(string shampooId)
+    {
+        ShampooParticleSet set = FindSet(shampooId);
+        if (set == null) return null;
+        if (set.bubbleColors == null || set.bubbleColors.Length == 0) return null;
+        return set.bubbleColors;
     }
 
     /// <summary>
@@ -211,24 +274,67 @@ public class BathTouchEffect : MonoBehaviour
     }
 
     /// <summary>
-    /// 飾り（いちご・星）を設定する。
+    /// 飾り1種目（おひさま・星）を設定する。
     /// accentSprite が空、または accentParticle が未結線なら飾りを出さない。
     /// </summary>
     private void ApplyAccent(ShampooParticleSet set)
     {
-        _accentEnabled = false;
+        _accentEnabled = ApplyAccentTo(accentParticle, set.accentSprite, set.accentTint);
+    }
 
-        if (accentParticle == null) return;
-        if (set.accentSprite == null)
+    /// <summary>
+    /// 飾り2種目以降を設定する。
+    ///
+    /// extraAccentParticles[i] と set.extraAccentSprites[i] を【同じ番号】で対応させる。
+    /// 片方しか無い番号は「出さない」。シャンプーごとに種類数が違ってよい。
+    /// （例：おひさま は2種類、せっけん は1種類だけ）
+    /// </summary>
+    private void ApplyExtraAccents(ShampooParticleSet set)
+    {
+        int slots = extraAccentParticles != null ? extraAccentParticles.Length : 0;
+
+        // 結線されている ParticleSystem の数ぶんだけフラグを持つ
+        if (_extraAccentEnabled.Length != slots) _extraAccentEnabled = new bool[slots];
+
+        for (int i = 0; i < slots; i++)
         {
-            // このシャンプーでは飾りなし。放出を止める
-            var off = accentParticle.emission;
+            Sprite sprite = (set.extraAccentSprites != null && i < set.extraAccentSprites.Length)
+                ? set.extraAccentSprites[i]
+                : null;
+
+            // 色は要素が足りなければ白（＝スプライトの色そのまま）にする
+            Color tint = (set.extraAccentTints != null && i < set.extraAccentTints.Length)
+                ? set.extraAccentTints[i]
+                : Color.white;
+
+            _extraAccentEnabled[i] = ApplyAccentTo(extraAccentParticles[i], sprite, tint);
+        }
+    }
+
+    /// <summary>
+    /// ParticleSystem 1つに飾りスプライトを1枚設定する。ApplyAccent と ApplyExtraAccents の共通処理。
+    ///
+    /// ★1枚しか登録しない理由
+    ///   Unity は Texture Sheet Animation に登録するスプライトが同一テクスチャであることを要求する。
+    ///   別々の PNG を混ぜられないので、種類を増やすときは ParticleSystem 自体を増やす。
+    ///
+    /// 戻り値: この ParticleSystem で飾りを出すなら true。
+    ///         未結線・スプライト未設定なら放出を止めて false を返す。
+    /// </summary>
+    private static bool ApplyAccentTo(ParticleSystem ps, Sprite sprite, Color tint)
+    {
+        if (ps == null) return false;
+
+        if (sprite == null)
+        {
+            // このシャンプーでは、この番号の飾りは出さない。放出を止める
+            var off = ps.emission;
             off.enabled = false;
-            return;
+            return false;
         }
 
         // Texture Sheet Animation に1枚だけ登録して、その絵を出す
-        var tsa = accentParticle.textureSheetAnimation;
+        var tsa = ps.textureSheetAnimation;
         tsa.enabled = true;
         tsa.mode = ParticleSystemAnimationMode.Sprites;
 
@@ -236,16 +342,16 @@ public class BathTouchEffect : MonoBehaviour
         {
             tsa.RemoveSprite(i);
         }
-        tsa.AddSprite(set.accentSprite);
+        tsa.AddSprite(sprite);
 
         tsa.frameOverTime = new ParticleSystem.MinMaxCurve(0f); // 絵を切り替えない
         tsa.startFrame    = new ParticleSystem.MinMaxCurve(0f);
         tsa.cycleCount    = 1;
 
-        var main = accentParticle.main;
-        main.startColor = new ParticleSystem.MinMaxGradient(set.accentTint);
+        var main = ps.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(tint);
 
-        _accentEnabled = true;
+        return true;
     }
 
     /// <summary>コンポーネント追加時・Reset 時に、4種類ぶんの枠を用意する。</summary>
@@ -264,7 +370,7 @@ public class BathTouchEffect : MonoBehaviour
             },
             new ShampooParticleSet
             {
-                shampooId = "ichigo",
+                shampooId = "ohisama",
                 bubbleColors = new[]
                 {
                     new Color(1f, 0.78f, 0.85f),
@@ -301,6 +407,19 @@ public class BathTouchEffect : MonoBehaviour
 
     // ── 位置・再生まわり ──────────────────────────────────────────────────────
 
+    /// <summary>
+    /// 画面座標を「泡を出している平面」のワールド座標に変換して返す。
+    ///
+    /// なぜ外に出すのか:
+    ///   体に泡を置く BathBubblePainter が、指の位置を同じ平面に載せる必要があるため。
+    ///   変換の距離（particleDistance）を2箇所に持つとカメラを動かしたときに必ずズレるので、
+    ///   この1箇所を正として共有する。
+    /// </summary>
+    public Vector3 ScreenToWorldPosition(Vector2 screenPosition)
+    {
+        return ScreenToWorld(screenPosition);
+    }
+
     private Vector3 ScreenToWorld(Vector2 screenPosition)
     {
         var cam = Camera.main;
@@ -326,6 +445,15 @@ public class BathTouchEffect : MonoBehaviour
             accentParticle.transform.position = world;
             accentParticle.Play();
         }
+
+        for (int i = 0; i < _extraAccentEnabled.Length; i++)
+        {
+            if (!_extraAccentEnabled[i]) continue;
+            var ps = extraAccentParticles[i];
+            if (ps == null) continue;
+            ps.transform.position = world;
+            ps.Play();
+        }
     }
 
     // 毎フレーム位置を更新（ドラッグ追従用）
@@ -335,6 +463,12 @@ public class BathTouchEffect : MonoBehaviour
 
         if (touchParticle != null) touchParticle.transform.position = world;
         if (accentParticle != null) accentParticle.transform.position = world;
+
+        if (extraAccentParticles != null)
+        {
+            foreach (var ps in extraAccentParticles)
+                if (ps != null) ps.transform.position = world;
+        }
     }
 
     // 連続放出：emission を有効化し、停止中なら Play() する
@@ -347,13 +481,21 @@ public class BathTouchEffect : MonoBehaviour
         }
 
         // 先に位置を確定してから再生する（原点に出ないよう）
-        UpdatePosition(screenPosition);
+        // followFinger が OFF のときは Scene に置いた位置のまま動かさない
+        if (followFinger) UpdatePosition(screenPosition);
 
         StartOne(touchParticle);
 
         if (_accentEnabled && accentParticle != null)
         {
             StartOne(accentParticle);
+        }
+
+        for (int i = 0; i < _extraAccentEnabled.Length; i++)
+        {
+            if (!_extraAccentEnabled[i]) continue;
+            var ps = extraAccentParticles[i];
+            if (ps != null) StartOne(ps);
         }
     }
 
@@ -385,6 +527,19 @@ public class BathTouchEffect : MonoBehaviour
         {
             var e = accentParticle.emission;
             e.enabled = false;
+        }
+
+        // ★結線されている全部を止める。_extraAccentEnabled は見ない。
+        //   シャンプーを切り替えた直後など、フラグと実際の放出状態がずれても
+        //   「出しっぱなし」を作らないため。
+        if (extraAccentParticles != null)
+        {
+            foreach (var ps in extraAccentParticles)
+            {
+                if (ps == null) continue;
+                var ee = ps.emission;
+                ee.enabled = false;
+            }
         }
     }
 }
