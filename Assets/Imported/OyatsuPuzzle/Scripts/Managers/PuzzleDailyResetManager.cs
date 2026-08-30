@@ -12,7 +12,8 @@ namespace OyatsuPuzzle
         public static void CheckDailyReset(PuzzleManager puzzleManager)
         {
             Debug.Log("[OyatsuPuzzle] Daily reset check.");
-            string today    = DateTime.Today.ToString("yyyy-MM-dd");
+            // ★S-7（2026/8/30）：「今日」の基準を GameDate（JST 3:00）に統一した
+            string today    = GameDate.Today();
             string lastDate = PlayerPrefs.GetString(KeyLastDate, "");
 
             if (lastDate == today)

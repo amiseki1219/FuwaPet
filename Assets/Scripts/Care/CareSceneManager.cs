@@ -551,7 +551,8 @@ public class CareSceneManager : MonoBehaviour
 
     private void ResetDailyCountIfNeeded()
     {
-        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+        string today = GameDate.Today();
         if (_save.lastBathDate != today) { _save.bathCountToday = 0; _save.lastBathDate = today; }
         if (_save.lastNadeDate != today) { _save.nadeCountToday = 0; _save.lastNadeDate = today; }
         if (_save.lastPlayDate != today) { _save.playCountToday = 0; _save.lastPlayDate = today; }

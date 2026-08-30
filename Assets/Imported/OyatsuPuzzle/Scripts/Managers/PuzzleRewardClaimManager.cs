@@ -10,7 +10,8 @@ namespace OyatsuPuzzle
 
         public static bool IsClaimedToday(int stage)
         {
-            string today   = System.DateTime.Today.ToString("yyyy-MM-dd");
+            // ★S-7（2026/8/30）：「今日」の基準を GameDate（JST 3:00）に統一した
+            string today   = GameDate.Today();
             string stored  = PlayerPrefs.GetString(Key(stage), "");
             return stored == today;
         }
@@ -24,7 +25,7 @@ namespace OyatsuPuzzle
                 Debug.Log($"[OyatsuPuzzle] Reward already claimed. stage={stage}");
                 return false;
             }
-            string today = System.DateTime.Today.ToString("yyyy-MM-dd");
+            string today = GameDate.Today();   // ★S-7
             PlayerPrefs.SetString(Key(stage), today);
             PlayerPrefs.Save();
             Debug.Log($"[OyatsuPuzzle] Reward claim recorded. stage={stage}");

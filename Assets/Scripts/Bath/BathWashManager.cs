@@ -1130,7 +1130,7 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
         ResetBathCountIfNewDay(save);
         save.bathCountToday++;
-        save.lastBathDate = System.DateTime.Now.ToString("yyyy-MM-dd");
+        save.lastBathDate = GameDate.Today();   // ★S-7：JST 3:00 基準
 
         ApplyPersonality(save);
 
@@ -1200,7 +1200,8 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     private void ResetBathCountIfNewDay(SaveData save)
     {
-        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+        string today = GameDate.Today();
         if (save.lastBathDate != today)
             save.bathCountToday = 0;
     }

@@ -205,10 +205,9 @@ public class QuestUIManager : MonoBehaviour
     private void UpdateTimer()
     {
         if (resetTimerText == null) return;
-        DateTime jst = DateTime.UtcNow.AddHours(9);
-        DateTime nextReset = new DateTime(jst.Year, jst.Month, jst.Day, 3, 0, 0);
-        if (jst >= nextReset) nextReset = nextReset.AddDays(1);
-        TimeSpan span = nextReset - jst;
+        // ★S-7（2026/8/30）：ここに「3」が直書きされており、QuestManager と2箇所に
+        //   同じ数値が重複していた。リセット時刻の定義は GameDate 1箇所にまとめた。
+        TimeSpan span = GameDate.TimeUntilNextReset();
         resetTimerText.text = $"あと{(int)span.TotalHours}:{span.Minutes:D2}でリセット";
     }
 

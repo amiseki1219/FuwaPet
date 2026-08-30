@@ -14,7 +14,8 @@ namespace OyatsuPuzzle
         {
             get
             {
-                string today = System.DateTime.Today.ToString("yyyy-MM-dd");
+                // ★S-7（2026/8/30）：「今日」の基準を GameDate（JST 3:00）に統一した
+                string today = GameDate.Today();
                 return PlayerPrefs.GetString(KeyDecidedDate, "") == today;
             }
         }
@@ -45,7 +46,7 @@ namespace OyatsuPuzzle
                 piece = Random.value < 0.5f ? PieceType.StrawberryCake : PieceType.Pudding;
 
             string text  = $"{piece.ToEnglishName()} x1";
-            string today = System.DateTime.Today.ToString("yyyy-MM-dd");
+            string today = GameDate.Today();   // ★S-7
             PlayerPrefs.SetString(KeyDecidedDate, today);
             PlayerPrefs.SetString(KeyPiece,       text);
             PlayerPrefs.Save();

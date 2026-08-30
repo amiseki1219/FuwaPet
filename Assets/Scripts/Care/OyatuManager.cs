@@ -276,7 +276,8 @@ public class OyatuManager : MonoBehaviour
 
     private void ResetFreeCountIfNewDay(SaveData save)
     {
-        string today = System.DateTime.Now.ToString("yyyy-MM-dd");
+        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
+        string today = GameDate.Today();
         if (save.lastFreeOyatuDate != today)
         {
             save.freeOyatuCountToday = 0;
