@@ -24,9 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Tutorial.unity
     guid: 689af05b93d6b4f97874829c1e585d40
   - enabled: 1
-    path: Assets/_Archive/MyCollection.unity
-    guid: ed600b1cc225f49e392a46c06f84f844
-  - enabled: 1
     path: Assets/Scenes/CoinPurchase.unity
     guid: e78ff1a7fd10646f09977a84d2fbf789
   - enabled: 1
@@ -44,6 +41,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RoomEdit.unity
     guid: 12e3527558485403aba297d32b6a2d40
+  - enabled: 1
+    path: Assets/Scenes/MyCollection.unity
+    guid: 766bfc356e7e2444ba269fa1750de765
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

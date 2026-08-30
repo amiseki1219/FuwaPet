@@ -27,7 +27,6 @@
 - Unity資産の移動・再生成・GUID変更を勝手に行わない。
 - Assets/_Archive と Assets/_Recovery は実装元として扱わず、通常の機能実装対象にしない。
 - Build Settingsを変更する場合は、アーカイブSceneを参照していないか必ず確認する。
-- 現在、MyCollectionはBuild Settingsで `Assets/_Archive/MyCollection.unity` を参照している。明示指示なしに修正しない。
 
 ## 調査と実装の進め方
 
