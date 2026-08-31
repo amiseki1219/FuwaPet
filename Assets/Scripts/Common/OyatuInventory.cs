@@ -58,6 +58,20 @@ public static class OyatuInventory
     /// </summary>
     public const int MaxPerOyatu = 10;
 
+    /// <summary>
+    /// 所持数をボタンに出すときの文言。★2026/8/30 決定。
+    ///   0〜9個 … 「3こ」
+    ///   10個   … 「いっぱい」（これ以上もらえないことが分かるように）
+    ///
+    /// ★「あと3こ」という書き方はやめた。
+    ///   上限10個があるため「残り3個持っている」とも
+    ///   「あと3個まで受け取れる」とも読めて紛らわしかったため。
+    ///
+    /// ★文言はここ1箇所で決める。画面側に直書きしないこと（ParamNames と同じ方針）。
+    /// </summary>
+    public static string StockLabel(SaveData save, string id)
+        => IsFull(save, id) ? "いっぱい" : $"{Get(save, id)}こ";
+
     /// <summary>もう上限まで持っているか。</summary>
     public static bool IsFull(SaveData save, string id) => Get(save, id) >= MaxPerOyatu;
 

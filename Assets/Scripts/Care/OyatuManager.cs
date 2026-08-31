@@ -60,6 +60,21 @@ public class OyatuManager : MonoBehaviour
     [SerializeField] private Color selectedTabColor;   // FFD3D1
     [SerializeField] private Color unselectedTabColor; // FCEBD6
 
+    [Tooltip("タブの文字。ノーマルおやつ側（TabBar/FreeOyatu の Text (TMP)）")]
+    [SerializeField] private TextMeshProUGUI freeTabLabel;
+
+    [Tooltip("タブの文字。スペシャルおやつ側（TabBar/MyOyatu の Text (TMP)）")]
+    [SerializeField] private TextMeshProUGUI paidTabLabel;
+
+    // ★色は必ず初期値を書く。Unity は未設定の Color を (0,0,0,0)＝透明で入れるため、
+    //   書かないと「文字が消えた」ように見えて原因が分からなくなる
+    //   （BathFinishEffect で実際に踏んだ地雷。CLAUDE.md §23 参照）
+    [Tooltip("選択中のタブの文字色。ピンクの上に乗るので白")]
+    [SerializeField] private Color selectedTabTextColor = Color.white;
+
+    [Tooltip("選択していないタブの文字色。クリームの上に乗るので茶色")]
+    [SerializeField] private Color unselectedTabTextColor = new Color(0.55f, 0.43f, 0.31f, 1f); // 8C6E4F
+
     [Tooltip("「※ノーマルおやつは1日6回まであげられるよ」の案内文（NaviText）。\n" +
              "★ノーマルおやつのタブでだけ出す。マイおやつのタブでは隠す。\n" +
              "  未結線でも動く（出しっぱなしになるだけ）")]
@@ -180,7 +195,7 @@ public class OyatuManager : MonoBehaviour
         {
             var root = data.isFree ? freeButtonRoot : paidButtonRoot;
             var view = Instantiate(oyatuButtonPrefab, root);
-            view.Bind(data, OyatuInventory.Get(save, data.id), OnSelectOyatu);
+            view.Bind(data, OyatuInventory.StockLabel(save, data.id), OnSelectOyatu);
             _buttons[data.id] = view;
         }
 
@@ -224,6 +239,12 @@ public class OyatuManager : MonoBehaviour
         if (freeTabImage != null)   freeTabImage.color = selectedTabColor;
         if (paidTabImage != null)   paidTabImage.color = unselectedTabColor;
 
+        // ★背景の色だけでなく、文字の色も切り替える。
+        //   選択中＝ピンクの上に白、非選択＝クリームの上に茶色。
+        //   片方だけにすると、選択中の文字が読めなくなる
+        if (freeTabLabel != null) freeTabLabel.color = selectedTabTextColor;
+        if (paidTabLabel != null) paidTabLabel.color = unselectedTabTextColor;
+
         // ★1日6回の上限は【無償おやつだけ】の話なので、こちらのタブでだけ案内を出す
         if (naviText != null) naviText.SetActive(true);
     }
@@ -234,6 +255,10 @@ public class OyatuManager : MonoBehaviour
         if (paidOyatuPanel != null) paidOyatuPanel.SetActive(true);
         if (freeTabImage != null)   freeTabImage.color = unselectedTabColor;
         if (paidTabImage != null)   paidTabImage.color = selectedTabColor;
+
+        // ★OnTabFree と対になっている。片方だけ直すと必ず食い違うので、変えるときは両方を見ること
+        if (freeTabLabel != null) freeTabLabel.color = unselectedTabTextColor;
+        if (paidTabLabel != null) paidTabLabel.color = selectedTabTextColor;
 
         // ★マイおやつには1日6回の上限が無いので、案内文は隠す
         if (naviText != null) naviText.SetActive(false);
@@ -418,7 +443,7 @@ public class OyatuManager : MonoBehaviour
         if (save == null) return;
 
         // 自動生成したボタン
-        foreach (var kv in _buttons) kv.Value.SetStock(OyatuInventory.Get(save, kv.Key));
+        foreach (var kv in _buttons) kv.Value.SetStockLabel(OyatuInventory.StockLabel(save, kv.Key));
 
         // Scene に手で置いたボタン（Prefab 未結線のときの経路）
         RefreshStockTextsInPanel(freeOyatuPanel, save);
@@ -439,7 +464,7 @@ public class OyatuManager : MonoBehaviour
             var label = t.GetComponent<TextMeshProUGUI>();
             if (label == null) continue;
 
-            label.text = $"あと{OyatuInventory.Get(save, id)}こ";
+            label.text = OyatuInventory.StockLabel(save, id);
         }
     }
 

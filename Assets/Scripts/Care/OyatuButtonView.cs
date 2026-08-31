@@ -57,7 +57,7 @@ public class OyatuButtonView : MonoBehaviour
     /// <summary>
     /// データを流し込む。OyatuManager が生成直後に1回呼ぶ。
     /// </summary>
-    public void Bind(OyatuData data, int stock, Action<string> onClick)
+    public void Bind(OyatuData data, string stockLabel, Action<string> onClick)
     {
         if (data == null) return;
 
@@ -83,7 +83,7 @@ public class OyatuButtonView : MonoBehaviour
         }
 
         ApplyIcon(data);
-        SetStock(stock);
+        SetStockLabel(stockLabel);
         SetSelected(false);
 
         if (button != null)
@@ -121,10 +121,14 @@ public class OyatuButtonView : MonoBehaviour
                          $"（ファイルがあるか、Texture Type=Sprite・Sprite Mode=Single か確認してください）", this);
     }
 
-    /// <summary>所持数の表示を更新する。表示は「あと○こ」。</summary>
-    public void SetStock(int stock)
+    /// <summary>
+    /// 所持数の表示を更新する。
+    /// ★文言は OyatuInventory.StockLabel が決める（0〜9=「3こ」/ 10=「いっぱい」）。
+    ///   ここで組み立てないこと。2箇所で作ると必ず食い違う。
+    /// </summary>
+    public void SetStockLabel(string label)
     {
-        if (stockText != null) stockText.text = $"あと{stock}こ";
+        if (stockText != null) stockText.text = label;
     }
 
     /// <summary>「選択中」の飾りを出し入れする。</summary>

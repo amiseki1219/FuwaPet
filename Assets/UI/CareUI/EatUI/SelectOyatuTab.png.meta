@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5886f3501dc7f45209d1c5faf4e2a6db
+guid: c2e74e4f50dc943afa538c00d0ddc265
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2874371892478052265
-    second: "\u304A\u3084\u3064\u30BF\u30A4\u30C8\u30EB_0"
+      213: -5427382424230888749
+    second: SelectOyatuTab_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,13 +46,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 35, y: 0, z: 35, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u304A\u3084\u3064\u30BF\u30A4\u30C8\u30EB_0"
+      name: SelectOyatuTab_0
       rect:
         serializedVersion: 2
         x: 0
@@ -134,15 +134,15 @@ TextureImporter:
         width: 446
         height: 74
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9a78583d102d3e720800000000000000
-      internalID: 2874371892478052265
+      spriteID: 3daf48fc0701ea4b0800000000000000
+      internalID: -5427382424230888749
       vertices: []
       indices: 
       edges: []
@@ -151,8 +151,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
-    internalID: 0
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u304A\u3084\u3064\u30BF\u30A4\u30C8\u30EB_0": 2874371892478052265
+      SelectOyatuTab_0: -5427382424230888749
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
