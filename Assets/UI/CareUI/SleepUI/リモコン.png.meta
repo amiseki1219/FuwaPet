@@ -134,7 +134,7 @@ TextureImporter:
         width: 495
         height: 650
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -147,11 +147,55 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: "\u30EA\u30E2\u30B3\u30F3_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 502
+        height: 695
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9a9472cc107a42aca92045fa282f1b7
+      internalID: 2129441740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30EA\u30E2\u30B3\u30F3_2"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 502
+        height: 714
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c11970b0c2cc4dfb9452a1e52a6a65e
+      internalID: -827648880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f97d3f056e2f64afe998070a7b93a029
     internalID: 0
     vertices: []
     indices: 
@@ -162,6 +206,8 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       "\u30EA\u30E2\u30B3\u30F3_0": 6229942426053993768
+      "\u30EA\u30E2\u30B3\u30F3_1": 2129441740
+      "\u30EA\u30E2\u30B3\u30F3_2": -827648880
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
