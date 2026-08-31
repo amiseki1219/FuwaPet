@@ -640,8 +640,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8968905886585141821, guid: c92f10e6ebd804ffbbfa61e1ed5dee8b, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: c92f10e6ebd804ffbbfa61e1ed5dee8b, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -22269,6 +22269,7 @@ MonoBehaviour:
     slotIndex: 1
     slot: {fileID: 1650466952}
     shadow: {fileID: 0}
+  windowView: {fileID: 0}
   verboseLog: 1
 --- !u!4 &1177810396
 Transform:
@@ -29146,6 +29147,7 @@ MonoBehaviour:
     dailyQuestsClaimed: 00000000
     freeOyatuCountToday: 0
     lastFreeOyatuDate: 
+    oyatuStocks: []
     bathCountToday: 0
     lastBathDate: 
     nadeCountToday: 0
@@ -41734,8 +41736,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3624359877985901565, guid: 5414b284cb76f444ba9a9ac4e2e6d0f4, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 5414b284cb76f444ba9a9ac4e2e6d0f4, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
