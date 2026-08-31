@@ -307,8 +307,10 @@ public class OyatuManager : MonoBehaviour
         // 無償おやつの1日上限チェック
         if (_selectedOyatu.isFree)
         {
-            ResetFreeCountIfNewDay(save);
-            if (save.freeOyatuCountToday >= FreeOyatuDailyLimit)
+            // ★S-3（2026/8/31）：ここは「読むだけ」。
+            //   この下にはコインが足りずに return する経路があるため、
+            //   ここで日付を書き換えると「あげていないのに今日あげた扱い」になってしまう。
+            if (DailyCounters.FreeOyatuToday(save) >= FreeOyatuDailyLimit)
             {
                 careManager?.ShowNotice("今日のおやつは上限に達したよ…！");
                 return;
@@ -370,8 +372,9 @@ public class OyatuManager : MonoBehaviour
         ApplyPersonality(save, _selectedOyatu);
 
         // 無償おやつ使用カウント更新
+        // ★S-3（2026/8/31）：実際にあげたときだけ回数と日付が進む
         if (_selectedOyatu.isFree)
-            save.freeOyatuCountToday++;
+            DailyCounters.ConsumeFreeOyatu(save);
 
         GameContext.Instance?.SavePetStatus();
         QuestManager.Instance?.NotifyFeed();
@@ -414,17 +417,6 @@ public class OyatuManager : MonoBehaviour
     /// </summary>
     public int GetStock(string oyatuId)
         => OyatuInventory.Get(SaveManager.Instance?.Data, oyatuId);
-
-    private void ResetFreeCountIfNewDay(SaveData save)
-    {
-        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
-        string today = GameDate.Today();
-        if (save.lastFreeOyatuDate != today)
-        {
-            save.freeOyatuCountToday = 0;
-            save.lastFreeOyatuDate   = today;
-        }
-    }
 
     /// <summary>
     /// 各おやつボタンの「あと○こ」表示を更新する。★U-9（2026/8/30）

@@ -592,16 +592,16 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnBath()
     {
-        ResetDailyCountIfNeeded();
-        if (_save.bathCountToday >= BathSceneManager.MaxBathPerDay) { ShowNotice($"今日のお風呂は{BathSceneManager.MaxBathPerDay}回までだよ！"); return; }
+        // ★S-3（2026/8/31）：ここは「読むだけ」。日付を書き換えないので、
+        //   Bath 画面へ行って何もせず戻っても「今日入浴した」ことにならない。
+        if (DailyCounters.BathToday(_save) >= BathSceneManager.MaxBathPerDay) { ShowNotice($"今日のお風呂は{BathSceneManager.MaxBathPerDay}回までだよ！"); return; }
         GoToScene("Bath");
     }
 
     public void OnBtnPet()
     {
-        ResetDailyCountIfNeeded();
-        if (_save.nadeCountToday >= MaxNadePerDay) { ShowNotice($"今日のなでなでは{MaxNadePerDay}回までだよ！"); return; }
-        _save.nadeCountToday++;
+        if (DailyCounters.NadeToday(_save) >= MaxNadePerDay) { ShowNotice($"今日のなでなでは{MaxNadePerDay}回までだよ！"); return; }
+        DailyCounters.ConsumeNade(_save);   // ★S-3：実際になでたときだけ回数と日付が進む
         _status.AddEnergy(3f);
         _status.AddTrust(2);
         GameContext.Instance?.SavePetStatus();
@@ -612,12 +612,11 @@ public class CareSceneManager : MonoBehaviour
 
     public void OnBtnPlay()
     {
-        ResetDailyCountIfNeeded();
-        if (_save.playCountToday >= MaxPlayPerDay) { ShowNotice($"今日のあそぶは{MaxPlayPerDay}回までだよ！"); return; }
+        if (DailyCounters.PlayToday(_save) >= MaxPlayPerDay) { ShowNotice($"今日のあそぶは{MaxPlayPerDay}回までだよ！"); return; }
         // ★2026/8/31：あそぶを無料化した（10🪙 → FREE）。
         //   あそぶ由来のコイン報酬はパズルクリアのみに一本化したため、
         //   ここにあったコイン消費（UseCoin(10)）を削除している。
-        _save.playCountToday++;
+        DailyCounters.ConsumePlay(_save);   // ★S-3：実際にあそんだときだけ回数と日付が進む
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
         _status.OnPlayed();
@@ -655,13 +654,4 @@ public class CareSceneManager : MonoBehaviour
     public void ShowCleanPopup(string text)  => cleanPopup?.Show(text);
     public void ShowHungerPopup(string text) => hungerPopup?.Show(text);
     public void ShowEnergyPopup(string text) => energyPopup?.Show(text);
-
-    private void ResetDailyCountIfNeeded()
-    {
-        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
-        string today = GameDate.Today();
-        if (_save.lastBathDate != today) { _save.bathCountToday = 0; _save.lastBathDate = today; }
-        if (_save.lastNadeDate != today) { _save.nadeCountToday = 0; _save.lastNadeDate = today; }
-        if (_save.lastPlayDate != today) { _save.playCountToday = 0; _save.lastPlayDate = today; }
-    }
 }
