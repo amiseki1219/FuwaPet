@@ -1,19 +1,9 @@
 fileFormatVersion: 2
-guid: 17e8b9d86f17c4dd8bcab6212770ce02
+guid: cc326cded7fdc4c6a93428bd07a33334
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tripo_mat_48f7a2b9
-    second: {fileID: 2100000, guid: e09919fff3c447edba14f231a114798d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: MCP_Table_Underside_Cream
-    second: {fileID: 2100000, guid: b7c111325dac45ab8e0fd6cfe0460668, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
