@@ -614,7 +614,9 @@ public class CareSceneManager : MonoBehaviour
     {
         ResetDailyCountIfNeeded();
         if (_save.playCountToday >= MaxPlayPerDay) { ShowNotice($"今日のあそぶは{MaxPlayPerDay}回までだよ！"); return; }
-        if (!GameData.Instance.UseCoin(10)) { ShowNotice("コインが足りないよ…！"); return; }
+        // ★2026/8/31：あそぶを無料化した（10🪙 → FREE）。
+        //   あそぶ由来のコイン報酬はパズルクリアのみに一本化したため、
+        //   ここにあったコイン消費（UseCoin(10)）を削除している。
         _save.playCountToday++;
         _status.AddEnergy(30f);
         _status.AddHunger(-10f);
