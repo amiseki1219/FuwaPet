@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f6b2788e080ef487abf8a9b9b5dc5415
+guid: c2e74e4f50dc943afa538c00d0ddc265
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4249118389093272326
-    second: "\u6E05\u6F54Hundle_0"
+      213: -5427382424230888749
+    second: SelectOyatuTab_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 19, y: 0, z: 19, w: 0}
+  spriteBorder: {x: 35, y: 0, z: 35, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u6E05\u6F54Hundle_0"
+      name: SelectOyatuTab_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 250
-        height: 39
+        width: 446
+        height: 74
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,30 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60b0c7e79a6e7fa30800000000000000
-      internalID: 4249118389093272326
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: "\u6E05\u6F54Handle_0"
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 250
-        height: 39
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5a88ef1d93c8440fba62693c17b0c32b
-      internalID: 32789702
+      spriteID: 3daf48fc0701ea4b0800000000000000
+      internalID: -5427382424230888749
       vertices: []
       indices: 
       edges: []
@@ -173,8 +151,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d6282dda91b4c4e78b1d34818acb084f
-    internalID: -419855648
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -183,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u6E05\u6F54Handle_0": 32789702
-      "\u6E05\u6F54Hundle_0": 4249118389093272326
+      SelectOyatuTab_0: -5427382424230888749
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

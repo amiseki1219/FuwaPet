@@ -37,7 +37,7 @@ public class CareSceneManager : MonoBehaviour
 
     // バーと数字は同じ時間で動かす。ここを長くすると、数字がゆっくりカウントアップする
     [Tooltip("ステータスバーと数字が今の値まで動くのにかかる時間")]
-    [SerializeField] private float statusAnimateDuration = 1.2f;
+    [SerializeField] private float statusAnimateDuration = 0.6f;
 
     [Header("信頼度")]
     [SerializeField] private Slider trustSlider;
@@ -325,12 +325,121 @@ public class CareSceneManager : MonoBehaviour
             conditionText.text = $"{ResolveCharName()}は{text}";
     }
 
+    /// <summary>ステータスバーを一度でも表示したか。★U-1（2026/8/30）で追加。</summary>
+    private bool _statusBarsInitialized;
+
+    /// <summary>
+    /// ステータスバーを更新する。
+    ///
+    /// 【動きの決まり】2026/8/30（U-1）
+    ///   ・画面に入った1回目 … アニメーションしない。いまの値をそのまま出す
+    ///   ・2回目以降         … 【増えたバーだけ】アニメーションで伸ばす。減ったバーは即反映
+    ///   ・お風呂／ねんねから戻ったとき … 例外。増えたぶんを巻き戻してから伸ばす
+    ///
+    /// 【なぜ1回目をアニメーションしないのか】
+    ///   Care.unity のスライダーは初期値 100（満タン）で保存されている。
+    ///   そこから現在値へ動かすと「開いた瞬間にゲージが減った」ように見えていた。
+    ///   実際には減っていない。罪悪感を煽らない方針（requirements.md 付録A.1）に反するので消した。
+    ///
+    /// 【なぜ減るときはアニメーションしないのか】
+    ///   増えたことを見せるのが目的の演出なので、減る動きを見せる理由がない。
+    ///   あそぶ（元気+30・おなか-10）なら、元気だけ伸びて、おなかは即座に減る。
+    ///
+    /// 数字はここでは入れない。バーと同じコルーチンの中でカウントアップさせる。
+    /// （即代入するとバーだけ伸びて数字はパッと切り替わり、ちぐはぐに見える）
+    /// </summary>
     private void SetStatusBars()
     {
-        // 数字はここでは入れない。バーと同じコルーチンの中でカウントアップさせる。
-        // （即代入するとバーだけ伸びて数字はパッと切り替わり、ちぐはぐに見える）
         if (_sliderCoroutine != null) StopCoroutine(_sliderCoroutine);
+
+        if (!_statusBarsInitialized)
+        {
+            _statusBarsInitialized = true;
+            ApplyStatusBarsImmediate();
+
+            // ★お風呂・ねんねから戻ったときだけ、増えたぶんを巻き戻してアニメーションさせる。
+            //   Care は LoadScene で作り直されるので、ここも「画面に入った1回目」になる。
+            //   そのまま即反映にすると「お風呂完了！キレイ ＋60pt」と出ているのに
+            //   ゲージはもう伸び切っている、という食い違いが起きる。
+            //   ★この時点では静的フラグはまだ落ちていない（Start の後半で拾って落とす）ので読める。
+            //     フラグを【消さないこと】。消すと結果のポップアップが出なくなる。
+            if (!TryRewindForCareResult()) return;
+
+            _sliderCoroutine = StartCoroutine(AnimateSlidersCoroutine());
+            return;
+        }
+
+        // 2回目以降。増えたバーが1本も無いなら、アニメーションせずに即反映して終わり
+        if (!AnySliderWillIncrease())
+        {
+            ApplyStatusBarsImmediate();
+            return;
+        }
+
+        // 減った・変わらないバーだけ先に確定させる。残り（増えたバー）はコルーチンが伸ばす
+        SnapNonIncreasingSliders();
         _sliderCoroutine = StartCoroutine(AnimateSlidersCoroutine());
+    }
+
+    /// <summary>バーと数字に現在値をそのまま入れる。アニメーションの最後でも使う。</summary>
+    private void ApplyStatusBarsImmediate()
+    {
+        if (cleanSlider  != null) cleanSlider.value  = _status.Clean;
+        if (hungerSlider != null) hungerSlider.value = _status.Hunger;
+        if (energySlider != null) energySlider.value = _status.Energy;
+        if (moodSlider   != null) moodSlider.value   = _status.Mood;
+
+        SetStatusValueTexts(_status.Mood, _status.Clean, _status.Hunger, _status.Energy);
+    }
+
+    /// <summary>そのバーがこれから増えるか。誤差で動かないよう、わずかな差は無視する。</summary>
+    private static bool WillIncrease(Slider slider, float target)
+        => slider != null && target > slider.value + 0.01f;
+
+    private bool AnySliderWillIncrease()
+        => WillIncrease(cleanSlider,  _status.Clean)
+        || WillIncrease(hungerSlider, _status.Hunger)
+        || WillIncrease(energySlider, _status.Energy)
+        || WillIncrease(moodSlider,   _status.Mood);
+
+    /// <summary>増えないバー（減った・変わらない）を、先に現在値へ合わせてしまう。</summary>
+    private void SnapNonIncreasingSliders()
+    {
+        if (cleanSlider  != null && !WillIncrease(cleanSlider,  _status.Clean))  cleanSlider.value  = _status.Clean;
+        if (hungerSlider != null && !WillIncrease(hungerSlider, _status.Hunger)) hungerSlider.value = _status.Hunger;
+        if (energySlider != null && !WillIncrease(energySlider, _status.Energy)) energySlider.value = _status.Energy;
+        if (moodSlider   != null && !WillIncrease(moodSlider,   _status.Mood))   moodSlider.value   = _status.Mood;
+    }
+
+    /// <summary>
+    /// お風呂・ねんねから戻ってきたときだけ、対象のバーを「お世話する前」の位置まで巻き戻す。
+    /// 巻き戻したら true を返す（＝このあとアニメーションさせる）。
+    ///
+    /// ★気分は 清潔・おなか・元気 の平均（PetStatus.Mood）なので、
+    ///   清潔と元気を戻したぶんの 1/3 だけ一緒に戻す。
+    /// ★下限は 10（PetStatus のパラメータ下限）。
+    /// </summary>
+    private bool TryRewindForCareResult()
+    {
+        float cleanBack  = BathWashManager.BathJustCompleted
+            ? BathWashManager.BathJustCleanAmount : 0f;
+        float energyBack = SleepSceneManager.SleepJustCompleted
+            ? SleepSceneManager.SleepJustEnergyAmount : 0f;
+
+        if (cleanBack <= 0f && energyBack <= 0f) return false;
+
+        if (cleanSlider != null && cleanBack > 0f)
+            cleanSlider.value = Mathf.Max(10f, _status.Clean - cleanBack);
+
+        if (energySlider != null && energyBack > 0f)
+            energySlider.value = Mathf.Max(10f, _status.Energy - energyBack);
+
+        if (moodSlider != null)
+            moodSlider.value = Mathf.Max(10f, _status.Mood - (cleanBack + energyBack) / 3f);
+
+        Debug.Log($"<color=#00E5FF>[決定]</color> [Care] お世話の結果ぶんだけゲージを巻き戻してから伸ばします" +
+                  $"（{ParamNames.Clean} -{cleanBack} / 元気 -{energyBack}）");
+        return true;
     }
 
     /// <summary>
@@ -373,12 +482,8 @@ public class CareSceneManager : MonoBehaviour
             }
         }
 
-        if (cleanSlider  != null) cleanSlider.value  = _status.Clean;
-        if (hungerSlider != null) hungerSlider.value = _status.Hunger;
-        if (energySlider != null) energySlider.value = _status.Energy;
-        if (moodSlider   != null) moodSlider.value   = _status.Mood;
-
-        SetStatusValueTexts(_status.Mood, _status.Clean, _status.Hunger, _status.Energy);
+        // ★最後は必ず現在値でそろえる。同じ処理を2箇所に書かないよう1メソッドに寄せてある
+        ApplyStatusBarsImmediate();
     }
 
     /// <summary>数字の表示だけを書き換える。切り上げではなく切り捨てで、バーの見た目と揃える。</summary>

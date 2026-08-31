@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f6b2788e080ef487abf8a9b9b5dc5415
+guid: e932f3722919f46ab96e199a0ef6b6d0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4249118389093272326
-    second: "\u6E05\u6F54Hundle_0"
+      213: -8968905886585141821
+    second: "\u9032\u6357\u30B9\u30C6\u30FC\u30BF\u30B9\u571F\u53F0_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u6E05\u6F54Hundle_0"
+      name: "\u9032\u6357\u30B9\u30C6\u30FC\u30BF\u30B9\u571F\u53F0_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 250
-        height: 39
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,30 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60b0c7e79a6e7fa30800000000000000
-      internalID: 4249118389093272326
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: "\u6E05\u6F54Handle_0"
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 250
-        height: 39
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5a88ef1d93c8440fba62693c17b0c32b
-      internalID: 32789702
+      spriteID: 3c5ce2e8d9b088380800000000000000
+      internalID: -8968905886585141821
       vertices: []
       indices: 
       edges: []
@@ -173,8 +151,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d6282dda91b4c4e78b1d34818acb084f
-    internalID: -419855648
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -183,8 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u6E05\u6F54Handle_0": 32789702
-      "\u6E05\u6F54Hundle_0": 4249118389093272326
+      "\u9032\u6357\u30B9\u30C6\u30FC\u30BF\u30B9\u571F\u53F0_0": -8968905886585141821
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
