@@ -202,6 +202,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: -6155256083111238286, guid: 0f5cef0d45d704b3cabe39e4df1fce3a, type: 3}
     ownedByDefault: 1
+  - category: 6
+    id: Nightstand_Gaming
+    displayName: "\u30B2\u30FC\u30DF\u30F3\u30B0\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6616488525142177647, guid: 2ce76d6a8f9844559bf095b2263b37a2, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 4024599922619524828, guid: 4a9e327195fb44d79b1c20f0f4c41842, type: 3}
+    ownedByDefault: 1
   - category: 1
     id: Table_None
     displayName: "\u306A\u3057"
@@ -495,6 +502,13 @@ MonoBehaviour:
     prefab: {fileID: 7935414634372999828, guid: 9122224d9185c4fd7ad334b0a246e0dd, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -6172189635252498345, guid: a043ae8e7fc7941e8a25f674071f133e, type: 3}
+    ownedByDefault: 1
+  - category: 3
+    id: WallShelf_GamingTV
+    displayName: "\u30B2\u30FC\u30DF\u30F3\u30B0\u30E2\u30CB\u30BF\u30FC"
+    prefab: {fileID: 6335207066844736780, guid: 36a20894d951a4c8aafacea7c1d6ce43, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 7189556926657930257, guid: 82898e276f8db47fda65a5810ed175af, type: 3}
     ownedByDefault: 1
   - category: 8
     id: Decoration_None
