@@ -89,9 +89,12 @@ public class WindowViewController : MonoBehaviour
     private TimeOfDay _currentTimeOfDay = (TimeOfDay)(-1);
     private float _checkInterval = 60f;
     private float _timeSinceLastCheck = 60f;
+    private Color _bookShelfLightPrefabColor;
+    private bool _hasBookShelfLightPrefabColor;
 
     private void Start()
     {
+        CacheBookShelfLightPrefabColor(bookShelfLight);
         CheckAndApplyTimeOfDay();
     }
 
@@ -167,8 +170,16 @@ public class WindowViewController : MonoBehaviour
     public void SetBookShelfLight(Light light)
     {
         bookShelfLight = light;
+        CacheBookShelfLightPrefabColor(light);
         if (light == null) return;
         ReapplyCurrentTimeOfDay();
+    }
+
+    private void CacheBookShelfLightPrefabColor(Light light)
+    {
+        _hasBookShelfLightPrefabColor = light != null;
+        if (_hasBookShelfLightPrefabColor)
+            _bookShelfLightPrefabColor = light.color;
     }
 
     public void SetTimeOfDay(TimeOfDay time)
@@ -222,7 +233,10 @@ public class WindowViewController : MonoBehaviour
             bookShelfLight.gameObject.SetActive(setting.bookShelfLightEnabled);
             if (setting.bookShelfLightEnabled)
             {
-                bookShelfLight.color     = setting.bookShelfLightColor;
+                // 家具ごとの色を優先する。Gaming は青、既存家具は従来の暖色を保つ。
+                bookShelfLight.color     = _hasBookShelfLightPrefabColor
+                    ? _bookShelfLightPrefabColor
+                    : setting.bookShelfLightColor;
                 bookShelfLight.intensity = setting.bookShelfLightIntensity;
             }
         }
