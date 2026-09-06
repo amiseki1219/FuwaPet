@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: d16fc4ef438bb41728081d096db83238
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8000597163167781945
+    second: Thumb_Shelf_Gaming_0
+  - first:
+      213: -6215896055113641761
+    second: Thumb_Shelf_Gaming_1
+  - first:
+      213: 1005195586358166030
+    second: Thumb_Shelf_Gaming_2
+  - first:
+      213: -5215616232778543297
+    second: Thumb_Shelf_Gaming_3
+  - first:
+      213: 6076650377076311780
+    second: Thumb_Shelf_Gaming_4
+  - first:
+      213: 1827010578717180760
+    second: Thumb_Shelf_Gaming_5
+  - first:
+      213: -483038246800970505
+    second: Thumb_Shelf_Gaming_6
+  - first:
+      213: 8126504846664972533
+    second: Thumb_Shelf_Gaming_7
+  - first:
+      213: 4263062292091391876
+    second: Thumb_Shelf_Gaming_8
+  - first:
+      213: -4112526428624846161
+    second: Thumb_Shelf_Gaming_9
+  - first:
+      213: -7168148659878313387
+    second: Thumb_Shelf_Gaming_10
+  - first:
+      213: -6792188791736370746
+    second: Thumb_Shelf_Gaming_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_0
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 0
+        width: 1167
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9341d9d1bb4d70f60800000000000000
+      internalID: 8000597163167781945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_1
+      rect:
+        serializedVersion: 2
+        x: 1012
+        y: 847
+        width: 21
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd0133a9873bcb9a0800000000000000
+      internalID: -6215896055113641761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_2
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 822
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e024bae5f0c23fd00800000000000000
+      internalID: 1005195586358166030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_3
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 797
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3f49787ba86e97b0800000000000000
+      internalID: -5215616232778543297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_4
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 806
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e680ed8259945450800000000000000
+      internalID: 6076650377076311780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_5
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 712
+        width: 228
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85381510178da5910800000000000000
+      internalID: 1827010578717180760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_6
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 695
+        width: 10
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc20861647eb49f0800000000000000
+      internalID: -483038246800970505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_7
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 631
+        width: 12
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f8b4fa1a1527c070800000000000000
+      internalID: 8126504846664972533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_8
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 612
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48f48776190792b30800000000000000
+      internalID: 4263062292091391876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_9
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 589
+        width: 14
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa20964900f5de6c0800000000000000
+      internalID: -4112526428624846161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_10
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 562
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 552c2c6b5ce958c90800000000000000
+      internalID: -7168148659878313387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thumb_Shelf_Gaming_11
+      rect:
+        serializedVersion: 2
+        x: 1107
+        y: 492
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c9f92dc74c4db1a0800000000000000
+      internalID: -6792188791736370746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Thumb_Shelf_Gaming_0: 8000597163167781945
+      Thumb_Shelf_Gaming_1: -6215896055113641761
+      Thumb_Shelf_Gaming_10: -7168148659878313387
+      Thumb_Shelf_Gaming_11: -6792188791736370746
+      Thumb_Shelf_Gaming_2: 1005195586358166030
+      Thumb_Shelf_Gaming_3: -5215616232778543297
+      Thumb_Shelf_Gaming_4: 6076650377076311780
+      Thumb_Shelf_Gaming_5: 1827010578717180760
+      Thumb_Shelf_Gaming_6: -483038246800970505
+      Thumb_Shelf_Gaming_7: 8126504846664972533
+      Thumb_Shelf_Gaming_8: 4263062292091391876
+      Thumb_Shelf_Gaming_9: -4112526428624846161
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

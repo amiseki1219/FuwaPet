@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 976465045066980532, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2451794267415199357, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -48,9 +52,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2964599478670432235, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550373316740293118, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.864
+      objectReference: {fileID: 0}
+    - target: {fileID: 3550373316740293118, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.29
+      objectReference: {fileID: 0}
     - target: {fileID: 3833338908433267295, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: m_Name
       value: Room_Main
+      objectReference: {fileID: 0}
+    - target: {fileID: 4092880267490771974, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5146111009394784578, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7598099077720239509, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: daySetting.ambientIntensity
@@ -68,6 +92,10 @@ PrefabInstance:
       propertyPath: nightSetting.bookShelfLightIntensity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7907684602810018874, guid: 932717252df664a829e38fdef224aa3f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8012477440750218361, guid: 932717252df664a829e38fdef224aa3f, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.024
@@ -77,7 +105,8 @@ PrefabInstance:
       value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 173699956980372907, guid: 932717252df664a829e38fdef224aa3f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 932717252df664a829e38fdef224aa3f, type: 3}

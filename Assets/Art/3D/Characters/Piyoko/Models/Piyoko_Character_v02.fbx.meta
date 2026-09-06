@@ -149,7 +149,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Angry_v01
       takeName: metarig|Piyoko_Angry_v01
-      internalID: 0
+      internalID: -3171641877964755141
       firstFrame: 0
       lastFrame: 71
       wrapMode: 0
@@ -178,7 +178,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Cry_v01
       takeName: metarig|Piyoko_Cry_v01
-      internalID: 0
+      internalID: 5776831866601663444
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -207,7 +207,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Doze_v01
       takeName: metarig|Piyoko_Doze_v01
-      internalID: 0
+      internalID: -7942515905375318678
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -236,7 +236,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Greet_v01
       takeName: metarig|Piyoko_Greet_v01
-      internalID: 0
+      internalID: -1506215284769021078
       firstFrame: 0
       lastFrame: 53
       wrapMode: 0
@@ -265,7 +265,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_HappySmall_v01
       takeName: metarig|Piyoko_HappySmall_v01
-      internalID: 0
+      internalID: -786239614404696973
       firstFrame: 0
       lastFrame: 59
       wrapMode: 0
@@ -294,7 +294,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleBored_v01
       takeName: metarig|Piyoko_IdleBored_v01
-      internalID: 0
+      internalID: -2830773046759351390
       firstFrame: 0
       lastFrame: 119
       wrapMode: 0
@@ -323,7 +323,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleCurious_v01
       takeName: metarig|Piyoko_IdleCurious_v01
-      internalID: 0
+      internalID: 7392513954983718321
       firstFrame: 0
       lastFrame: 83
       wrapMode: 0
@@ -352,7 +352,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleHop_v01
       takeName: metarig|Piyoko_IdleHop_v01
-      internalID: 0
+      internalID: -5609407124907776073
       firstFrame: 0
       lastFrame: 47
       wrapMode: 0
@@ -381,7 +381,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleHum_v01
       takeName: metarig|Piyoko_IdleHum_v01
-      internalID: 0
+      internalID: 7648336755894790986
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -410,7 +410,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleLook_v01
       takeName: metarig|Piyoko_IdleLook_v01
-      internalID: 0
+      internalID: -1778802100846596234
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -439,7 +439,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_IdleStretch_v01
       takeName: metarig|Piyoko_IdleStretch_v01
-      internalID: 0
+      internalID: 6864602391191082831
       firstFrame: 0
       lastFrame: 71
       wrapMode: 0
@@ -468,7 +468,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Sad_v01
       takeName: metarig|Piyoko_Sad_v01
-      internalID: 0
+      internalID: 4080087623543323482
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -497,7 +497,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Shy_v01
       takeName: metarig|Piyoko_Shy_v01
-      internalID: 0
+      internalID: -6268920186475463654
       firstFrame: 0
       lastFrame: 71
       wrapMode: 0
@@ -526,7 +526,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Sleep_v01
       takeName: metarig|Piyoko_Sleep_v01
-      internalID: 0
+      internalID: -2597650355197473387
       firstFrame: 0
       lastFrame: 143
       wrapMode: 0
@@ -555,7 +555,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_TrustUp_v01
       takeName: metarig|Piyoko_TrustUp_v01
-      internalID: 0
+      internalID: -91655135166627598
       firstFrame: 0
       lastFrame: 95
       wrapMode: 0
@@ -584,7 +584,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Piyoko_Yawn_v01
       takeName: metarig|Piyoko_Yawn_v01
-      internalID: 0
+      internalID: -7680855846887528615
       firstFrame: 0
       lastFrame: 71
       wrapMode: 0

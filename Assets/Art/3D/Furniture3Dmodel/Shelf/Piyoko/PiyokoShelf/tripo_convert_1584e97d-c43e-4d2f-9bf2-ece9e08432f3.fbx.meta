@@ -3,7 +3,12 @@ guid: 17a8b0ef78de643ea8a24c10a87858da
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_1584e97d
+    second: {fileID: 2100000, guid: 954d732e58144aea968053f7668b5753, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -38,11 +43,11 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
-    importPhysicalCameras: 1
-    importVisibility: 1
-    importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -79,7 +84,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -105,6 +110,6 @@ ModelImporter:
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
-  userData: 
+  userData: Piyoko shelf exported from the current unsaved Blender state. Existing model GUID and internal names are preserved; Blender inner-color correction is baked into Color.jpg. Cameras, lights, and animation are excluded.
   assetBundleName: 
   assetBundleVariant: 

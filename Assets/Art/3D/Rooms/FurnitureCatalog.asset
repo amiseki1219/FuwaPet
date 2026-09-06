@@ -104,6 +104,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: 399275890886976974, guid: dfd334f825d39499c9f3aea3407ed10a, type: 3}
     ownedByDefault: 1
+  - category: 0
+    id: Bed_Cloud
+    displayName: "\u304F\u3082\u306E\u30D9\u30C3\u30C9"
+    prefab: {fileID: 2883534812364179115, guid: 3e1d23cce91474a9ca57ac07bb27977c, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 7550310143167230192, guid: f4275cfabe8664e5387946970edaa6fb, type: 3}
+    ownedByDefault: 1
   - category: 2
     id: Sofa_None
     displayName: "\u306A\u3057"
@@ -135,14 +142,14 @@ MonoBehaviour:
   - category: 2
     id: Sofa_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 7991730810407657274, guid: b96a08e17281f4cceb4baea3003bae2f, type: 3}
+    prefab: {fileID: 2236371707551390036, guid: b96a08e17281f4cceb4baea3003bae2f, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 2919127301967665301, guid: 32f02a9a2a1c849799a560b2c9cb71a2, type: 3}
     ownedByDefault: 1
   - category: 2
     id: Sofa_Paru
     displayName: "\u308A\u307C\u3093\u306E\u30BD\u30D5\u30A1"
-    prefab: {fileID: 8591711127322278182, guid: 239c4dac5571b4b7c92b6720b75459d4, type: 3}
+    prefab: {fileID: 1808760453217263402, guid: 239c4dac5571b4b7c92b6720b75459d4, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3425283342497153935, guid: e50fa1ba04f8848a68674cc063e958e4, type: 3}
     ownedByDefault: 1
@@ -152,6 +159,13 @@ MonoBehaviour:
     prefab: {fileID: 2267068377872169162, guid: 0b95eb66815b540cf9417dc3625fc865, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1558947180396752644, guid: b23d7328fd9154e69b6739983e589855, type: 3}
+    ownedByDefault: 1
+  - category: 2
+    id: Sofa_Cloud
+    displayName: "\u304F\u3082\u306E\u30BD\u30D5\u30A1"
+    prefab: {fileID: 5370566315261871720, guid: f8d8e7e4f4eb941809e02a979c126cd6, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -6931045472058184534, guid: 621006c93bb5345c6bcc75fb06d25b92, type: 3}
     ownedByDefault: 1
   - category: 6
     id: Nightstand_None
@@ -202,6 +216,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: -6155256083111238286, guid: 0f5cef0d45d704b3cabe39e4df1fce3a, type: 3}
     ownedByDefault: 1
+  - category: 6
+    id: Nightstand_Cloud
+    displayName: "\u304F\u3082\u306E\u30E9\u30A4\u30C8"
+    prefab: {fileID: 3809199155960427731, guid: b27ca489b9c8646fd8f288b3f7069de7, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -1919585028919487621, guid: 3cc09fa1d5d16442db9707264069efd3, type: 3}
+    ownedByDefault: 1
   - category: 1
     id: Table_None
     displayName: "\u306A\u3057"
@@ -233,7 +254,7 @@ MonoBehaviour:
   - category: 1
     id: Table_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30C6\u30FC\u30D6\u30EB"
-    prefab: {fileID: 4414084931085620108, guid: a27435fdbce004daf8033cadb59e5561, type: 3}
+    prefab: {fileID: 3202237273340581322, guid: a27435fdbce004daf8033cadb59e5561, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3694040054090000080, guid: e72da67ad1f7b44b1adc729142c28ad1, type: 3}
     ownedByDefault: 1
@@ -251,6 +272,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: -858145242867497395, guid: 28de135ec76c243509394cd2d0153b1d, type: 3}
     ownedByDefault: 1
+  - category: 1
+    id: Table_Cloud
+    displayName: "\u304F\u3082\u306E\u30C6\u30FC\u30D6\u30EB"
+    prefab: {fileID: 122018218273569542, guid: 76f4429d18b534aada7e7cf3331f758e, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -5849039324756527360, guid: 81ff72295dc464e3ea23fe17f42403d7, type: 3}
+    ownedByDefault: 1
   - category: 4
     id: Shelf_None
     displayName: "\u306A\u3057"
@@ -261,7 +289,7 @@ MonoBehaviour:
   - category: 4
     id: Shelf_Default
     displayName: "\u304D\u307B\u3093\u306E\u672C\u68DA"
-    prefab: {fileID: 5319422960173350948, guid: ddfdec5be04c94af7a776cda3c24f188, type: 3}
+    prefab: {fileID: 530891701075848395, guid: ddfdec5be04c94af7a776cda3c24f188, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -5388974637643547423, guid: e947562253aa440409f204c0f42909b9, type: 3}
     ownedByDefault: 1
@@ -275,30 +303,37 @@ MonoBehaviour:
   - category: 4
     id: Shelf_Eru
     displayName: "\u661F\u306E\u672C\u68DA"
-    prefab: {fileID: 463386265084509396, guid: 4385dc4cab7f94f38bc9b5082babc9b7, type: 3}
+    prefab: {fileID: 7460926274181301628, guid: 815ee3473bc58442394fe3093b7b4a76, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 3488101561992639089, guid: 6170cfa8253874f53b68362c32d06910, type: 3}
     ownedByDefault: 1
   - category: 4
     id: Shelf_Koko
     displayName: "\u304A\u306F\u306A\u306E\u672C\u68DA"
-    prefab: {fileID: 5145409779243881766, guid: 1a6eaec56b8b645ed8297f34a19b9833, type: 3}
+    prefab: {fileID: 2278262227541563372, guid: 1a6eaec56b8b645ed8297f34a19b9833, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1681171118030248631, guid: c9a94a2a1a89a48a7bd061b36dceb61a, type: 3}
     ownedByDefault: 1
   - category: 4
     id: Shelf_Paru
     displayName: "\u30EA\u30DC\u30F3\u306E\u672C\u68DA"
-    prefab: {fileID: 2708758444531984644, guid: d8445e3c988674d62b982314005c8ac4, type: 3}
+    prefab: {fileID: 3031123123414274803, guid: d8445e3c988674d62b982314005c8ac4, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 600822802860163629, guid: 65d415adfc6fa46ca8d566e697852f2e, type: 3}
     ownedByDefault: 1
   - category: 4
     id: Shelf_Piyoko
     displayName: "\u305F\u307E\u3054\u306E\u672C\u68DA"
-    prefab: {fileID: 6950497602829096584, guid: 6557315f9921a440ebb21f84ec795749, type: 3}
+    prefab: {fileID: 3080772078935423149, guid: 6557315f9921a440ebb21f84ec795749, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 1673047254065089203, guid: d636b13cbe75d4070bf150eb5b8b5557, type: 3}
+    ownedByDefault: 1
+  - category: 4
+    id: Shelf_Cloud
+    displayName: "\u304F\u3082\u306E\u68DA"
+    prefab: {fileID: 1792582994237522402, guid: 4243c254a304444819956cec6b5e9085, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 3134982242976411175, guid: 058631d6755ee4778b7280b8b6dc55e7, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_None
@@ -309,45 +344,52 @@ MonoBehaviour:
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Default
-    displayName: "\u304D\u307B\u3093\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u304D\u307B\u3093\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 7646035117752206979, guid: abfbb5f0008ca4545bb15eb857afd31b, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 6677866693867197145, guid: e2f5c9275ef134daeaedb811ea620207, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Poko
-    displayName: "\u3069\u3093\u3050\u308A\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u3069\u3093\u3050\u308A\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 8745796264217850227, guid: 7c311f9addc384410a0a9b91d66615d2, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -3195515340590380889, guid: 2ec0e409247ac4cd993fb06ff51ae503, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Eru
-    displayName: "\u304F\u308D\u306D\u3053\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u304F\u308D\u306D\u3053\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 6365379481010862424, guid: 35fb53c2106bb47a89fe9551d34ea086, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -2907844652610541627, guid: 4a64e620fb75445109f12fcd2b90ffbb, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Koko
-    displayName: "\u304A\u306F\u306A\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u304A\u306F\u306A\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 5182547111340050012, guid: 0007964b0d5ba403fbd61ca77cb9dd27, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 9035549458761647817, guid: bc6e3f9eb7ac74e72a7108f97addec08, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Paru
-    displayName: "\u3057\u308D\u306D\u3053\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u3057\u308D\u306D\u3053\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 8812164423050199352, guid: 6a382f5498f8d425e97fef7b74cb5983, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -6012803614037902085, guid: 7dc8dedc389244f6cba86a26e47eebab, type: 3}
     ownedByDefault: 1
   - category: 7
     id: RoomLight_Piyoko
-    displayName: "\u305F\u307E\u3054\u306E\u30E9\u30A4\u30C8"
+    displayName: "\u305F\u307E\u3054\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
     prefab: {fileID: 6743083460001540856, guid: 34b188695c880492bb342896f3342254, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 804440105801345952, guid: cede24f626b4c450ea078fb1845c8c9b, type: 3}
+    ownedByDefault: 1
+  - category: 7
+    id: RoomLight_Cloud
+    displayName: "\u304F\u3082\u306E\u30EB\u30FC\u30E0\u30E9\u30A4\u30C8"
+    prefab: {fileID: 6093622032409494538, guid: 985951f59912843da93bf6e20172c64d, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 2218391208471751608, guid: 5fa5f58a0e253412ba9ce3cdaae15493, type: 3}
     ownedByDefault: 1
   - category: 9
     id: Rug_None
@@ -398,6 +440,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: -4479967088545185958, guid: 1efec2813c81a4d7481aa17a781b81f1, type: 3}
     ownedByDefault: 1
+  - category: 9
+    id: Rug_Cloud
+    displayName: "\u304F\u3082\u306E\u30E9\u30B0"
+    prefab: {fileID: 5575896554957488031, guid: 1eafafc03b05141b5b34b4d10508ddf8, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 6577916949818014724, guid: 9bdf278db9cf447e18ca6242edb89ce4, type: 3}
+    ownedByDefault: 1
   - category: 5
     id: Window_None
     displayName: "\u306A\u3057"
@@ -446,6 +495,13 @@ MonoBehaviour:
     prefab: {fileID: 5131443350231715982, guid: 4d90209897c7e48d99dc09343033e267, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -141835964443593231, guid: 5b5056e4b61be4056b70bbbaee7e8def, type: 3}
+    ownedByDefault: 1
+  - category: 5
+    id: Window_Cloud
+    displayName: "\u304F\u3082\u306E\u7A93"
+    prefab: {fileID: 5582276907070619157, guid: c7981d8f957e047cc9f0a5a2f23287b2, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -1346648806467506783, guid: 0c95603c681d34e70ba87cd1f1b25329, type: 3}
     ownedByDefault: 1
   - category: 3
     id: WallShelf_
@@ -496,6 +552,13 @@ MonoBehaviour:
     isEmptySlot: 0
     thumbnail: {fileID: -6172189635252498345, guid: a043ae8e7fc7941e8a25f674071f133e, type: 3}
     ownedByDefault: 1
+  - category: 3
+    id: WallShelf_Cloud
+    displayName: "\u304F\u3082\u306E\u98FE\u308A"
+    prefab: {fileID: 2288459755456802677, guid: b67ffa086c8994aefa0de39b6cb91f9e, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: -812541973414356700, guid: ebaa36bf9e2cd4d1fbffe80a6d2edb56, type: 3}
+    ownedByDefault: 1
   - category: 8
     id: Decoration_None
     displayName: "\u306A\u3057"
@@ -527,7 +590,7 @@ MonoBehaviour:
   - category: 8
     id: Decoration_Koko
     displayName: "\u304A\u306F\u306A\u306E\u30AC\u30FC\u30E9\u30F3\u30C9"
-    prefab: {fileID: 886338867701467849, guid: 02b1355164de442c3a0329653463dba7, type: 3}
+    prefab: {fileID: 1090219003037439509, guid: 02b1355164de442c3a0329653463dba7, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: 2302083412300119408, guid: e8c302dc974584433bad0905c60e4fc2, type: 3}
     ownedByDefault: 1
@@ -544,6 +607,13 @@ MonoBehaviour:
     prefab: {fileID: 7487053964817844928, guid: ac23eb552ba0141e490c90d02bc6ba95, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -7817148452496742992, guid: e47ac81077120476292009efdb53b6e0, type: 3}
+    ownedByDefault: 1
+  - category: 8
+    id: Decoration_Cloud
+    displayName: "\u304F\u3082\u306E\u30AC\u30FC\u30E9\u30F3\u30C9"
+    prefab: {fileID: 3058412240434368353, guid: 56a4a1e3eb95e450ba5f2c1987e1bc07, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 920587017708519710, guid: 71972464e07e94f94b4302a6ae1d9efe, type: 3}
     ownedByDefault: 1
   - category: 11
     id: Decoration2_None
@@ -621,4 +691,18 @@ MonoBehaviour:
     prefab: {fileID: 1639536957372976827, guid: c3244e22fd9524e69a54bb570f535dad, type: 3}
     isEmptySlot: 0
     thumbnail: {fileID: -1820188433, guid: c0b1650a2912a4357873a9668786dae7, type: 3}
+    ownedByDefault: 1
+  - category: 11
+    id: Decoration2_Cloud
+    displayName: "\u304F\u3082\u306E\u30A2\u30FC\u30C8"
+    prefab: {fileID: 8650354148343884396, guid: 36ea7db28bec0471b8d867c2ec31fc44, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 3554345606055568848, guid: a7a1a371551d2408db1e6c2d01539eea, type: 3}
+    ownedByDefault: 1
+  - category: 11
+    id: Decoration2_
+    displayName: "\u304F\u3082\u306E\u6C17\u7403"
+    prefab: {fileID: 7012501345083992016, guid: 4ebcaeed94f4d4372ba647203c58c340, type: 3}
+    isEmptySlot: 0
+    thumbnail: {fileID: 6323216288432584611, guid: 1f35237f6f3b749d285fd6fd5e25179c, type: 3}
     ownedByDefault: 1

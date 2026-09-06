@@ -1128,9 +1128,10 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             save.trust += TrustPerBath;   // 単独再生時は PetStatus を経由できないので SaveData へ直接
         }
 
-        ResetBathCountIfNewDay(save);
-        save.bathCountToday++;
-        save.lastBathDate = GameDate.Today();   // ★S-7：JST 3:00 基準
+        // ★S-3（2026/8/31）：リセット→+1→日付更新を DailyCounters に集約した。
+        //   ここに来るのは実際にお風呂を終えたときだけなので、
+        //   lastBathDate が「最後にお風呂に入った日」を正しく指すようになる。
+        DailyCounters.ConsumeBath(save);
 
         ApplyPersonality(save);
 
@@ -1196,13 +1197,5 @@ public class BathWashManager : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 }
                 break;
         }
-    }
-
-    private void ResetBathCountIfNewDay(SaveData save)
-    {
-        // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
-        string today = GameDate.Today();
-        if (save.lastBathDate != today)
-            save.bathCountToday = 0;
     }
 }

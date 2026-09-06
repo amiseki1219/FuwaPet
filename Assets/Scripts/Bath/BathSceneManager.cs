@@ -147,9 +147,8 @@ public class BathSceneManager : MonoBehaviour
         var saveForLimit = SaveManager.Instance?.Data;
         if (saveForLimit != null)
         {
-            // ★S-7（2026/8/30）：「今日」の基準は GameDate に一本化した（JST 3:00 で切り替わる）
-            string today = GameDate.Today();
-            int bathToday = (saveForLimit.lastBathDate == today) ? saveForLimit.bathCountToday : 0;
+            // ★S-3（2026/8/31）：判定は DailyCounters に集約した（読むだけでセーブは書き換えない）
+            int bathToday = DailyCounters.BathToday(saveForLimit);
             if (bathToday >= MaxBathPerDay)
             {
                 Debug.LogWarning($"[Bath] 今日のお風呂は {MaxBathPerDay} 回までです（現在 {bathToday} 回）");

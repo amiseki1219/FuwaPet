@@ -3,7 +3,12 @@ guid: f725d231a7ce2448c84f40448b7d595c
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_131b1eb7
+    second: {fileID: 2100000, guid: 59df82b073a74b8bb5050a7ac1e68f21, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -38,11 +43,11 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
-    importPhysicalCameras: 1
-    importVisibility: 1
-    importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -79,7 +84,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -105,6 +110,6 @@ ModelImporter:
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
-  userData: 
+  userData: Eru decoration exported from bracelet_underside_cleanup.blend. Blender-only underside color correction is baked into Color.jpg; cameras, lights, animation, and loose vertices are excluded. Existing model GUID and internal names are preserved for prefab compatibility.
   assetBundleName: 
   assetBundleVariant: 
